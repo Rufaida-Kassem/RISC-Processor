@@ -1,12 +1,12 @@
 
-module Memory #(parameter addBusWidth = 32) (
+module Memory #(parameter addBusWidth = 32, width = 16) (
     clk, rst, memR, memWR, addR, addWR, dataWR, dataR
 );
     input clk, rst, memR, memWR;
-    input [32 - 1 : 0] dataWR;
+    input [width - 1 : 0] dataWR;
     input [addBusWidth - 1 : 0] addR, addWR;
-    output reg [32 - 1 : 0] dataR;
-    reg [32 - 1 : 0] memory [0 : addBusWidth - 1];
+    output reg [width - 1 : 0] dataR;
+    reg [width - 1 : 0] memory [0 : addBusWidth - 1];
     integer i;
 
     always @(posedge clk , posedge rst) begin
