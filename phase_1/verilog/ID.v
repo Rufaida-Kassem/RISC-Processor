@@ -1,5 +1,5 @@
 module ID #(parameter width = 16) (
-    clk, instruction, MemR, MemWR, aluSrc, RegWR, aluOp, Op2Immid
+    clk, instruction, MemR, MemWR, aluSrc, RegWR, aluOp, I_op2
   );
   reg ack;
   wire fetchOp2;
@@ -11,13 +11,14 @@ module ID #(parameter width = 16) (
   output [2 : 0] write_addr;
   reg [4:0] opCode;
   output reg [4:0] aluOp;
-  output wire RegWR, aluSrc, MemWR, MemR ;
+  output reg RegWR, aluSrc, MemWR, MemR ;
+  
   RegFile
     RegFile_dut (
       .read_enable (read_enable ),
-      . write_enable ( write_enable ),
+      .write_enable ( write_enable ),
       .clk (clk ),
-      . rst ( rst ),
+      .rst ( rst ),
       .write_data (write_data ),
       .read_data1 (read_data1 ),
       .read_data2 (read_data2 ),
@@ -45,6 +46,7 @@ module ID #(parameter width = 16) (
     //TODO: decode the op code
     if(fetchOp2 == 1'b0)
     begin
+      ack = 'b0;
       opCode <= instruction  [width - 1 : width - 5];
       read_addr1 <= instruction[width - 6 : width - 8];
       read_addr2 <= instruction[width - 9 : width - 11];
@@ -55,7 +57,6 @@ module ID #(parameter width = 16) (
     begin
       ack = 1'b1;
       I_op2 = instruction[width - 1 : 0];
-
     end
   end
 endmodule
