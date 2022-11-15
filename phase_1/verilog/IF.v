@@ -26,7 +26,7 @@ module IF (
   );
   input clk, rst;
   wire pc;
-  output [31:0] instruction;
+  output [15:0] instruction;
 
   pcCircuit
     pcCircuit_dut (
