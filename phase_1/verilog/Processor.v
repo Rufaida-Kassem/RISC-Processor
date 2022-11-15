@@ -2,8 +2,7 @@ module Processor (
     clk, rst
   );
   input clk, rst;
-  wire memR, memWR, dataWR,
-       wire [:] addR, addWR
+  wire [15:0] instruction
 
   IF
     IF_dut (
@@ -16,7 +15,7 @@ module Processor (
     ID_dut (
       .clk (clk ),
       .instruction (instruction ),
-      .read_enable (read_enable ),
+      .read_enable ('b1 ),
       .op1 (op1 ),
       .R_op2 (R_op2 ),
       .I_op2 (I_op2 ),
