@@ -1,5 +1,3 @@
-`include "Decoder.v"
-`include "Register.v"
 module RegFile #(parameter N = 16)(read_enable,write_enable, read_data1, read_data2, write_data, clk,rst, read_addr1,read_addr2, write_addr);
 input read_enable, write_enable,clk, rst;
 input [N-1:0] write_data;
