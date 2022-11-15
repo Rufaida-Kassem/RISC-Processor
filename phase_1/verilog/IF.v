@@ -22,10 +22,10 @@ endmodule
 
 
 module IF (
-    clk, rst, instruction
+    clk, rst, instruction, pc
   );
   input clk, rst;
-  wire pc;
+  output pc;
   output [15:0] instruction;
 
   pcCircuit
@@ -34,8 +34,8 @@ module IF (
       .rst ( rst ),
       .addR  ( pc)
     );
-  Memory
-    instructions_memory #(20, 32) (
+  Memory #( .addBusWidth(20), .width(16) )
+    instructions_memory  (
       .clk (clk ),
       .rst ( rst ),
       .memR ( 'b1 ),
