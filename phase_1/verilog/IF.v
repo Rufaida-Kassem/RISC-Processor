@@ -15,7 +15,7 @@ module pcCircuit #(parameter addressWidth = 32) (
     else if (clk)
     begin
       pc <= pc + 1;
-      addR <= pc;
+      addR <= pc;  //update it before increasing the PC
     end
   end
 endmodule
@@ -28,24 +28,24 @@ module IF (
   wire pc;
   output [31:0] instruction;
 
-  pcCircuit 
-  pcCircuit_dut (
-    .clk (clk ),
-    .rst ( rst ),
-    .addR  ( pc)
-  );
+  pcCircuit
+    pcCircuit_dut (
+      .clk (clk ),
+      .rst ( rst ),
+      .addR  ( pc)
+    );
   Memory
-  instructions_memory #(20, 32) (
-    .clk (clk ),
-    .rst ( rst ),
-    .memR ( 'b1 ),
-    .memWR ( 'b0 ),
-    .dataWR (0),
-    .addR (pc),
-    .addWR (0),
-    .dataR  (instruction)
-  );
+    instructions_memory #(20, 32) (
+      .clk (clk ),
+      .rst ( rst ),
+      .memR ( 'b1 ),
+      .memWR ( 'b0 ),
+      .dataWR (0),
+      .addR (pc),
+      .addWR (0),
+      .dataR  (instruction)
+    );
 
- 
+
 endmodule
 
