@@ -1,4 +1,3 @@
-
 Memory
   data_memory #(11, 16) (
     .clk (clk ),

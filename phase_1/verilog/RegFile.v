@@ -1,11 +1,13 @@
 `include "Decoder.v"
 `include "Register.v"
-module RegFile #(parameter N = 16)(read_enable,write_enable, read_data,write_data, clk,rst, read_addr,write_addr);
+module RegFile #(parameter N = 16)(read_enable,write_enable, read_data1, read_data2, write_data, clk,rst, read_addr1,read_addr2, write_addr);
 input read_enable, write_enable,clk, rst;
 input [N-1:0] write_data;
-output wire[N-1:0]read_data;
+output wire[N-1:0]read_data1;
+output wire[N-1:0]read_data2;
 //wire [N-1:0]read_data_send;
-input[2:0] read_addr;
+input[2:0] read_addr1;
+input[2:0] read_addr2;
 input[2:0] write_addr;
 wire [7:0]arr_read_enable;
 wire [7:0]arr_write_enable;  //we can only drive wires with a continuous assign   (wrong --> from dr.dina, we can drive regs as well 
@@ -21,7 +23,9 @@ Register #(N) regs (arr_read_enable[i]&read_enable, arr_write_enable[i]&write_en
 endgenerate
 
 
-Decoder D_R(read_addr, arr_read_enable);
+Decoder D_R1(read_addr1, arr_read_enable);
+Decoder D_R2(read_addr2, arr_read_enable);
+
 Decoder D_W(write_addr, arr_write_enable);
 
 

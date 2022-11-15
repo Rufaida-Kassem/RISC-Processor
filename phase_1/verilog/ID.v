@@ -4,22 +4,26 @@ module ID #(parameter width = 16) (
   input clk;
   input [width - 1 : 0] instruction;
   output read_enable;
-  output [5 - 1 : 0] read_addr1, read_addr2;
-  output [5 - 1 : 0] write_addr;
-  output wire [2:0] aluOp, opCode;
+  reg [2 : 0] read_addr1, read_addr2;
+  output reg [2 : 0] op1, R_op2, I_op2;
+  output [2 : 0] write_addr;
+  reg [4:0] opCode;
+  output reg [4:0] aluOp;
   output wire RegWR, aluSrc, MemWR, MemR ;
-  reg [2:0]opCode;
-  RegFile 
-  RegFile_dut (
-    .read_enable (read_enable ),
-    . write_enable ( write_enable ),
-    .clk (clk ),
-    . rst ( rst ),
-    .write_data (write_data ),
-    .read_data (read_data ),
-    .read_addr (read_addr ),
-    .write_addr  ( write_addr)
-  );
+  RegFile
+    RegFile_dut (
+      .read_enable (read_enable ),
+      . write_enable ( write_enable ),
+      .clk (clk ),
+      . rst ( rst ),
+      .write_data (write_data ),
+      .read_data1 (read_data1 ),
+      .read_data2 (read_data2 ),
+      .read_addr1 (read_addr1 ),
+      .read_addr2 (read_addr2 ),
+      .write_addr  ( write_addr)
+    );
+
 
   controlUnit
     controlUnit_dut (
@@ -33,15 +37,22 @@ module ID #(parameter width = 16) (
     );
 
 
+
   always @(posedge clk)
   begin
     //TODO: decode the op code
-    opCode <= instruction  [width - 1 : width - 3];
-    
-
-    read_addr1 <= instruction[25 : 21];
-    read_addr2 <= instruction[20 : 16];
-    read_enable <= 'b1;
-    write_addr <= instruction[15 : 11];
+    if(fetchOp2 == 1'b0)
+    begin
+      opCode <= instruction  [width - 1 : width - 5];
+      read_addr1 <= instruction[width - 6 : width - 8];
+      read_addr2 <= instruction[width - 9 : width - 11];
+      read_enable <= 'b1;
+      write_addr <= instruction[width - 12 : width - 14];
+    end
+    else begin
+      fetchOp2 = 1'b1;
+      I_op2 = instruction[width - 1 : 0];
+      
+    end
   end
 endmodule
