@@ -1,42 +1,32 @@
-Memory
-  data_memory #(11, 16) (
-    .clk (clk ),
-    .rst ( rst ),
-    .memR ( memR ),
-    .memWR ( memWR ),
-    .dataWR (dataWR ),
-    .addR (addR ),
-    .addWR ( addWR ),
-    .dataR  ( dataR)
+module Processor (
+    clk, rst
   );
+  input clk, rst;
+  wire memR, memWR, dataWR,
+       wire [:] addR, addWR
 
-RegFile
-  RegFile_dut (
-    .read_enable (read_enable ),
-    .write_enable ( write_enable ),
-    .clk ( clk ),
-    .rst ( rst ),
-    .write_data (write_data ),
-    .read_addr (read_addr ),
-    .write_addr ( write_addr ),
-    .read_data  ( read_data)
-  );
+  IF
+    IF_dut (
+      .clk (clk ),
+      . rst ( rst ),
+      .instruction  ( instruction)
+    );
 
-pcCircuit
-  pcCircuit_dut (
-    .clk (clk ),
-    .rst ( rst ),
-    .addR  ( addR)
-  );
+  ID
+    ID_dut (
+      .clk (clk ),
+      .instruction (instruction ),
+      .read_enable (read_enable ),
+      .op1 (op1 ),
+      .R_op2 (R_op2 ),
+      .I_op2 (I_op2 ),
+      .write_addr (write_addr ),
+      .aluOp (aluOp ),
+      .RegWR (RegWR ),
+      .aluSrc (aluSrc ),
+      .MemWR (MemWR ),
+      .MemR  ( MemR)
+    );
 
-ID
-  ID_dut (
-    .clk (clk ),
-    .instruction (instruction ),
-    .read_enable (read_enable ),
-    .read_addr1 (read_addr1 ),
-    .read_addr2 ( read_addr2 ),
-    .write_addr (write_addr ),
-    .control_signals  ( control_signals)
-  );
+endmodule
 
