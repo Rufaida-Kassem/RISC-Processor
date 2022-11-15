@@ -1,6 +1,8 @@
 module ID #(parameter width = 16) (
     clk, instruction, MemR, MemWR, aluSrc, RegWR, aluOp, Op2Immid
   );
+  reg ack;
+  wire fetchOp2;
   input clk;
   input [width - 1 : 0] instruction;
   output read_enable;
@@ -49,10 +51,11 @@ module ID #(parameter width = 16) (
       read_enable <= 'b1;
       write_addr <= instruction[width - 12 : width - 14];
     end
-    else begin
-      fetchOp2 = 1'b1;
+    else
+    begin
+      ack = 1'b1;
       I_op2 = instruction[width - 1 : 0];
-      
+
     end
   end
 endmodule
