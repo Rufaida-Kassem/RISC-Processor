@@ -5,18 +5,23 @@ module ID #(parameter width = 16) (
   wire fetchOp2;
   input clk;
   input [width - 1 : 0] instruction;
-  output read_enable;
   reg [2 : 0] read_addr1, read_addr2;
   output reg [2 : 0] op1, R_op2, I_op2;
-  output [2 : 0] write_addr;
+  output [2 : 0] RW_Out_addr;  //address
+  input [2 : 0] RW_In_addr;
   reg [4:0] opCode;
-  output reg [4:0] aluOp;
-  output reg RegWR, aluSrc, MemWR, MemR ;
-  
+  output reg [4:0] aluOp_sig;
+  output reg RW_sig_out, aluSrc_sig, MemWR_sig, MemR_sig ;  //signal
+  input RW_Sig_in;
+  input [15:0] Reg_data;
+
+  //reg data back -- enable -- address
+  // input       -- out in  -- out in
+
   RegFile
     RegFile_dut (
-      .read_enable (read_enable ),
-      .write_enable ( write_enable ),
+      .read_enable ('b1 ),
+      .write_enable ( RW_sig ),
       .clk (clk ),
       .rst ( rst ),
       .write_data (write_data ),
@@ -24,19 +29,21 @@ module ID #(parameter width = 16) (
       .read_data2 (read_data2 ),
       .read_addr1 (read_addr1 ),
       .read_addr2 (read_addr2 ),
-      .write_addr  ( write_addr)
+      .write_addr  ( RW_In)
     );
 
 
   controlUnit
     controlUnit_dut (
       .clk (clk ),
-      .opCode (opCode),
+      .opCode (opCode ),
       .aluOp (aluOp ),
-      .RegWR (RegWR ),
+      .RegWR (RW_sig),
       .MemR (MemR ),
       .MemWR (MemWR ),
-      .aluSrc  ( aluSrc)
+      .aluSrc (aluSrc ),
+      .stall (fetchOp2 ),
+      .ackIn  ( ackIn)
     );
 
 
@@ -52,6 +59,7 @@ module ID #(parameter width = 16) (
       read_addr2 <= instruction[width - 9 : width - 11];
       read_enable <= 'b1;
       write_addr <= instruction[width - 12 : width - 14];
+      op1 <= instruction[width]
     end
     else
     begin
