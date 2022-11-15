@@ -1,5 +1,5 @@
 module ID #(parameter width = 16) (
-    clk, instruction, read_enable, read_addr1, read_addr2, write_addr, MemR, MemWR, aluSrc, RegWR, aluOp
+    clk, instruction, MemR, MemWR, aluSrc, RegWR, aluOp, Op2Immid
   );
   input clk;
   input [width - 1 : 0] instruction;
