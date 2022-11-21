@@ -9,8 +9,8 @@ module Execution(input [15:0]op1,
                  output[15:0]MemoryAddress,
                  output[15:0] Out
                  );
-//wire [15:0] Rd;
- //Mux16Bit muxRd(op2,immediate,AluScr,Rd);
- ALU alu(op1,op2,immediate,AluOp,Ccr, Out);
-assign MemoryAddress=immediate;
+wire [15:0] Rd;
+ Mux16Bit muxRd(op2,immediate,AluScr,Rd);
+ ALU alu(op1,Rd,AluOp,Ccr, Out);
+assign MemoryAddress=Rd;
 endmodule

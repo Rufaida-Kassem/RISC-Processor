@@ -2,15 +2,15 @@ module DataMemory (input MR,
                     input MW,
                     input clk,
                     input rst,
-                    input[7:0] MemoAddreess,
+                    input[11:0] MemoAddreess,
                     input[15:0] data,
                     output reg[15:0] Out
                                         );
-reg [15:0] memo[0:15];
+reg [15:0] memo[0:2**11];
 integer i;
 always @(posedge clk,posedge rst) begin
  if(rst) begin
-  for(i=0;i<8;i=i+1)begin
+  for(i=0;i<(2**11);i=i+1)begin
        memo[i]=0;  
   end
  end
