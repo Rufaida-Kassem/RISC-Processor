@@ -67,13 +67,27 @@ module Processor (
                     .Out(Out_Excute)
                  );
 ///////////////////////////Memory//////////////////////////////////
- DataMemory Date_Memory(.MR( EXMEMO_Reg_old[5]  ),
-                    .MW( EXMEMO_Reg_old[4] ),
-                    .clk(clk),
-                    .rst(rst),
-                    .MemoAddreess(EXMEMO_Reg_old[17:6]),
-                    .data( EXMEMO_Reg_old[33:18]),
-                    .Out(Out_Memo));
+//  DataMemory Date_Memory(.MR( EXMEMO_Reg_old[5]  ),
+//                     .MW( EXMEMO_Reg_old[4] ),
+//                     .clk(clk),
+//                     .rst(rst),
+//                     .MemoAddreess(EXMEMO_Reg_old[17:6]),
+//                     .data( EXMEMO_Reg_old[33:18]),
+//                     .Out(Out_Memo));
+
+  Memory 
+  Date_Memory (
+    .instr_data (0'b0),
+    .clk (clk ),
+    .rst ( rst ),
+    .memR ( EXMEMO_Reg_old[5] ),
+    .memWR ( EXMEMO_Reg_old[4] ),
+    .dataWR ( EXMEMO_Reg_old[33:18] ),
+    .addR (EXMEMO_Reg_old[17:6] ),
+    .addWR ( EXMEMO_Reg_old[17:6] ),
+    .dataR  ( Out_Memo)
+  );
+
 /////////////////////////////Write Back////////////////////////////////
 WriteBack Write_Back(.Load( MEMOWB_Reg_old[35:20]),
                  .Rd( MEMOWB_Reg_old[19:4]),
