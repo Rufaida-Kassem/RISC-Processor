@@ -38,7 +38,8 @@ module IF (
       .dataWR (0),
       .addR (pc),
       .addWR (0),
-      .dataR  (instruction)
+      .dataR  (instruction),
+      .instr_data(1'b1)
     );
     pcCircuit
     pcCircuit_dut (
