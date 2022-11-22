@@ -33,7 +33,7 @@ module RegFile_memo #(parameter N = 16) (read_enable,write_enable, read_data1, r
     else if(read_enable)
     begin
       read_data1 = arr_regs[read_addr1];
-      read_data2 = arr_regs[read_addr2];
+      read_data2 = arr_regs[read_addr2]
     end
     else
     begin

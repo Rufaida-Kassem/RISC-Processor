@@ -14,10 +14,10 @@ module Memory #(parameter addBusWidth = 32, width = 16) (
         if(rst)
         begin
             if(instr_data) begin
-                $readmemb("mem.mif", memory);
+                $readmemh("mem.mif", memory);
             end
             else begin
-                $readmemb("data.mif", memory);
+                $readmemh("data.mif", memory);
             end
         end
         else if (clk & memWR) begin

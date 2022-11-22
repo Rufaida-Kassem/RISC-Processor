@@ -75,7 +75,7 @@ module Processor (
 //                     .data( EXMEMO_Reg_old[33:18]),
 //                     .Out(Out_Memo));
 
-  Memory #(.addBusWidth(12))
+  Memory #(.addBusWidth (12))
   Date_Memory (
     .instr_data (1'b0),
     .clk (clk ),

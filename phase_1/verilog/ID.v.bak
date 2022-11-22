@@ -15,26 +15,12 @@ module ID #(parameter width = 16) (
   //reg data back -- enable -- address
   // input       -- out in  -- out in
 
-  // RegFile
-  //   RegFile_dut (
-  //     .read_enable (1'b1 ),
-  //     .write_enable ( RW_Sig_in ),
-  //     .clk (clk ),
-  //     .rst ( rst ),
-  //     .write_data (Reg_data ),
-  //     .read_data1 (op1 ),
-  //     .read_data2 (R_op2 ),
-  //     .read_addr1 (read_addr1 ),
-  //     .read_addr2 (read_addr2 ),
-  //     .write_addr  ( RW_In_addr)
-  //   );
-
-    RegFile_memo 
-    RegFile_memo_dut (
-      .read_enable (1'b1 ),
-      . write_enable ( RW_Sig_in ),
-      . clk ( clk ),
-      . rst ( rst ),
+  RegFile
+    RegFile_dut (
+      .read_enable ('b1 ),
+      .write_enable ( RW_Sig_in ),
+      .clk (clk ),
+      .rst ( rst ),
       .write_data (Reg_data ),
       .read_data1 (op1 ),
       .read_data2 (R_op2 ),
@@ -42,7 +28,7 @@ module ID #(parameter width = 16) (
       .read_addr2 (read_addr2 ),
       .write_addr  ( RW_In_addr)
     );
-  
+
 
   controlUnit
     controlUnit_dut (

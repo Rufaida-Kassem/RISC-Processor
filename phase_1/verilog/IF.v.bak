@@ -39,7 +39,7 @@ module IF (
       .memWR ( 1'b0 ),
       .dataWR (16'b0),
       .addR (pc[19:0]),
-      .addWR (20'b0),
+      .addWR (0),
       .dataR  (instruction),
       .instr_data(1'b1)
     );

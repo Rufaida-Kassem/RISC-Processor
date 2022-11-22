@@ -12,7 +12,7 @@ module Processor_tb;
         rst = 1'b1;
         #10
         rst = 1'b0;
-
+     # $finish;
     end
   end
 
