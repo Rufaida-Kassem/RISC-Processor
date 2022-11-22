@@ -21,7 +21,7 @@ module Memory #(parameter addBusWidth = 32, width = 16) (
 
     always @(negedge clk) begin
         if (~clk & memR) begin
-            dataR <= memory[addWR];
+            dataR <= memory[addR];
         end
     end
 
