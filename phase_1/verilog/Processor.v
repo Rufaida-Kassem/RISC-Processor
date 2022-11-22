@@ -2,6 +2,8 @@ module Processor (
     clk, rst
   );
   input clk, rst;
+
+
   wire [15:0] instruction;
   wire [31:0] pc;
   reg [63:0] IFIDReg_new;
@@ -16,13 +18,13 @@ module Processor (
   wire [2:0] RW_Out_addr, RW_In_addr; 
    
 
-  IF
-    IF_dut (
-      .clk (clk ),
-      . rst ( rst ),
-      .instruction  ( instruction),
-      .pc(pc)
-    );
+  IF 
+  IF_dut (
+    .clk (clk ),
+    . rst ( rst ),
+    .pc (pc ),
+    .instruction  ( instruction)
+  );
 
     ID 
     ID_dut (
@@ -68,7 +70,7 @@ module Processor (
 
   always @(negedge clk )
   begin
-    IDEReg_new = {MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, I_op2, RW_Out_addr, RW_sig_out};
+    IDEReg_new = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, I_op2, RW_Out_addr, RW_sig_out};
     IDEPCReg_new = IFIDReg_old[47:16];
   end         
 endmodule
