@@ -111,14 +111,16 @@ WriteBack Write_Back(.Load( MEMOWB_Reg_old[35:20]),
       MEMOWB_Reg_old=MEMOWB_Reg_new;
       IFIDReg_old = IFIDReg_new;
       IFIDReg_new = {16'b0, pc, instruction};
+      IDEReg_new = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
+      IDEPCReg_new = IFIDReg_old[47:16];
     end
 
   end
 
   always @(negedge clk )
   begin
-    IDEReg_new = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
-    IDEPCReg_new = IFIDReg_old[47:16];
+    //IDEReg_new = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
+    //IDEPCReg_new = IFIDReg_old[47:16];
 //=============================================Execute - Memory Buffer============================================//
 // can get Error[12:0]
 //{IDEReg_old[0]==Write Back sig,IDEReg_old[3:1]==Write Back Address}
