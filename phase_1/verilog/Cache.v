@@ -1,8 +1,7 @@
 
-module Memory #(parameter addBusWidth = 32, width = 16) (
-    clk, rst, memR, memWR, addR, addWR, dataWR, dataR, instr_data  // instr = 1  data = 0
+module Memory #(parameter addBusWidth = 32, width = 16, instrORdata) (  //instr = 1  data = 0
+    clk, rst, memR, memWR, addR, addWR, dataWR, dataR  
 );
-    input instr_data;
     input clk, rst, memR, memWR;
     input [width - 1 : 0] dataWR;
     input [addBusWidth - 1 : 0] addR, addWR;
@@ -13,19 +12,19 @@ module Memory #(parameter addBusWidth = 32, width = 16) (
     always @(posedge clk , posedge rst) begin
         if(rst)
         begin
-            if(instr_data) begin
+            if(instrORdata) begin
                 $readmemb("mem.mif", memory);
             end
             else begin
                 $readmemb("data.mif", memory);
             end
         end
-        else if (clk & memWR) begin
+        else if (clk & memWR) begin  //write
             memory[addWR] <= dataWR;
         end
     end
 
-    always @(negedge clk) begin
+    always @(negedge clk) begin   //read
         if (~clk & memR) begin
             dataR <= memory[addR];
         end

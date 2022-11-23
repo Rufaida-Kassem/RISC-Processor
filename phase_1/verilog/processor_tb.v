@@ -10,13 +10,13 @@ module Processor_tb;
   initial begin
     begin
         rst = 1'b1;
-        #10
+        #20
         rst = 1'b0;
 
     end
   end
 
   always
-    #5  clk = ! clk ;
+    #10  clk = ! clk ;
 
 endmodule

@@ -20,6 +20,7 @@ module RegFile_memo #(parameter N = 16) (read_enable,write_enable, read_data1, r
     end
     else if(write_enable)
     begin
+      //arr_regs[write_addr] = 16'b1;
       arr_regs[write_addr] = write_data;
     end
   end
