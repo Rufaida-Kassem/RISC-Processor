@@ -5,12 +5,15 @@ module Processor (
 
 
   wire [15:0] instruction;
+  wire [15:0] instruction_in_decode;
+  wire [15:0] pc_in_decode;
+  wire [15:0] pc_in_execute;
   wire [31:0] pc;
-  reg [63:0] IFIDReg_new;  // 0000_0000_0000_0000 - PC[47:16] - instruction[15:0]
-  reg [63:0] IFIDReg_old;  // 0000_0000_0000_0000 - PC - instruction
-  reg [63:0] IDEReg_new;   // 4'b0 - MemR_sig[59] - MemWR_sig[58] - aluOp_sig (5 bits)[57:53] - aluSrc_sig[52] - op1[51:36] (value of first reg) - R_op2[35:20] (value of second reg) to be saved for WB - I_op2[19:4] (immediate) - RW_Out_addr[3:1] dest address - RW_sig_out[0]
+  // reg [63:0] IFIDReg_new;  // 0000_0000_0000_0000 - PC[47:16] - instruction[15:0]
+  // reg [63:0] IFIDReg_old;  // 0000_0000_0000_0000 - PC - instruction
+  // reg [63:0] IDEReg_new;   // 4'b0 - MemR_sig[59] - MemWR_sig[58] - aluOp_sig (5 bits)[57:53] - aluSrc_sig[52] - op1[51:36] (value of first reg) - R_op2[35:20] (value of second reg) to be saved for WB - I_op2[19:4] (immediate) - RW_Out_addr[3:1] dest address - RW_sig_out[0]
   reg [63:0] IDEReg_old;   // same as above
-  reg [31:0] IDEPCReg_new; // we separate it to reduce the size in case we put all in reg (as we will need to keep the size log to the base 2)
+  // reg [31:0] IDEPCReg_new; // we separate it to reduce the size in case we put all in reg (as we will need to keep the size log to the base 2)
   reg [31:0] IDEPCReg_old; // same as above
   wire MemR_sig, MemWR_sig, RW_sig_out, aluSrc_sig, RW_Sig_in; //signals 3ady
   wire [15:0] I_op2, R_op2, op1, Reg_data;  // out from the IF  --  out from ID  --  out of ID  --  Back to ID (WB)
@@ -26,7 +29,38 @@ module Processor (
   wire [15:0] MemoryAddress;
   wire [15:0] Out_Excute;
   wire [15:0] Out_Memo;
-   
+
+  Register #(48)
+  IFIDReg (
+    .r_enable (1'b1 ),
+    . w_enable ( 1'b1 ),
+    . clk ( clk ),
+    . rst ( rst ),
+    .write_data ({pc, instruction} ),
+    .read_data  ( {pc_in_decode, instruction_in_decode})
+  );
+
+  Register #(60)
+  IDEReg (
+    .r_enable (1'b1 ),
+    . w_enable ( 1'b1 ),
+    . clk ( clk ),
+    . rst ( rst ),
+    .write_data ({MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out} ),
+    .read_data  ( IDEReg_old[59:0])
+  );
+
+  Register #(32)
+  IDEPCReg (
+    .r_enable( 1'b1 ),
+    . w_enable( 1'b1 ),
+    . clk ( clk ),
+    . rst ( rst ),
+    .write_data (pc_in_decode),
+    .read_data  ( IDEPCReg_old)
+  );
+
+
 
   IF 
   IF_dut (
@@ -38,7 +72,7 @@ module Processor (
 
     ID 
     ID_dut (
-      .instruction (IFIDReg_old[15:0]),    //input
+      .instruction (instruction_in_decode),    //input
       .op1 (op1 ),                         //output
       . R_op2 ( R_op2 ),                   //output
       . I_op2 ( I_op2 ),                   //output
@@ -101,24 +135,24 @@ WriteBack Write_Back(.Load( MEMOWB_Reg_old[35:20]),
   begin
     if(rst)
     begin
-      IFIDReg_new = {16'b0, pc, instruction};  // pc --> firs location (initialized by the pcCircuit)   --  instruction: available at half the cycle (-ve edge)
+      // IFIDReg_new = {16'b0, pc, instruction};  // pc --> firs location (initialized by the pcCircuit)   --  instruction: available at half the cycle (-ve edge)
     end
     else
     begin
-      IDEReg_old = IDEReg_new;
-      IDEPCReg_old = IDEPCReg_new;
-      EXMEMO_Reg_old= EXMEMO_Reg_new;
-      MEMOWB_Reg_old=MEMOWB_Reg_new;
-      IFIDReg_old = IFIDReg_new;
-      IFIDReg_new = {16'b0, pc, instruction};
+      // IDEReg_old = IDEReg_new;
+      // IDEPCReg_old = IDEPCReg_new;
+      // EXMEMO_Reg_old= EXMEMO_Reg_new;
+      // MEMOWB_Reg_old=MEMOWB_Reg_new;
+      // IFIDReg_old = IFIDReg_new;
+      // IFIDReg_new = {16'b0, pc, instruction};
     end
 
   end
 
   always @(negedge clk )
   begin
-    IDEReg_new = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
-    IDEPCReg_new = IFIDReg_old[47:16];
+    // IDEReg_new = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
+    // IDEPCReg_new = IFIDReg_old[47:16];
 //=============================================Execute - Memory Buffer============================================//
 // can get Error[12:0]
 //{IDEReg_old[0]==Write Back sig,IDEReg_old[3:1]==Write Back Address}
