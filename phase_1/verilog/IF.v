@@ -1,18 +1,18 @@
 module pcCircuit #(parameter addressWidth = 32) (
-    clk, rst, addR
+    enable, rst, addR
   );
-  input clk, rst;
+  input enable, rst;
   output reg [addressWidth - 1 : 0] addR;  // pc
   reg [addressWidth - 1 : 0] pc;
 
   //pc circuit
-  always @(posedge clk , posedge rst)
+  always @(posedge enable , posedge rst)
   begin
     if(rst)
     begin
       pc <= 32'h20;   // the first location as we leave the first part for the interrupt
     end
-    else if (clk)
+    else if (enable == 1'b1)
     begin
       pc <= pc + 1;  //word addressable so add only 1
       addR <= pc;    //update it before increasing the PC   (non-blocking)
@@ -22,10 +22,10 @@ endmodule
 
 
 module IF (
-    clk, rst, instruction, pc
+    clk, rst, instruction, pc, enable
   );
 
-  input clk, rst;
+  input clk, rst, enable;
   output [31:0] pc;
   output [15:0] instruction;
 
@@ -45,7 +45,7 @@ module IF (
     );
     pcCircuit
     pcCircuit_dut (
-      .clk (clk ),
+      .enable (enable ),
       .rst ( rst ),
       .addR  ( pc)  // to update the pc only
     );

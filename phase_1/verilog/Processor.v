@@ -1,9 +1,7 @@
 module Processor (
-    clk, rst
+    clk, rst, start
   );
-  input clk, rst;
-
-
+  input clk, rst, start;
   wire [15:0] instruction;
   wire [31:0] pc;
   reg [63:0] IFIDReg;  // 0000_0000_0000_0000 - PC[47:16] - instruction[15:0]
@@ -14,112 +12,160 @@ module Processor (
   wire [4:0] aluOp_sig;  //signal 3ady
   wire [2:0] RW_Out_addr, RW_In_addr;   // out from ID  --  back from ID  -->  they are equal shifted :|
 
-//////////////////For Execute and Memory
-  reg [36:0] EXMEMO_Reg_new;
-  reg [36:0] EXMEMO_Reg_old;
-  reg [35:0] MEMOWB_Reg_new;
-  reg [35:0] MEMOWB_Reg_old;
+  //////////////////For Execute and Memory
+  reg [36:0] EXMEMO_Reg;
+  reg [35:0] MEMOWB_Reg;
   wire [2:0]Ccr;
   wire [15:0] MemoryAddress;
   wire [15:0] Out_Excute;
   wire [15:0] Out_Memo;
-   
 
-  IF 
-  IF_dut (
-    .clk (clk ),
-    .rst ( rst ),
-    .pc (pc ),
-    .instruction  ( instruction)  //output
-  );
+  reg fetch_enable, decode_enable;
 
-    ID 
+  reg     [2:0] current_state, next_state;
+  parameter idle_state = 0, fetch_state = 1, decode_state = 2, execute_state = 3, memory_state = 4, write_back_state = 5;
+
+  IF
+    IF_dut (
+      .enable(fetch_enable),
+      .clk (clk ),
+      .rst ( rst ),
+      .pc (pc ),
+      .instruction  ( instruction)  //output
+    );
+
+  ID
     ID_dut (
+      .enable(decode_enable),
       .instruction (IFIDReg[15:0]),    //input
       .op1 (op1 ),                         //output
       . R_op2 ( R_op2 ),                   //output
       . I_op2 ( I_op2 ),                   //output
       .RW_Out_addr (RW_Out_addr ),         //output
-      .RW_In_addr (MEMOWB_Reg_old[2:0]),   //input
+      .RW_In_addr (MEMOWB_Reg[2:0]),   //input
       .aluOp_sig (aluOp_sig ),  //output
       .RW_sig_out (RW_sig_out ),  //output
       .aluSrc_sig ( aluSrc_sig ), //output
       .MemWR_sig ( MemWR_sig ), //output
       .MemR_sig ( MemR_sig ),
-      .RW_Sig_in (MEMOWB_Reg_old[3] ), //input --> WB 
+      .RW_Sig_in (MEMOWB_Reg[3] ), //input --> WB
       .Reg_data  ( Reg_data),  //input  --> WB
       .clk (clk ),
       .rst ( rst )
     );
-  
-//////////////////For Execute and Memory
-/////////////////////////Execute////////////////////////////////////
+
+  //////////////////For Execute and Memory
+  /////////////////////////Execute////////////////////////////////////
   Execution  Execute(.op1( IDEReg[51:36]),
                      .op2( IDEReg[35:20]),
                      .immediate( IDEReg[19:4]),
-                     .AluOp( IDEReg[55:53]), 
+                     .AluOp( IDEReg[55:53]),
                      .AluScr( IDEReg[52]),
                      .Mr( IDEReg[59] ),
                      .Mw( IDEReg[58]),
                      .Ccr(Ccr),
-                    .MemoryAddress(MemoryAddress),
-                    .Out(Out_Excute)
-                 );
-///////////////////////////Memory//////////////////////////////////
-//  DataMemory Date_Memory(.MR( EXMEMO_Reg_old[5]  ),
-//                     .MW( EXMEMO_Reg_old[4] ),
-//                     .clk(clk),
-//                     .rst(rst),
-//                     .MemoAddreess(EXMEMO_Reg_old[17:6]),
-//                     .data( EXMEMO_Reg_old[33:18]),
-//                     .Out(Out_Memo));
+                     .MemoryAddress(MemoryAddress),
+                     .Out(Out_Excute)
+                    );
+  ///////////////////////////Memory//////////////////////////////////
+  //  DataMemory Date_Memory(.MR( EXMEMO_Reg[5]  ),
+  //                     .MW( EXMEMO_Reg[4] ),
+  //                     .clk(clk),
+  //                     .rst(rst),
+  //                     .MemoAddreess(EXMEMO_Reg[17:6]),
+  //                     .data( EXMEMO_Reg[33:18]),
+  //                     .Out(Out_Memo));
 
   Memory #(.addBusWidth(12), .width(16), .instrORdata(0))
-  Date_Memory (
-    .clk (clk ),
-    .rst ( rst ),
-    .memR ( EXMEMO_Reg_old[5] ),
-    .memWR ( EXMEMO_Reg_old[4] ),
-    .dataWR ( EXMEMO_Reg_old[33:18] ),
-    .addR (EXMEMO_Reg_old[17:6] ),
-    .addWR ( EXMEMO_Reg_old[17:6] ),
-    .dataR  ( Out_Memo)
-  );
+         Date_Memory (
+           .clk (clk ),
+           .rst ( rst ),
+           .memR ( EXMEMO_Reg[5] ),
+           .memWR ( EXMEMO_Reg[4] ),
+           .dataWR ( EXMEMO_Reg[33:18] ),
+           .addR (EXMEMO_Reg[17:6] ),
+           .addWR ( EXMEMO_Reg[17:6] ),
+           .dataR  ( Out_Memo)
+         );
 
-/////////////////////////////Write Back////////////////////////////////
-WriteBack Write_Back(.Load( MEMOWB_Reg_old[35:20]),
-                 .Rd( MEMOWB_Reg_old[19:4]),
-                 .Wb( MEMOWB_Reg_old[3]),
-                 .WriteData( Reg_data)
-               );
-//////////////////////////////////////////////////////////////
+  /////////////////////////////Write Back////////////////////////////////
+  WriteBack Write_Back(.Load( MEMOWB_Reg[35:20]),
+                       .Rd( MEMOWB_Reg[19:4]),
+                       .Wb( MEMOWB_Reg[3]),
+                       .WriteData( Reg_data)
+                      );
 
-  always @(posedge clk , posedge rst)
-  begin
-    if(rst)
+    always @ (current_state, start)
     begin
-      // IFIDReg = {16'b0, pc, instruction};  // pc --> firs location (initialized by the pcCircuit)   --  instruction: available at half the cycle (-ve edge)
+      case (current_state)
+        idle_state:
+          if(start & ~rst)
+          begin
+            next_state <= fetch_state;
+          end
+        fetch_state:
+          next_state <= decode_state;
+        decode_state:
+          next_state <= execute_state;
+        execute_state:
+          next_state <= memory_state;
+        memory_state:
+          next_state <= write_back_state;
+        write_back_state:
+          next_state <= fetch_state;
+
+        default:
+          next_state = idle_state;
+      endcase
     end
-    else
-    begin
-      IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
-      IDEPCReg = IFIDReg[47:16];
-      IFIDReg = {16'b0, pc, instruction};
 
-      EXMEMO_Reg_old= EXMEMO_Reg_new;
-      MEMOWB_Reg_old=MEMOWB_Reg_new;
-    end
+      always @ (current_state)
+      begin
+        case (current_state)
+          decode_state:
+          begin
+            decode_enable = 1'b1;
+            IFIDReg <= {16'b0, pc, instruction};
+          end
+          execute_state:
+          begin
+            IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
+            IDEPCReg = IFIDReg[47:16];
+            decode_enable = 1'b0;
+          end
+          memory_state:
+            EXMEMO_Reg<={Ccr,Out_Excute,MemoryAddress[12:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
+          write_back_state:
+            MEMOWB_Reg<={Out_Excute,Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
+          endcase
+      end
 
-  end
+      always @ (current_state, aluSrc_sig)
+      begin
+        case (current_state)
+          fetch_state:
+            fetch_enable = 1'b1;
+          decode_state:
+          begin        
+            fetch_enable = 1'b0;    
+            if(aluSrc_sig)
+            fetch_enable = 1'b1;
+          end
+          execute_state:
+          fetch_enable = 1'b0;
 
-  always @(negedge clk )
-  begin
-//=============================================Execute - Memory Buffer============================================//
-// can get Error[12:0]
-//{IDEReg_old[0]==Write Back sig,IDEReg_old[3:1]==Write Back Address}
-    EXMEMO_Reg_new={Ccr,Out_Excute,MemoryAddress[12:0],MemR_sig, MemWR_sig,IDEReg[0],IDEReg[3:1]};
-//=============================================Memory - Write Back Buffer========================================//
-    MEMOWB_Reg_new={Out_Excute,Out_Memo, EXMEMO_Reg_old[3], EXMEMO_Reg_old[2:0]};
-  end         
-endmodule
+          endcase
+      end
+      
 
+      always @ (posedge clk or posedge rst)
+      begin
+        if (rst)
+          current_state <= idle_state;
+        else
+          if(clk)
+          begin
+            current_state <= next_state;
+          end
+      end
+    endmodule
