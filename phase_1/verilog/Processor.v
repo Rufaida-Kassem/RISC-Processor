@@ -98,7 +98,7 @@ WriteBack Write_Back(.Load( MEMOWB_Reg_old[35:20]),
   begin
     if(rst)
     begin
-      IFIDReg = {16'b0, pc, instruction};  // pc --> firs location (initialized by the pcCircuit)   --  instruction: available at half the cycle (-ve edge)
+      // IFIDReg = {16'b0, pc, instruction};  // pc --> firs location (initialized by the pcCircuit)   --  instruction: available at half the cycle (-ve edge)
     end
     else
     begin
