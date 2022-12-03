@@ -88,62 +88,86 @@ module Processor (
                        .WriteData(Reg_data)
                       );
 
-    always @ (current_state, start, ldm)
-    begin
-      case (current_state)
-        idle_state:
-          if(start & ~rst)
-          begin
-            next_state  = fetch_state;
-          end
-        fetch_state:
-        begin
-          next_state  = decode_state;
-          fetch_enable  = 1'b1;
-        end
-        decode_state:
-        begin
-          next_state  = execute_state;
-          decode_enable = 1'b1;
-          IFIDReg  = {16'b0, pc, instruction};
-          fetch_enable = 1'b0;    
-          if(ldm)
-            fetch_enable = 1'b1;
-        end
-        execute_state:
-        begin
-          next_state  = memory_state;
-          fetch_enable  = 1'b0;
-          IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
-          IDEPCReg = IFIDReg[47:16];
-          decode_enable  = 1'b0;
-          
-          //fetch_enable = 1'b0;  //changed here doaa
-        end
-          
-        memory_state:
-        begin
-          next_state  = write_back_state;
-          EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
-        end
-        write_back_state:
+  //Moore logic
+  always @ (current_state, ldm)
+  begin
+    case (current_state)
+      fetch_state:
+      begin
+        fetch_enable  = 1'b1;
+      end
+      decode_state:
+      begin
+        decode_enable = 1'b1;
+        IFIDReg  = {16'b0, pc, instruction};
+        fetch_enable = 1'b0;
+        if(ldm)
+          fetch_enable = 1'b1;
+      end
+      execute_state:
+      begin
+        fetch_enable  = 1'b0;
+        IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
+        IDEPCReg = IFIDReg[47:16];
+        decode_enable  = 1'b0;
+
+      end
+
+      memory_state:
+      begin
+        EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
+      end
+      write_back_state:
+      begin
+        MEMOWB_Reg ={EXMEMO_Reg[33:18],Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
+      end
+    endcase
+  end
+
+  //next state logic
+  always @ (current_state, start)
+  begin
+    case (current_state)
+      idle_state:
+        if(start & ~rst)
         begin
           next_state  = fetch_state;
-          MEMOWB_Reg ={EXMEMO_Reg[33:18],Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
         end
-        default:
-          next_state = idle_state;
-      endcase
-    end
-
-      always @ (posedge clk or posedge rst)
+      fetch_state:
       begin
-        if (rst)
-          current_state  = idle_state;
-        else
-          if(clk)    //and ~aluSrc_sig
-          begin
-            current_state  = next_state;
-          end
+        next_state  = decode_state;
       end
-    endmodule
+      decode_state:
+      begin
+        next_state  = execute_state;
+      end
+      execute_state:
+      begin
+        next_state  = memory_state;
+      end
+
+      memory_state:
+      begin
+        next_state  = write_back_state;
+      end
+      write_back_state:
+      begin
+        next_state  = fetch_state;
+      end
+      default:
+        next_state = idle_state;
+    endcase
+  end
+
+
+  always @ (posedge clk or posedge rst)
+  begin
+    if (rst)
+      current_state  = idle_state;
+    else
+      if(clk)
+      begin
+        current_state  = next_state;
+      end
+  end
+endmodule
