@@ -27,16 +27,17 @@ module IF (
 
   input clk, rst, enable;
   output [31:0] pc;
+  wire [31:0] pc_internal;
   output [15:0] instruction;
 
-  assign pc [31:20] = 0;
+  assign pc_internal [31:20] = 0;
 
   Memory #( .addBusWidth(20), .width(16), .instrORdata(1) )
     instructions_memory  (
       .clk (clk ),
       .rst ( rst ),
       .memR ( 1'b1 ),    //we always read from it only (enabled 3la tool mesh mehtaga signal)
-      .addR (pc[19:0]),  // address to read the instruction
+      .addR (pc_internal[19:0]),  // address to read the instruction
       .dataR  (instruction),  // output
 
       .memWR ( 1'b0 ),   // disable 3la tool
@@ -47,9 +48,10 @@ module IF (
     pcCircuit_dut (
       .enable (enable ),
       .rst ( rst ),
-      .addR  ( pc)  // to update the pc only
+      .addR  ( pc_internal)  // to update the pc only
     );
 
+    assign pc = pc_internal;
 
 endmodule
 
