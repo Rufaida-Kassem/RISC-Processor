@@ -12,7 +12,7 @@ Addition addOp (Rs,Rd,DecOut[3], Ccr, Out);
 //LDM
 Ldm ldmOp (Rd ,DecOut[1], Out);
 //NOT
- Not notOp ( Rs, DecOut[4], Out, Ccr);
+ Not notOp ( Rd, DecOut[4], Out, Ccr);
 //STD
  Sw swOp( Rs,DecOut[2] ,Out);
 endmodule

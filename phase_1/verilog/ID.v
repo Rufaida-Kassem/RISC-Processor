@@ -1,6 +1,8 @@
 module ID #(parameter width = 16) (
+  enable,ldm,
     instruction, RW_sig_out, aluSrc_sig, MemWR_sig, MemR_sig, RW_Sig_in, Reg_data, aluOp_sig, op1, R_op2, I_op2, RW_Out_addr, RW_In_addr, clk, rst
   );
+  input enable;
   input clk, rst;
   input [width - 1 : 0] instruction;
   wire [2 : 0] read_addr1, read_addr2;   // to read from RegFile
@@ -12,6 +14,7 @@ module ID #(parameter width = 16) (
   output wire RW_sig_out, aluSrc_sig, MemWR_sig, MemR_sig ;  //signal
   input RW_Sig_in;
   input [15:0] Reg_data;
+  output ldm;
 
   //reg data back -- enable -- address
   // input       -- out in  -- out in
@@ -33,12 +36,14 @@ module ID #(parameter width = 16) (
 
   controlUnit
     controlUnit_dut (
+      .enable(enable),
       .opCode (opCode ),
       .aluOp (aluOp_sig ),
       .RegWR (RW_sig_out ),
       .MemR (MemR_sig ),
       .MemWR (MemWR_sig ),
-      .aluSrc  ( aluSrc_sig)
+      .aluSrc  ( aluSrc_sig),
+      .ldm(ldm)
     );
 
   assign opCode = instruction  [width - 1 : width - 5];

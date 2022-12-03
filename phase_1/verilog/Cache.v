@@ -13,7 +13,7 @@ module Memory #(parameter addBusWidth = 32, width = 16, instrORdata) (  //instr 
         if(rst)
         begin
             if(instrORdata) begin
-                $readmemb("mem.mif", memory);
+                $readmemb("instructions.mif", memory);
             end
             else begin
                 $readmemb("data.mif", memory);
