@@ -6,12 +6,12 @@ module Processor (
   wire [31:0] pc;
   reg [63:0] IFIDReg;  // 0000_0000_0000_0000 - PC[47:16] - instruction[15:0]
   reg [63:0] IDEReg;   // 4'b0 - MemR_sig[59] - MemWR_sig[58] - aluOp_sig (5 bits)[57:53] - aluSrc_sig[52] - op1[51:36] (value of first reg) - R_op2[35:20] (value of second reg) to be saved for WB - I_op2[19:4] (immediate) - RW_Out_addr[3:1] dest address - RW_sig_out[0]
-  reg [31:0] IDEPCReg; // we separate it to reduce the size in case we put all in reg (as we will need to keep the size log to the base 2)
-  wire MemR_sig, MemWR_sig, RW_sig_out, aluSrc_sig, RW_Sig_in; //signals 3ady
+  reg [31:0] IDEPCReg; // we separte it to reduce the size in case we put all in reg (as we will need to keep the size log to the base 2)
+  wire MemR_sig, MemWR_sig, RW_siga_out, aluSrc_sig, RW_Sig_in; //signals 3ady
   wire [15:0] I_op2, R_op2, op1, Reg_data;  // out from the IF  --  out from ID  --  out of ID  --  Back to ID (WB)
   wire [4:0] aluOp_sig;  //signal 3ady
   wire [2:0] RW_Out_addr, RW_In_addr;   // out from ID  --  back from ID  -->  they are equal shifted :|
-
+//                                                                                                                                                       000000001000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_0001001000100000_001_1
   //////////////////For Execute and Memory
   reg [36:0] EXMEMO_Reg;
   reg [35:0] MEMOWB_Reg;
@@ -97,6 +97,8 @@ module Processor (
                        .WriteData( Reg_data)
                       );
 
+
+
     // always @ (current_state, start)
     // begin
     //   case (current_state)
@@ -122,59 +124,78 @@ module Processor (
     // end
 
 
+    assign fetch_enable  = 1'b1;
+    assign decode_enable  = 1'b1;
 
-
-
-
-    always @ (current_state, start, ldm)
+    
+    always @ (posedge clk, posedge rst)
     begin
-      case (current_state)
-        idle_state:
-          if(start & ~rst)
-          begin
-            next_state  = fetch_state;
-          end
-        fetch_state:
-        begin
-          next_state  = decode_state;
-          fetch_enable  = 1'b1;
-        end
-        decode_state:
-        begin
-          next_state  = execute_state;
-          decode_enable = 1'b1;
-          IFIDReg  = {16'b0, pc, instruction};
-          fetch_enable = 1'b0;    
-          if(ldm)
-            fetch_enable = 1'b1;
-        end
-        execute_state:
-        begin
-          next_state  = memory_state;
-          fetch_enable  = 1'b0;
-          IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
-          IDEPCReg = IFIDReg[47:16];
-          decode_enable  = 1'b0;
-          
-          //fetch_enable = 1'b0;  //changed here doaa
-        end
-          
-        memory_state:
-        begin
-          next_state  = write_back_state;
-          EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[12:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
-        end
-        write_back_state:
-        begin
-          next_state  = fetch_state;
-          MEMOWB_Reg ={Out_Excute,Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
-        end
-        default:
-          next_state = idle_state;
-      endcase
+      if(rst)
+      begin
+        IFIDReg  = 0;
+        IDEReg = 0;
+        IDEPCReg = 0;
+        EXMEMO_Reg = 0;
+        MEMOWB_Reg = 0;
+      end
+      else if(clk)    //and ~aluSrc_sig
+      begin
+        IFIDReg  = {16'b0, pc, instruction};
+        IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
+        IDEPCReg = IFIDReg[47:16];
+        EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[12:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
+        MEMOWB_Reg ={Out_Excute,Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
+      end
     end
 
 
+    // always @ (current_state, start, ldm)
+    // begin
+    //   case (current_state)
+    //     idle_state:
+    //       if(start & ~rst)
+    //       begin
+    //         next_state  = fetch_state;
+    //       end
+    //     fetch_state:
+    //     begin
+    //       next_state  = decode_state;
+    //       fetch_enable  = 1'b1;
+    //     end
+    //     decode_state:
+    //     begin
+    //       next_state  = execute_state;
+    //       decode_enable = 1'b1;
+    //       IFIDReg  = {16'b0, pc, instruction};
+    //       fetch_enable = 1'b0;    
+    //       if(ldm)
+    //         fetch_enable = 1'b1;
+    //     end
+    //     execute_state:
+    //     begin
+    //       next_state  = memory_state;
+    //       fetch_enable  = 1'b0;
+    //       IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
+    //       IDEPCReg = IFIDReg[47:16];
+    //       decode_enable  = 1'b0;
+          
+    //       //fetch_enable = 1'b0;  //changed here doaa
+    //     end
+          
+    //     memory_state:
+    //     begin
+    //       next_state  = write_back_state;
+    //       EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[12:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
+    //     end
+    //     write_back_state:
+    //     begin
+    //       next_state  = fetch_state;
+    //       MEMOWB_Reg ={Out_Excute,Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
+    //     end
+    //     default:
+    //       next_state = idle_state;
+    //   endcase
+    // end
 
 
 
@@ -219,16 +240,19 @@ module Processor (
 
       //     endcase
       // end
+
+
+
       
 
-      always @ (posedge clk or posedge rst)
-      begin
-        if (rst)
-          current_state  = idle_state;
-        else
-          if(clk)    //and ~aluSrc_sig
-          begin
-            current_state  = next_state;
-          end
-      end
+      // always @ (posedge clk or posedge rst)
+      // begin
+      //   if (rst)
+      //     current_state  = idle_state;
+      //   else
+      //     if(clk)    //and ~aluSrc_sig
+      //     begin
+      //       current_state  = next_state;
+      //     end
+      // end
     endmodule
