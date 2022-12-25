@@ -20,7 +20,7 @@ module Processor (
   wire [15:0] Out_Excute;
   wire [15:0] Out_Memo;
 
-  reg fetch_enable, decode_enable;
+  wire fetch_enable, decode_enable;
   wire ldm;
 
   reg     [2:0] current_state, next_state;
@@ -140,11 +140,13 @@ module Processor (
       end
       else if(clk)    //and ~aluSrc_sig
       begin
-        IFIDReg  = {16'b0, pc, instruction};
-        IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
-        IDEPCReg = IFIDReg[47:16];
-        EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[12:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
         MEMOWB_Reg ={Out_Excute,Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
+        EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[12:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
+        IDEPCReg = IFIDReg[47:16];
+        IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
+        IFIDReg  = {16'b0, pc, instruction};
+        
+        
       end
     end
 
