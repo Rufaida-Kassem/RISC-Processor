@@ -32,7 +32,9 @@ module callSM (
   input call, clk, rst,
   output pc_to_stack_1, pc_to_stack_2, stack, MemWR
 );
-  
+reg     [2:0] current_state, next_state;
+parameter idle_state = 0, ;
+
 endmodule
 module retSM (
   input ret, clk, rst,
@@ -44,7 +46,16 @@ module intSM (
   input interrupt, clk, rst,
   output ccr_to_stack , pc_to_stack_1, pc_to_stack_2, stack, MemWR
 );
-  
+reg     [2:0] current_state, next_state;
+parameter idle_state = 0, wait_ = 1, freezePc = 2, freezePc_cu = 3, push_pc1 = 4, push_pc2 = 5, push_ccr = 6;
+
+always @(posedge clk, posedge rst) begin
+  if(rst) begin
+  end
+  if(clk) begin
+  end
+end
+
 endmodule
 module rtiSM (
   input rti, clk, rst,
