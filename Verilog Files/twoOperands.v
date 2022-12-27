@@ -19,8 +19,9 @@ endmodule
 module Addition(input [15:0]Rs,
                  input [15:0]Rd,
                  input Enable,
-                 output reg[2:0] Ccr,
-                 output reg[15:0] Out
+                input [2:0]previousflags,
+                output reg[15:0] Out,
+                output reg [2:0] Ccr
                );
 always@ * begin
 //Assign Carry flag 
@@ -43,8 +44,9 @@ endmodule
 module Subtraction(input [15:0]Rs,
                  input [15:0]Rd,
                  input Enable,
-                 output reg[2:0] Ccr,
-                 output reg[15:0] Out
+                input [2:0]previousflags,
+                output reg[15:0] Out,
+                output reg [2:0] Ccr
                );
 always@ * begin
 //Assign Carry flag 
@@ -68,8 +70,9 @@ endmodule
 module Anding(input [15:0]Rs,
                  input [15:0]Rd,
                  input Enable,
-                 output reg[2:0] Ccr,
-                 output reg[15:0] Out
+                 input [2:0]previousflags,
+                 output reg[15:0] Out,
+                 output reg [2:0] Ccr
                );
 always@ * begin
 //Assign Carry flag 
@@ -91,8 +94,9 @@ endmodule
 module Oring(input [15:0]Rs,
                  input [15:0]Rd,
                  input Enable,
-                 output reg[2:0] Ccr,
-                 output reg[15:0] Out
+                 input [2:0]previousflags,
+                 output reg[15:0] Out,
+                 output reg [2:0] Ccr
                );
 always@ * begin
 //Assign Carry flag 
@@ -110,23 +114,20 @@ Ccr=3'bz;
 end
 end
 endmodule
-
-
-
-
 ////////////////////Shift Left//////////////////////////// 
 module ShiftLeft(input [15:0]Rs,
-                 input [7:0]shiftAmmount,
+                 input [15:0]shiftAmmount,
                  input Enable,
-                 output reg[2:0] Ccr,
-                 output reg[15:0] Out
+                 input [2:0]previousflags,
+                 output reg[15:0] Out,
+                 output reg [2:0] Ccr
                );
 always@ * begin
 //Assign Carry flag 
 if( Enable==1'b1)
 begin
 //Keep sign of value
- {Ccr[2],Out}=Rs <<< shiftAmmount;
+ {Ccr[2],Out}=Rs << shiftAmmount;
 //Assign zero flag to one if out is zeros
 Ccr[0] = (Out == 15'b0) ? 1'b1 : 1'b0 ;
 //Assign negative flag to one if out is less than zero
@@ -142,10 +143,11 @@ endmodule
 
 ////////////////////Shift Left//////////////////////////// 
 module ShiftRight(input [15:0]Rs,
-                 input [7:0]shiftAmmount,
+                 input [15:0]shiftAmmount,
                  input Enable,
-                 output reg[2:0] Ccr,
-                 output reg[15:0] Out
+                 input [2:0]previousflags,
+                 output reg[15:0] Out,
+                 output reg [2:0] Ccr
                );
 always@ * begin
 //Assign Carry flag 

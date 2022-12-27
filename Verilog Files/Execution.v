@@ -1,7 +1,7 @@
 module Execution(input [15:0]op1,
                  input [15:0]op2,
                  input[15:0]immediate,
-                 input[5:0]AluOp, 
+                 input[4:0]AluOp, 
                  input AluScr,
                  input Mr,
                  input Mw,
