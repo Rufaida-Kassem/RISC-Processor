@@ -9,7 +9,7 @@ module RegFile_memo #(parameter N = 16) (read_enable,write_enable, read_data1, r
   integer i;
   reg[N-1:0]arr_regs[7:0];
 
-  always @(negedge clk, posedge rst)
+  always @(posedge clk, posedge rst)
   begin
     if(rst)
     begin
@@ -25,7 +25,7 @@ module RegFile_memo #(parameter N = 16) (read_enable,write_enable, read_data1, r
     end
   end
 
-  always @(posedge clk, posedge rst)
+  always @(negedge clk, posedge rst)
   begin
     if(rst)
     begin

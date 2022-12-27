@@ -15,11 +15,12 @@ module ID #(parameter width = 16) (
   input RW_Sig_in;
   input [15:0] Reg_data;
   output ldm;
+  wire read_enable;
 
   //reg data back -- enable -- address
   // input       -- out in  -- out in
 
-    RegFile_memo 
+  RegFile_memo 
     RegFile_memo_dut (
       .read_enable (read_enable ),
       .write_enable ( RW_Sig_in ),
@@ -49,7 +50,7 @@ module ID #(parameter width = 16) (
   assign opCode = instruction  [width - 1 : width - 5];
   assign read_addr1 = instruction[width - 6 : width - 8];
   assign read_addr2 = instruction[width - 9 : width - 11];
-  assign read_enable = 1'b1;
+  assign read_enable = enable;
   assign RW_Out_addr = instruction[width - 9 : width - 11];  //instruction[width - 12 : width - 14];
   assign I_op2 = instruction[width - 1 : 0];
 endmodule

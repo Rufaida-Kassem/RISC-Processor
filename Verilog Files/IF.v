@@ -1,7 +1,7 @@
 module pcCircuit #(parameter addressWidth = 32) (
-    enable, rst, addR
+    enable, rst, addR, clk
   );
-  input enable, rst;
+  input enable, rst, clk;
   output reg [addressWidth - 1 : 0] addR;  // pc
   reg [addressWidth - 1 : 0] pc;
 
@@ -14,8 +14,8 @@ module pcCircuit #(parameter addressWidth = 32) (
     end
     else if (enable == 1'b1)
     begin
-      pc <= pc + 1;  //word addressable so add only 1
-      addR <= pc;    //update it before increasing the PC   (non-blocking)
+      addR = pc;    //update it before increasing the PC   (non-blocking)
+      pc = pc + 1;  //word addressable so add only 1
     end
   end
 endmodule
@@ -48,7 +48,8 @@ module IF (
     pcCircuit_dut (
       .enable (enable ),
       .rst ( rst ),
-      .addR  ( pc_internal)  // to update the pc only
+      .addR  ( pc_internal),  // to update the pc only
+      .clk(clk)
     );
 
     assign pc = pc_internal;

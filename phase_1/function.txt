@@ -1,0 +1,1 @@
+ | (opCode[4] & opCode[3] & ~opCode[2] & ~opCode[1] & ~opCode[0])
