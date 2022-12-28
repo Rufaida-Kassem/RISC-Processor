@@ -18,3 +18,4 @@ endmodule
 
 ////////To be moved to control unit/////////////////////////
 //branch = opCode[4] & ~opCode[3] & opCode[2]
+//if branch && taken ==> change pc to the output of jmpsCU
