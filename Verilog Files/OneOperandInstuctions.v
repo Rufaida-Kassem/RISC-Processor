@@ -97,23 +97,27 @@ end
 endmodule
 
 
-module OUT(input[15:0] Rds,input Enable,output reg[15:0] Out);
+module OUT(input[15:0] Rds,input Enable,input[2:0] previousflags,output reg[15:0] Out,output reg[2:0] Ccr);
 always@* begin
 if(Enable == 1'b1) begin
 Out = Rds;
+Ccr = previousflags;
 end
 else begin
 Out = 16'bz;
+Ccr = 3'bz;
 end
 end
 endmodule
-module IN(input[15:0] Rds,input Enable,output reg[15:0] Out);
+module IN(input[15:0] Rds,input Enable,input[2:0] previousflags,output reg[15:0] Out,output reg[2:0] Ccr);
 always@* begin
 if(Enable == 1'b1) begin
 Out = Rds;
+Ccr = previousflags;
 end
 else begin
 Out = 16'bz;
+Ccr = 3'bz;
 end
 end
 endmodule

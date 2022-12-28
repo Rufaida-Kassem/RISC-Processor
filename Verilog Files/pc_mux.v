@@ -9,19 +9,19 @@ module PC_Mux (
     output reg [31:0] pc
 );
 
-always @(*)
-begin
-    if(enable)
-    begin
-        case (selection)
-            00: interrupt_addr
-            01: first_instruction_addr
-            10: next_instruction_addr
-            11: branch_addr
-            default: pc = pc
-        endcase
-    end
-end
+// always @(*)
+// begin
+//     if(enable)
+//     begin
+//         case (selection)
+//             00: interrupt_addr;
+//             01: first_instruction_addr;
+//             10: next_instruction_addr;
+//             11: branch_addr;
+//             default: pc = pc;
+//         endcase
+//     end
+// end
 
     
 endmodule

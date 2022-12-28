@@ -12,14 +12,23 @@ module Processor (
   wire [4:0] aluOp_sig;  //signal 3ady
   wire [2:0] RW_Out_addr, RW_In_addr;   // out from ID  --  back from ID  -->  they are equal shifted :|
 
+
+
+
   //////////////////For Execute and Memory
-  reg [36:0] EXMEMO_Reg;
+  reg [85:0] EXMEMO_Reg; //86 bits ==>  all Control signals(15 bit)
+                                        // Alu out(16 bit)
+                                        // Address(12bit)
+                                        // Ccr(3bits)
+                                        // ALu op(5bits)
+                                        // write address(3 bit)
+                                        // Pc(32 bit)
   reg [35:0] MEMOWB_Reg;
   wire [2:0]Ccr;
   wire [15:0] MemoryAddress;
   wire [15:0] Out_Excute;
   wire [15:0] Out_Memo;
-
+  wire [15:0] outputPort;
   reg fetch_enable, decode_enable;
   wire ldm;
 
@@ -60,11 +69,17 @@ module Processor (
   /////////////////////////Execute////////////////////////////////////
   Execution  Execute(.op1( IDEReg[51:36]),
                      .op2( IDEReg[35:20]),
+                     .inport(16'b0),
                      .immediate( IDEReg[19:4]),
-                     .AluOp( IDEReg[55:53]),
-                     .AluScr( IDEReg[52]),
-                     .Mr( IDEReg[59] ),
-                     .Mw( IDEReg[58]),
+                     .shiftAmmount(16'b0),
+                     .AluOp( IDEReg[57:53]),
+                     .AluScr(2'b00),
+                     .Inport(1'b0),
+                     .Branch(1'b0),
+                     .ExecuteMemoryForwarding(16'b0),
+                     .MemoryWBForwarding(16'b0),
+                     .Forward1Sel(2'b0),
+                     .Forward2Sel(2'b0),
                      .Ccr(Ccr),
                      .MemoryAddress(MemoryAddress),
                      .Out(Out_Excute)
@@ -85,7 +100,10 @@ module Processor (
   WriteBack Write_Back(.Load( MEMOWB_Reg[35:20]),
                        .Rd( MEMOWB_Reg[19:4]),
                        .Wb( MEMOWB_Reg[3]),
-                       .WriteData(Reg_data)
+                       .Port_Write(1'b0),
+                       .output_port_pervious(16'b0),
+                       .Write_Data(Reg_data),
+                       .output_port(outputPort)
                       );
 
     always @ (current_state, start, ldm)
@@ -124,11 +142,22 @@ module Processor (
         memory_state:
         begin
           next_state  = write_back_state;
-          EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],IDEReg[59], IDEReg[58],IDEReg[0],IDEReg[3:1]};
+          //[85:83] ==> Ccr
+          //[82:67] ==> ALuout
+          //[66:55] ==> Memoryaddress
+          //[54:40] ==> ControlSignals
+          //[39:35] ==> Alu op ==> must take from decode buffer need bits
+          //[34:32] ==> Write address
+          //[31:0] ==> Pc
+          EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],IDEReg[59], IDEReg[58],IDEReg[0],1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,aluOp_sig,IDEReg[3:1],pc};
         end
         write_back_state:
         begin
           next_state  = fetch_state;
+          //[35:20] ==> ALu out
+          //[19:4] ==> Memout
+          //[3] ==> wb selector
+          //[2:0] reg address
           MEMOWB_Reg ={EXMEMO_Reg[33:18],Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
         end
         default:

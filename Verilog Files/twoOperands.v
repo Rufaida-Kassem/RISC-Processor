@@ -1,16 +1,20 @@
 ////////////////////Mov////////////////////////////
 module Mov(input [15:0]Rs,
                  input Enable,
-                 output reg[15:0] Out
+                 input [2:0]previousflags,
+                 output reg[15:0] Out,
+                 output reg [2:0] Ccr
                );
 always@ * begin
 //Assign Carry flag 
 if( Enable==1'b1)
 begin
  Out = Rs;
+ Ccr = previousflags;
 end
 else begin
 Out=16'bz;
+Ccr = 3'bz;
 end
 end
 endmodule
