@@ -14,3 +14,7 @@ module jumpsCU (
   assign pc = (taken == 1'b1)? {16'b0, rdst} : 32'b0;
 
 endmodule
+
+
+////////To be moved to control unit/////////////////////////
+//branch = opCode[4] & ~opCode[3] & opCode[2]
