@@ -25,11 +25,11 @@ r1
 !s85 0
 31
 Z4 !s108 1669121251.000000
-!s107 Register.v|RegFile_memo.v|RegFile.v|processor_tb.v|Processor.v|IF.v|ID.v|Decoder.v|control_unit.v|Cache.v|
-Z5 !s90 Cache.v|control_unit.v|Decoder.v|ID.v|IF.v|Processor.v|processor_tb.v|RegFile.v|RegFile_memo.v|Register.v|
+Z5 !s107 Register.v|RegFile_memo.v|RegFile.v|processor_tb.v|Processor.v|IF.v|ID.v|Decoder.v|control_unit.v|Cache.v|
+Z6 !s90 Cache.v|control_unit.v|Decoder.v|ID.v|IF.v|Processor.v|processor_tb.v|RegFile.v|RegFile_memo.v|Register.v|
 !i113 0
-Z6 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
-Z7 tCvgOpt 0
+Z7 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z8 tCvgOpt 0
 ncontrol@unit
 vDecoder
 R1
@@ -48,11 +48,11 @@ r1
 !s85 0
 31
 R4
-Z8 !s107 Register.v|RegFile_memo.v|RegFile.v|processor_tb.v|Processor.v|IF.v|ID.v|Decoder.v|control_unit.v|Cache.v|
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@decoder
 vID
 R1
@@ -71,11 +71,11 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@i@d
 vIF
 R1
@@ -94,12 +94,35 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@i@f
+vjumpsCU
+!s110 1672246022
+!i10b 1
+!s100 IH]1^d>:X[UP9?O7:klGZ0
+IH_IJYOj:;fXci1`bIY:Q91
+R0
+w1672246019
+8jmps_cu.v
+Fjmps_cu.v
+!i122 19
+L0 1 16
+R2
+R3
+r1
+!s85 0
+31
+!s108 1672246022.000000
+!s107 jmps_cu.v|
+!s90 jmps_cu.v|
+!i113 0
+R7
+R8
+njumps@c@u
 vMemory
 R1
 !i10b 1
@@ -117,11 +140,11 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@memory
 vpcCircuit
 R1
@@ -140,11 +163,11 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 npc@circuit
 vProcessor
 R1
@@ -163,11 +186,11 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@processor
 vProcessor_tb
 R1
@@ -186,11 +209,11 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@processor_tb
 vRegFile
 R1
@@ -209,11 +232,11 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@reg@file
 vRegFile_memo
 R1
@@ -232,11 +255,11 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@reg@file_memo
 vRegister
 R1
@@ -255,9 +278,9 @@ r1
 !s85 0
 31
 R4
-R8
 R5
-!i113 0
 R6
+!i113 0
 R7
+R8
 n@register
