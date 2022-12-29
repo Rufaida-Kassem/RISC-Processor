@@ -27,7 +27,7 @@ module controlUnit (
   assign pop_ccr = 0;
   //assign ccr_to_stack = 0;
 
-  callSM 
+  callSM
   callSM_dut (
     .call (call ),
     .clk (clk ),

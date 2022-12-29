@@ -1,27 +1,32 @@
 module PC_Mux (
     input [31:0] interrupt_addr,
-    input [31:0] first_instructoin_addr,
+    input [31:0] first_instruction_addr,
     input [31:0] next_instruction_addr,
-    input [31:0] branch_addr,
+    input [31:0] branch_call_addr,
     //input [31:0] calling_addr,
     input [1:0] selection,
-    input enable,
+    input pc_enable,
     output reg [31:0] pc
 );
 
-always @(*)
+always @(posedge clk, posedge rst)
 begin
-    if(enable)
+    if(rst)
+        pc = 32'h20; 
+    else if(clk)
     begin
-        case (selection)
-            00: interrupt_addr
-            01: first_instruction_addr
-            10: next_instruction_addr
-            11: branch_addr
-            default: pc = pc
-        endcase
+        if(pc_enable)
+        begin
+            case (selection)
+                00: next_instruction_addr 
+                01: first_instruction_addr
+                10: interrupt_addr
+                11: branch_call_addr
+                default: pc = pc
+            endcase
+        end
+        
     end
 end
 
-    
 endmodule
