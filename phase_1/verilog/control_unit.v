@@ -55,7 +55,8 @@ module controlUnit (
 
   assign fetch_pc_enable = ~ freeze_pc;
   assign mem_data_sel = pc_to_stack1 == 1'b1 ? 2'b01 : pc_to_stack2 == 1'b1 ? 2'b10 : ccr_to_stack == 1'b1 ? 2'b11 : 2'b0;
-  assign pc_sel = pc_sel_int || pc_sel_call || pc_sel_ret || pc_sel_rti;
+  assign pc_sel = pc_sel_int | pc_sel_call | pc_sel_ret | pc_sel_rti | {1'b0 , rst};
+
     callSM
     callSM_dut (
       .call (call ),
@@ -190,7 +191,7 @@ module callSM (
       begin
         next_state = idle_state;
         load_pc_call = 1'b1;
-        pc_sel = 2'b0;
+        pc_sel = 2'b11;
       end
       default:
       begin
@@ -309,7 +310,7 @@ module intSM (
     case(current_state)
       idle_state:
       begin
-        pc_sel = 2'b0;
+        pc_sel = 2'b10;
         freeze_pc = 0;
         freeze_cu = 0;
         stack = 0;

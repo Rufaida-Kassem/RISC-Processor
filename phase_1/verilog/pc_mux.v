@@ -18,11 +18,11 @@ begin
         if(pc_enable)
         begin
             case (selection)
-                00: next_instruction_addr 
-                01: first_instruction_addr
-                10: interrupt_addr
-                11: branch_call_addr
-                default: pc = pc
+                00: next_instruction_addr;
+                01: first_instruction_addr;
+                10: interrupt_addr;
+                11: branch_call_addr;
+                default: pc = pc;
             endcase
         end
         
