@@ -4,6 +4,18 @@ module pcCircuit #(parameter addressWidth = 32) (
   input enable, rst, clk;
   output reg [addressWidth - 1 : 0] addR;  // pc
   reg [addressWidth - 1 : 0] pc;
+  wire next_instruction_addr;
+
+  PC_Mux 
+  PC_Mux_dut (
+    .interrupt_addr (32'b0),
+    .first_instructoin_addr (32'h20 ),
+    .next_instruction_addr (next_instruction_addr ),
+    .branch_addr (branch_addr ),
+    .selection (selection ),
+    .enable (enable ),
+    .pc  ( pc)
+  );
 
   //pc circuit
   always @(posedge clk , posedge rst)

@@ -1,20 +1,19 @@
-module ID #(parameter width = 16) (
-  enable,ldm,
-    instruction, RW_sig_out, aluSrc_sig, MemWR_sig, MemR_sig, RW_Sig_in, Reg_data, aluOp_sig, op1, R_op2, I_op2, RW_Out_addr, RW_In_addr, clk, rst
+module ID #(parameter width = 16) (Mem_to_Reg
+  input enable, load_use,
+  input clk, rst,
+  input [width - 1 : 0] instruction,
+  output [15 : 0] op1, R_op2, I_op2,
+  output [2 : 0] RW_Out_addr, //address
+  input [2 : 0] RW_In_addr,
+  output [4:0] aluOp_sig,
+  output [1:0] aluSrc_sig,
+  output RW_sig_out, MemWR_sig, MemR_sig , Mem_to_Reg, //signal
+  input RW_Sig_in,
+  input [15:0] Reg_data,
+  output ldm, pc_to_stack_1, pc_to_stack_2, stack, pc_intr_handler, ccr_to_stack
   );
-  input enable;
-  input clk, rst;
-  input [width - 1 : 0] instruction;
   wire [2 : 0] read_addr1, read_addr2;   // to read from RegFile
-  output [15 : 0] op1, R_op2, I_op2;
-  output [2 : 0] RW_Out_addr;  //address
-  input [2 : 0] RW_In_addr;
   wire [4:0] opCode;
-  output wire [4:0] aluOp_sig;
-  output wire RW_sig_out, aluSrc_sig, MemWR_sig, MemR_sig ;  //signal
-  input RW_Sig_in;
-  input [15:0] Reg_data;
-  output ldm;
   wire read_enable;
 
   //reg data back -- enable -- address
@@ -22,7 +21,7 @@ module ID #(parameter width = 16) (
 
   RegFile_memo 
     RegFile_memo_dut (
-      .read_enable (read_enable ),
+      .read_enable (1'b1 ),
       .write_enable ( RW_Sig_in ),
       .clk ( clk ),
       .rst ( rst ),
@@ -33,19 +32,26 @@ module ID #(parameter width = 16) (
       .read_addr2 (read_addr2 ),
       .write_addr  ( RW_In_addr)
     );
-  
 
-  controlUnit
-    controlUnit_dut (
-      .enable(enable),
-      .opCode (opCode ),
-      .aluOp (aluOp_sig ),
-      .RegWR (RW_sig_out ),
-      .MemR (MemR_sig ),
-      .MemWR (MemWR_sig ),
-      .aluSrc  ( aluSrc_sig),
-      .ldm(ldm)
-    );
+    controlUnit 
+  controlUnit_dut (
+    .interrupt (interrupt ),
+    .load_use (load_use ),
+    .opCode (opCode ),
+    .aluOp (aluOp_sig ),
+    .RegWR (RW_sig_out ),
+    .MemR (MemR_sig ),
+    .MemWR (MemWR_sig ),
+    .aluSrc (aluSrc_sig ),
+    .ldm (ldm ),
+    .Mem_to_Reg (Mem_to_Reg ),
+    .pc_to_stack_1 (pc_to_stack_1 ),
+    .pc_to_stack_2 (pc_to_stack_2 ),
+    .ccr_to_stack (ccr_to_stack ),
+    .stack (stack ),
+    .pc_intr_handler  ( pc_intr_handler)
+  );
+
 
   assign opCode = instruction  [width - 1 : width - 5];
   assign read_addr1 = instruction[width - 6 : width - 8];
