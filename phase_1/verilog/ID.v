@@ -16,15 +16,7 @@ module ID #(parameter width = 16) (
   input clk, rst;
   input [width - 1 : 0] instruction;
   wire [2 : 0] read_addr1, read_addr2;   // to read from RegFile
-  output [15 : 0] op1, R_op2, I_op2;
-  output [2 : 0] RW_Out_addr;  //address
-  input [2 : 0] RW_In_addr;
   wire [4:0] opCode;
-  output wire [4:0] aluOp_sig;
-  output wire RW_sig_out, aluSrc_sig, MemWR_sig, MemR_sig ;  //signal
-  input RW_Sig_in;
-  input [15:0] Reg_data;
-  output ldm;
   wire read_enable;
   output [31:0] pc_jmp,
          wire branch_taken, branch_sig;
@@ -34,7 +26,7 @@ module ID #(parameter width = 16) (
 
   RegFile_memo
     RegFile_memo_dut (
-      .read_enable (read_enable ),
+      .read_enable (1'b1 ),
       .write_enable ( RW_Sig_in ),
       .clk ( clk ),
       .rst ( rst ),

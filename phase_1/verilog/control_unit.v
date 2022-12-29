@@ -203,6 +203,10 @@ module callSM (
 
 
 endmodule
+
+
+
+
 module retSM (
     input ret, clk, rst,
     output reg pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu,
@@ -274,6 +278,8 @@ module retSM (
 
 
 endmodule
+
+
 module intSM (
     inout interrupt,
     input clk, rst, ldm, load_use,
@@ -375,6 +381,10 @@ module intSM (
 
 
 endmodule
+
+
+
+
 module rtiSM (
     input rti, clk, rst,
     output reg pop_ccr , pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu,
