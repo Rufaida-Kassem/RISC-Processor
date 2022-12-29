@@ -6,10 +6,10 @@ module jumpsCU (
     output[31:0] pc,
     output taken
   );
-  parameter jz = 1,
-  jmp = 0,
-  jn = 2,
-  jc = 3;
+  parameter jz = 0,
+  jmp = 3,
+  jn = 1,
+  jc = 2;
   assign taken = (branch == 1'b0) ? 1'b0 : (jtype == jmp) || (jtype == jz && ccr[0] == 1'b1) || (jtype == jn && ccr[2] == 1'b1) || (jtype == jc && ccr[3] == 1'b1);
   assign pc = (taken == 1'b1)? {16'b0, rdst} : 32'b0;
 
