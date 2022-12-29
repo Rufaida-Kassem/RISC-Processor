@@ -11,7 +11,7 @@ module jumpsCU (
   jn = 1,
   jc = 2;
   assign taken = (branch == 1'b0) ? 1'b0 : (jtype == jmp) || (jtype == jz && ccr[0] == 1'b1) || (jtype == jn && ccr[2] == 1'b1) || (jtype == jc && ccr[3] == 1'b1);
-  assign pc = (taken == 1'b1)? {16'b0, rdst} : 32'b0;
+  assign pc = {16'b0, rdst};
 
 endmodule
 

@@ -11,7 +11,7 @@ module Processor (
   wire [15:0] I_op2, R_op2, op1, Reg_data;  // out from the IF  --  out from ID  --  out of ID  --  Back to ID (WB)
   wire [4:0] aluOp_sig;  //signal 3ady
   wire [2:0] RW_Out_addr, RW_In_addr;   // out from ID  --  back from ID  -->  they are equal shifted :|
-
+  wire load_use;
 
 
 
@@ -44,26 +44,48 @@ module Processor (
       .instruction  ( instruction)  //output
     );
 
-  ID
+  // ID
+  //   ID_dut (
+  //     .enable(decode_enable),
+  //     .instruction (IFIDReg[15:0]),    //input
+  //     .op1 (op1 ),                         //output
+  //     . R_op2 ( R_op2 ),                   //output
+  //     . I_op2 ( I_op2 ),                   //output
+  //     .RW_Out_addr (RW_Out_addr ),         //output
+  //     .RW_In_addr (MEMOWB_Reg[2:0]),   //input
+  //     .aluOp_sig (aluOp_sig ),  //output
+  //     .RW_sig_out (RW_sig_out ),  //output
+  //     .aluSrc_sig ( aluSrc_sig ), //output
+  //     .MemWR_sig ( MemWR_sig ), //output
+  //     .MemR_sig ( MemR_sig ),
+  //     .RW_Sig_in (MEMOWB_Reg[3] ), //input --> WB
+  //     .Reg_data  ( Reg_data),  //input  --> WB
+  //     .clk (clk ),
+  //     .rst ( rst ),
+  //     .ldm(ldm)
+  //   );
+
+
+    ID 
     ID_dut (
-      .enable(decode_enable),
-      .instruction (IFIDReg[15:0]),    //input
-      .op1 (op1 ),                         //output
-      . R_op2 ( R_op2 ),                   //output
-      . I_op2 ( I_op2 ),                   //output
-      .RW_Out_addr (RW_Out_addr ),         //output
-      .RW_In_addr (MEMOWB_Reg[2:0]),   //input
-      .aluOp_sig (aluOp_sig ),  //output
-      .RW_sig_out (RW_sig_out ),  //output
-      .aluSrc_sig ( aluSrc_sig ), //output
-      .MemWR_sig ( MemWR_sig ), //output
-      .MemR_sig ( MemR_sig ),
-      .RW_Sig_in (MEMOWB_Reg[3] ), //input --> WB
-      .Reg_data  ( Reg_data),  //input  --> WB
+      .interrupt (interrupt ),
+      .load_use (load_use ),
+      .mem_to_Reg_sig (mem_to_Reg_sig ),
+      .pop_pc1_sig (pop_pc1_sig ),
+      .pop_pc2_sig (pop_pc2_sig ),
+      .pop_ccr_sig (pop_ccr_sig ),
+      .stack_sig (stack_sig ),
+      .fetch_pc_enable (fetch_pc_enable ),
+      .pc_sel (pc_sel ),
+      .mem_data_sel (mem_data_sel ),
+      .ccr (ccr ),
+      .enable (enable ),
       .clk (clk ),
-      .rst ( rst ),
-      .ldm(ldm)
+      .rst (rst ),
+      .instruction (instruction ),
+      .pc_jmp  ( pc_jmp)
     );
+  
 
   //////////////////For Execute and Memory
   /////////////////////////Execute////////////////////////////////////

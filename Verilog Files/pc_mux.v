@@ -1,4 +1,5 @@
 module PC_Mux (
+    input clk, rst,
     input [31:0] interrupt_addr,
     input [31:0] first_instruction_addr,
     input [31:0] next_instruction_addr,
@@ -18,10 +19,10 @@ begin
         if(pc_enable)
         begin
             case (selection)
-                00: next_instruction_addr;
-                01: first_instruction_addr;
-                10: interrupt_addr;
-                11: branch_call_addr;
+                00: pc = next_instruction_addr;
+                01: pc = first_instruction_addr;
+                10: pc = interrupt_addr;
+                11: pc = branch_call_addr;
                 default: pc = pc;
             endcase
         end

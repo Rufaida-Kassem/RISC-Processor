@@ -1,25 +1,24 @@
 module ID #(parameter width = 16) (
-    enable,ldm,
-    instruction, RW_sig_out, aluSrc_sig, MemWR_sig, MemR_sig, RW_Sig_in, Reg_data, aluOp_sig, op1, R_op2, I_op2, RW_Out_addr, RW_In_addr, clk, rst
-  );
-  input interrupt, load_use;
+  input interrupt, load_use,
   output mem_to_Reg_sig,
          pop_pc1_sig,
          pop_pc2_sig,
          pop_ccr_sig,
          stack_sig,
-         fetch_pc_enable
-         ;
-  output [1:0] pc_sel, mem_data_sel;
-  input[2:0] ccr;
-  input enable;
-  input clk, rst;
-  input [width - 1 : 0] instruction;
-  wire [2 : 0] read_addr1, read_addr2;   // to read from RegFile
+         fetch_pc_enable,
+  output [1:0] pc_sel, mem_data_sel,
+  input[2:0] ccr,
+  input enable,
+  input clk, rst,
+  input [width - 1 : 0] instruction,
+  output [31:0] pc_jmp
+ );
+  
+  wire [2:0] read_addr1, read_addr2;   // to read from RegFile
   wire [4:0] opCode;
   wire read_enable;
-  output [31:0] pc_jmp,
-         wire branch_taken, branch_sig;
+  wire branch_taken, branch_sig;
+  wire freeze_cu;
 
   //reg data back -- enable -- address
   // input       -- out in  -- out in
@@ -40,6 +39,8 @@ module ID #(parameter width = 16) (
 
   controlUnit
     controlUnit_dut (
+      .clk(clk),
+      .rst(rst),
       .branch_taken (branch_taken ),
       .interrupt (interrupt ),
       .load_use (load_use ),
@@ -58,7 +59,8 @@ module ID #(parameter width = 16) (
       .pop_pc2 (pop_pc2_sig ),
       .pop_ccr (pop_ccr_sig ),
       .fetch_pc_enable  ( fetch_pc_enable),
-      .mem_data_sel (mem_data_sel)
+      .mem_data_sel (mem_data_sel),
+      .freeze_cu(freeze_cu)
     );
 
   jumpsCU
@@ -70,8 +72,11 @@ module ID #(parameter width = 16) (
       .ccr (ccr ),
       .rdst (R_op2),
       .pc (pc_jmp ),
-      .taken  ( branch_taken)
+      .taken  (branch_taken)
     );
+
+
+
 
   assign opCode = instruction  [width - 1 : width - 5];
   assign read_addr1 = instruction[width - 6 : width - 8];

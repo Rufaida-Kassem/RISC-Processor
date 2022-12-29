@@ -1,4 +1,5 @@
 module controlUnit (
+    input clk, rst,
     output [1:0] mem_data_sel,
     input branch_taken,
     inout interrupt,
@@ -8,7 +9,8 @@ module controlUnit (
     output [1:0] aluSrc,
     output RegWR, MemR, MemWR, ldm, Mem_to_Reg, stack , branch,
     output[1:0] pc_sel,
-    output pop_pc1, pop_pc2, pop_ccr, fetch_pc_enable
+    output pop_pc1, pop_pc2, pop_ccr, fetch_pc_enable,
+    output freeze_cu
   );
   wire pc_to_stack1, pc_to_stack2, ccr_to_stack;
   wire MemWR_call, MemWR_int, MemWR_cu,
@@ -21,7 +23,10 @@ module controlUnit (
        load_pc_call,
        load_pc_jmps,
        freeze_pc_int, freeze_pc_call, freeze_pc_rti, freeze_pc_ret, freeze_pc,
-       freeze_cu_int, freeze_cu_call, freeze_cu_rti, freeze_cu_ret, freeze_cu;
+       freeze_cu_int, freeze_cu_call, freeze_cu_rti, freeze_cu_ret, freeze_cu_ldm;
+       
+  wire [1:0] pc_sel_int, pc_sel_call, pc_sel_ret, pc_sel_rti;
+
   assign branch = opCode[4] && ~opCode[3] && opCode[2];
 
   assign aluSrc = {(opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]), (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0])};
@@ -50,14 +55,25 @@ module controlUnit (
   assign pop_pc1 = pop_pc1_rti || pop_pc1_ret;
   assign pop_pc2 = pop_pc2_rti || pop_pc2_ret;
   assign pop_ccr = pop_ccr_rti;
-  assign freeze_cu = load_use || freeze_cu_call || freeze_cu_int || freeze_cu_ret || freeze_cu_rti;
+  assign freeze_cu = load_use || freeze_cu_call || freeze_cu_int || freeze_cu_ret || freeze_cu_rti || freeze_cu_ldm;
   assign freeze_pc = freeze_pc_call || freeze_pc_int || freeze_pc_ret || freeze_pc_rti;
 
   assign fetch_pc_enable = ~ freeze_pc;
   assign mem_data_sel = pc_to_stack1 == 1'b1 ? 2'b01 : pc_to_stack2 == 1'b1 ? 2'b10 : ccr_to_stack == 1'b1 ? 2'b11 : 2'b0;
-  assign pc_sel = pc_sel_int | pc_sel_call | pc_sel_ret | pc_sel_rti | {1'b0 , rst};
+  assign pc_sel = pc_sel_int | pc_sel_call | pc_sel_ret | pc_sel_rti | {1'b0 , rst} | {branch_taken, branch_taken};
 
-    callSM
+  ldmSM 
+    ldmSM_dut (
+      .clk (clk ),
+      .rst (rst ),
+      .ldm (ldm ),
+      .freeze_cu  ( freeze_cu_ldm)
+    );
+
+
+
+
+  callSM
     callSM_dut (
       .call (call ),
       .clk (clk ),
@@ -120,15 +136,60 @@ module controlUnit (
 
 endmodule
 
-//F D E M WB
-//  F D E M WB
-module ldmSM ();
+//F D E M WB 
+//  F F D E M WB
+
+module ldmSM (
+  input clk, rst, ldm,
+  output reg freeze_cu
+);
+reg     [1:0] current_state, next_state;
+parameter idle_state = 0, freeze_cu_state = 1;
+
+always @(posedge clk, posedge rst)
+begin
+  if(rst)
+  begin
+    current_state = idle_state;
+  end
+  if(clk)
+  begin
+    current_state = next_state;
+  end
+end
+
+always @ (current_state, ldm)
+begin
+  next_state = idle_state;
+  case(current_state)
+    idle_state:
+    begin
+      freeze_cu = 1'b0;
+      if(ldm)
+      begin
+        next_state = freeze_cu_state;
+      end
+    end
+    freeze_cu_state:
+    begin
+      freeze_cu = 1'b1;
+      next_state = idle_state;
+    end
+    default:
+    begin
+      next_state = idle_state;
+    end
+  endcase
+
+end
+
+
 endmodule
 
 module callSM ( 
-                 input call, clk, rst,
-                 output reg pc_to_stack1, pc_to_stack2, stack, MemWR, load_pc_call, freeze_pc, freeze_cu,
-                 output [1:0] pc_sel
+  input call, clk, rst,
+  output reg pc_to_stack1, pc_to_stack2, stack, MemWR, load_pc_call, freeze_pc, freeze_cu,
+  output reg [1:0] pc_sel
                 );
   reg     [1:0] current_state, next_state;
   // push pc from decode not from pc itself
@@ -182,11 +243,12 @@ module callSM (
 
       end
       push_pc2:
+      begin
         next_state = load_pc;
-      MemWR = 1'b1;
-      stack = 1'b1;
-      pc_to_stack2 = 1'b1;
-
+        MemWR = 1'b1;
+        stack = 1'b1;
+        pc_to_stack2 = 1'b1;
+      end
       load_pc:
       begin
         next_state = idle_state;
@@ -206,12 +268,10 @@ module callSM (
 endmodule
 
 
-
-
 module retSM (
     input ret, clk, rst,
     output reg pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu,
-    output [1:0] pc_sel
+    output reg [1:0] pc_sel
   );
 
   //we have to set pc to pc - 1 to fetch the correct instruction
@@ -233,7 +293,7 @@ module retSM (
     end
   end
 
-  always @ (current_state, call)
+  always @ (current_state, ret)
   begin
     next_state = idle_state;
     case(current_state)
@@ -285,7 +345,7 @@ module intSM (
     inout interrupt,
     input clk, rst, ldm, load_use,
     output reg ccr_to_stack , pc_to_stack1, pc_to_stack2, stack, MemWR, pc_intr_handler, freeze_pc, freeze_cu,
-    output [1:0] pc_sel
+    output reg [1:0] pc_sel
   );
   reg     [2:0] current_state, next_state;
   parameter idle_state = 0, wait_ = 1, wait_ldm_load_use = 2, freezePc = 3, freezePc_cu = 4, push_pc1 = 5, push_pc2 = 6, push_ccr = 7;
@@ -384,12 +444,10 @@ module intSM (
 endmodule
 
 
-
-
 module rtiSM (
     input rti, clk, rst,
     output reg pop_ccr , pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu,
-    output [1:0] pc_sel
+    output reg [1:0] pc_sel
   );
 
   reg     [1:0] current_state, next_state;
@@ -408,7 +466,7 @@ module rtiSM (
     end
   end
 
-  always @ (current_state, call)
+  always @ (current_state, rti)
   begin
     next_state = idle_state;
     case(current_state)
@@ -422,7 +480,7 @@ module rtiSM (
         stack = 1'b0;
         pop_pc2 = 1'b0;
         pop_pc1 = 1'b0;
-        if(ret)
+        if(rti)
         begin
           next_state = pop_ccr_state;
         end
