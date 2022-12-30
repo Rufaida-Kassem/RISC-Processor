@@ -162,22 +162,21 @@ module Processor (
       .MemoryAddress(IDEReg[78:67]),  // you have to send the memoaddress that exists in the buffer IDEReg
       .Out(Out_Excute)
 );
-//////////////////////////////////////////ForWarding Unit///////////////////////////////////////////////////////
 FullForwardingUnit fullforwardingunit(.CurrentRsrcAddress(),.CurrentRdstAddress(),.WriteMemoWriteBackAddress(),.WriteExcuMemoAddress,
                            output reg[1:0] SelectionSignalRcs, output reg[1:0] SelectionSignalRds
                            );
-//////////////////////////////////////////Memory/////////////////////////////////////////////////                           
-Memory #(.addBusWidth(12), .width(16), .instrORdata(0))
-         Date_Memory (
-           .clk (clk ),
-           .rst ( rst ),
-           .memR ( EXMEMO_Reg[5] ),
-           .memWR ( EXMEMO_Reg[4] ),
-           .dataWR ( EXMEMO_Reg[33:18] ),
-           .addR (EXMEMO_Reg[17:6] ),
-           .addWR ( EXMEMO_Reg[17:6] ),
-           .dataR  ( Out_Memo)
-         );
+// Memory 
+//   #(.addBusWidth(12), .width(16), .instrORdata(0))
+//          Date_Memory (
+//            .clk (clk ),
+//            .rst ( rst ),
+//            .memR ( EXMEMO_Reg[5] ),
+//            .memWR ( EXMEMO_Reg[4] ),
+//            .dataWR ( EXMEMO_Reg[33:18] ),
+//            .addR (EXMEMO_Reg[17:6] ),
+//            .addWR ( EXMEMO_Reg[17:6] ),
+//            .dataR  ( Out_Memo)
+//          );
 
 //   /////////////////////////////Write Back////////////////////////////////
 // WriteBack 

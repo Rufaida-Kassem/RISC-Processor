@@ -9,6 +9,13 @@ Top level modules:
 	jumpConditionallyNegative
 	jumpConditionallyCarry
 
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Processor.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Processor.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module Processor
+
+Top level modules:
+	Processor
+
 } {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/jmps_cu.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/jmps_cu.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module jumpsCU
@@ -37,12 +44,42 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	Sw
 
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/SPAdder.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/SPAdder.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module SPAdder
+
+Top level modules:
+	SPAdder
+
 } {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/RegFile_memo.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/RegFile_memo.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module RegFile_memo
 
 Top level modules:
 	RegFile_memo
+
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/DataMemory.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/DataMemory.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module Mux12Bit
+-- Compiling module Mux4x1
+-- Compiling module DataMemory
+
+Top level modules:
+	DataMemory
+
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Cache.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Cache.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module Memory
+
+Top level modules:
+	Memory
+
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/ID.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/ID.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module ID
+
+Top level modules:
+	ID
 
 } {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Ldm.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Ldm.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
@@ -51,6 +88,9 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	Ldm
 
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/a_temp.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/a_temp.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+
 } {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Decoder.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Decoder.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module Decoder
@@ -58,8 +98,13 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	Decoder
 
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/a_temp.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/a_temp.v}
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/IF.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/IF.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module pcCircuit
+-- Compiling module IF
+
+Top level modules:
+	IF
 
 } {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/control_unit.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/control_unit.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
@@ -80,12 +125,12 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	ALU
 
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Execution.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Execution.v}
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/pc_mux.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/pc_mux.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module Execution
+-- Compiling module PC_Mux
 
 Top level modules:
-	Execution
+	PC_Mux
 
 } {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/WriteBack.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/WriteBack.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
@@ -94,26 +139,19 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	WriteBack
 
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/pc_mux.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/pc_mux.v}
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Execution.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Execution.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module PC_Mux
+-- Compiling module Execution
 
 Top level modules:
-	PC_Mux
+	Execution
 
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Register.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Register.v}
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Addition.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Addition.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module Register
+-- Compiling module Addition
 
 Top level modules:
-	Register
-
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Mux2x1.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Mux2x1.v}
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module Mux16Bit
-
-Top level modules:
-	Mux16Bit
+	Addition
 
 } {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/processor_tb.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/processor_tb.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
@@ -122,44 +160,33 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	Processor_tb
 
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/RegFile.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/RegFile.v}
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Mux2x1.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Mux2x1.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module RegFile
+-- Compiling module Mux16Bit
 
 Top level modules:
-	RegFile
+	Mux16Bit
 
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/OneOperandInstuctions.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/OneOperandInstuctions.v}
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Register.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Register.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module Not
--- Compiling module SETC
--- Compiling module CLRC
--- Compiling module INC
--- Compiling module DEC
--- Compiling module OUT
--- Compiling module IN
+-- Compiling module Register
 
 Top level modules:
-	Not
-	SETC
-	CLRC
-	INC
-	DEC
-	OUT
-	IN
+	Register
 
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/MemoryInstructions.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/MemoryInstructions.v}
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Mux3x1.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Mux3x1.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module Ldm
--- Compiling module Sw
--- Compiling module LDD
--- Compiling module PUSH
+-- Compiling module Mux3x1
 
 Top level modules:
-	Ldm
-	Sw
-	LDD
-	PUSH
+	Mux3x1
+
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/FullForwardingUnit.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/FullForwardingUnit.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module FullForwardingUnit
+
+Top level modules:
+	FullForwardingUnit
 
 } {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/twoOperands.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/twoOperands.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
@@ -180,11 +207,43 @@ Top level modules:
 	ShiftLeft
 	ShiftRight
 
-} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Mux3x1.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/Mux3x1.v}
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/MemoryInstructions.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/MemoryInstructions.v}
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module Mux3x1
+-- Compiling module Ldm
+-- Compiling module Sw
+-- Compiling module LDD
+-- Compiling module PUSH
 
 Top level modules:
-	Mux3x1
+	Ldm
+	Sw
+	LDD
+	PUSH
+
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/OneOperandInstuctions.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/OneOperandInstuctions.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module Not
+-- Compiling module SETC
+-- Compiling module CLRC
+-- Compiling module INC
+-- Compiling module DEC
+-- Compiling module OUT
+-- Compiling module IN
+
+Top level modules:
+	Not
+	SETC
+	CLRC
+	INC
+	DEC
+	OUT
+	IN
+
+} {} {}} {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/RegFile.v} {1 {vlog -work work -stats=none {D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/RegFile.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module RegFile
+
+Top level modules:
+	RegFile
 
 } {} {}}
