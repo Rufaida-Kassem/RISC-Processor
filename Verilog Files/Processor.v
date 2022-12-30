@@ -84,17 +84,30 @@ module Processor (
                      .MemoryAddress(MemoryAddress),
                      .Out(Out_Excute)
                     );
-  Memory #(.addBusWidth(12), .width(16), .instrORdata(0))
-         Date_Memory (
-           .clk (clk ),
-           .rst ( rst ),
-           .memR ( EXMEMO_Reg[5] ),
-           .memWR ( EXMEMO_Reg[4] ),
-           .dataWR ( EXMEMO_Reg[33:18] ),
-           .addR (EXMEMO_Reg[17:6] ),
-           .addWR ( EXMEMO_Reg[17:6] ),
-           .dataR  ( Out_Memo)
-         );
+
+                    DataMemory Date_Memory (.clk(clk),
+                    .rst(rst),
+                    .MR(EXMEMO_Reg[5]),
+                    .MW(EXMEMO_Reg[4]),
+                    .MemoAddreess(EXMEMO_Reg[17:6]),
+                    .Ccr(3'b0),
+                    .AluOut(EXMEMO_Reg[33:18]),
+                    .PcLow(16'b0),
+                    .PcHigh(16'b0),
+                    .sel1(2'b00),
+                    .sel2(1'b1),
+                    .Out1(Out_Memo));
+  // Memory #(.addBusWidth(12), .width(16), .instrORdata(0))
+  //        Date_Memory (
+  //          .clk (clk ),
+  //          .rst ( rst ),
+  //          .memR ( EXMEMO_Reg[5] ),
+  //          .memWR ( EXMEMO_Reg[4] ),
+  //          .dataWR ( EXMEMO_Reg[33:18] ),
+  //          .addR (EXMEMO_Reg[17:6] ),
+  //          .addWR ( EXMEMO_Reg[17:6] ),
+  //          .dataR  ( Out_Memo)
+  //        );
 
   /////////////////////////////Write Back////////////////////////////////
   WriteBack Write_Back(.Load( MEMOWB_Reg[35:20]),
