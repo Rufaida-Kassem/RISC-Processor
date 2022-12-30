@@ -92,7 +92,10 @@ module Processor (
       .pc_selection (pc_sel ),
       .branch_call_addr (pc_jmp ),
       .pc_out (pc ),  //output --> next instruction address
-      .instruction  ( instruction)  //output
+      .instruction  ( instruction),  //output
+      .pop_pc_low_sig (pop_pc1_sig),
+      .pop_pc_high_sig (pop_pc2_sig),
+      .pop_data (16'b0)
     );
 
  
