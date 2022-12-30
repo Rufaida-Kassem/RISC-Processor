@@ -80,7 +80,7 @@ module Processor (
 
 
 
-  reg fetch_pc_enable_oring;
+  wire fetch_pc_enable_oring;
 
 
   assign fetch_pc_enable_oring = (rst == 1'b1) ? 1'b1 : fetch_pc_enable;

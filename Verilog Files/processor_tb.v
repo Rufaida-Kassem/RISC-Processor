@@ -5,7 +5,7 @@ module Processor_tb;
   reg  start = 0;
   wire [15:0] outputPort;
   wire [15:0] inputPort;
-  wire interrupt;
+  wire interrupt = 1'b0;
   // Processor
   //   Processor_dut (
   //     .clk (clk ),
