@@ -29,7 +29,7 @@ module ID #(parameter width = 16) (
   wire [2:0] read_addr1, read_addr2;   // to read from RegFile
   wire [4:0] opCode;
   wire read_enable;
-  wire branch_taken, branch_sig;
+  wire branch_taken;
 
   //reg data back -- enable -- address
   // input       -- out in  -- out in
@@ -58,13 +58,13 @@ module ID #(parameter width = 16) (
       .opCode (opCode ),
       .aluOp (aluOp ),
       .aluSrc (aluSrc ),
-      .RegWR (RW_sig_out ),
-      .MemR (MemR_sig ),
-      .MemWR (MemWR_sig ),
+      .RegWR (RegWR ),
+      .MemR (MemR),
+      .MemWR (MemWR),
       .ldm (ldm ),
       .Mem_to_Reg (mem_to_Reg_sig ),
       .stack (stack_sig ),
-      .branch (branch_sig ),
+      .branch (branch ),
       .pc_sel (pc_sel ),
       .pop_pc1 (pop_pc1_sig ),
       .pop_pc2 (pop_pc2_sig ),
@@ -81,7 +81,7 @@ module ID #(parameter width = 16) (
     jumpsCU_dut (
       .clk (clk ),
       .rst (rst ),
-      .branch (branch_sig ),
+      .branch (branch ),
       .jtype (opCode[1:0] ),
       .ccr (ccr ),
       .rdst (R_op2),

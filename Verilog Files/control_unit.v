@@ -21,46 +21,48 @@ module controlUnit (
        pop_pc1_ret, pop_pc1_rti, pop_pc2_ret, pop_pc2_rti,
        pop_ccr_rti,
        load_pc_call,
-       load_pc_jmps,
        freeze_pc_int, freeze_pc_call, freeze_pc_rti, freeze_pc_ret, freeze_pc,
        freeze_cu_int, freeze_cu_call, freeze_cu_rti, freeze_cu_ret, freeze_cu_ldm;
        
   wire [1:0] pc_sel_int, pc_sel_call, pc_sel_ret, pc_sel_rti;
 
-  assign branch = opCode[4] && ~opCode[3] && opCode[2];
+  assign branch = rst == 1'b1 ? 'b0 : opCode[4] && ~opCode[3] && opCode[2];
 
-  assign aluSrc = {(opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]), (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0])};
+  assign aluSrc = rst == 1'b1 ? 'b0 : {(opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]), (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0])};
 
 
-  assign ldm = (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]);
+  assign ldm = rst == 1'b1 ? 'b0 : (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]);
 
-  assign aluOp = opCode;
+  assign aluOp = rst == 1'b1 ? 'b0 : opCode;
 
-  assign MemR_cu = (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]) || (opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]) || (opCode[4] && opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]);
-  assign MemWR_cu = (~opCode[4] && ~opCode[3] && opCode[2] && opCode[1] && opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && opCode[0]) || (opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && ~opCode[0]);
-  assign RegWR = (opCode == 5'b00011 || opCode == 5'b00100 || opCode == 5'b00101 || opCode == 5'b01000 || (opCode[4] == 1'b0 && opCode[3] == 1'b1) || opCode == 5'b10000 || opCode == 5'b10001 || opCode == 5'b10010); //(~opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && opCode[0]) || (~opCode[4] && ~opCode[3] && opCode[2] && ~opCode[1] && ~opCode[0]) || (~opCode[4] && ~opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]) || (~opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]) || (~opCode[4] && opCode[3] && ~opCode[2] && opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && ~opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]);
-  assign Mem_to_Reg = (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]);
-  assign stack_cu = (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && opCode[0]) || (~opCode[4] && ~opCode[3] && opCode[2] && opCode[1] && opCode[0]);
+  assign MemR_cu = rst == 1'b1 ? 'b0 : (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]) || (opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]) || (opCode[4] && opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]);
+  assign MemWR_cu = rst == 1'b1 ? 'b0 : (~opCode[4] && ~opCode[3] && opCode[2] && opCode[1] && opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && opCode[0]) || (opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && ~opCode[0]);
+  assign RegWR = rst == 1'b1 ? 'b0 : (opCode == 5'b00011 || opCode == 5'b00100 || opCode == 5'b00101 || opCode == 5'b01000 || (opCode[4] == 1'b0 && opCode[3] == 1'b1) || opCode == 5'b10000 || opCode == 5'b10001 || opCode == 5'b10010); //(~opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && opCode[0]) || (~opCode[4] && ~opCode[3] && opCode[2] && ~opCode[1] && ~opCode[0]) || (~opCode[4] && ~opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]) || (~opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]) || (~opCode[4] && opCode[3] && ~opCode[2] && opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && ~opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]);
+  assign Mem_to_Reg = rst == 1'b1 ? 'b0 : (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]) || (opCode[4] && ~opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]);
+  assign stack_cu = rst == 1'b1 ? 'b0 : (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && opCode[0]) || (~opCode[4] && ~opCode[3] && opCode[2] && opCode[1] && opCode[0]);
 
-  assign portR = (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && opCode[0]);
-  assign portWR = (~opCode[4] && ~opCode[3] && opCode[2] && opCode[1] && ~opCode[0]);
+  assign portR = rst == 1'b1 ? 'b0 : (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && opCode[0]);
+  assign portWR = rst == 1'b1 ? 'b0 : (~opCode[4] && ~opCode[3] && opCode[2] && opCode[1] && ~opCode[0]);
 
-  assign call = (opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]);
-  assign rti = (opCode[4] && opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]);
-  assign ret = (opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]);
+  assign call = rst == 1'b1 ? 'b0 : (opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && ~opCode[0]);
+  assign rti = rst == 1'b1 ? 'b0 : (opCode[4] && opCode[3] && ~opCode[2] && opCode[1] && ~opCode[0]);
+  assign ret = rst == 1'b1 ? 'b0 : (opCode[4] && opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]);
+  
+  assign MemR = rst == 1'b1 ? 'b0 :  MemR_cu | MemR_rti | MemR_ret;
+  assign MemWR = rst == 1'b1 ? 'b0 : MemWR_cu | MemWR_int | MemWR_call;
+  assign stack = rst == 1'b1 ? 'b0 : stack_cu | stack_rti | stack_ret | stack_int | stack_call;
+  assign pc_to_stack1 = rst == 1'b1 ? 'b0 : pc_to_stack1_int | pc_to_stack1_call;
+  assign pc_to_stack2 = rst == 1'b1 ? 'b0 : pc_to_stack2_int | pc_to_stack2_call;
+  assign ccr_to_stack = rst == 1'b1 ? 'b0 : ccr_to_stack_int;
+  assign pop_pc1 = rst == 1'b1 ? 'b0 : pop_pc1_rti | pop_pc1_ret;
+  assign pop_pc2 = rst == 1'b1 ? 'b0 : pop_pc2_rti | pop_pc2_ret;
+  assign pop_ccr = rst == 1'b1 ? 'b0 : pop_ccr_rti;
+  assign freeze_cu = rst == 1'b1 ? 'b0 : load_use | freeze_cu_call | freeze_cu_int | freeze_cu_ret | freeze_cu_rti | freeze_cu_ldm;
+  assign freeze_pc = rst == 1'b1 ? 'b0 : freeze_pc_call | freeze_pc_int | freeze_pc_ret | freeze_pc_rti;
 
-  assign pc_to_stack1 = pc_to_stack1_int || pc_to_stack1_call;
-  assign pc_to_stack2 = pc_to_stack2_int || pc_to_stack2_call;
-  assign ccr_to_stack = ccr_to_stack_int;
-  assign pop_pc1 = pop_pc1_rti || pop_pc1_ret;
-  assign pop_pc2 = pop_pc2_rti || pop_pc2_ret;
-  assign pop_ccr = pop_ccr_rti;
-  assign freeze_cu = load_use || freeze_cu_call || freeze_cu_int || freeze_cu_ret || freeze_cu_rti || freeze_cu_ldm;
-  assign freeze_pc = freeze_pc_call || freeze_pc_int || freeze_pc_ret || freeze_pc_rti;
-
-  assign fetch_pc_enable = ~ freeze_pc;
-  assign mem_data_sel = pc_to_stack1 == 1'b1 ? 2'b01 : pc_to_stack2 == 1'b1 ? 2'b10 : ccr_to_stack == 1'b1 ? 2'b11 : 2'b0;
-  assign pc_sel = pc_sel_int | pc_sel_call | pc_sel_ret | pc_sel_rti | {1'b0 , rst} | {branch_taken, branch_taken};
+  assign fetch_pc_enable = freeze_pc == 1'b1 ? 1'b0 : 1'b1;
+  assign mem_data_sel = (rst == 1'b1) ? 'b0 : (pc_to_stack1 == 1'b1) ? 2'b01 : (pc_to_stack2 == 1'b1) ? 2'b10 : (ccr_to_stack == 1'b1) ? 2'b11 : 2'b0;
+  assign pc_sel = rst == 1'b1 ? 'b0 : pc_sel_int | pc_sel_call | pc_sel_ret | pc_sel_rti | {1'b0 , rst} | {branch_taken, branch_taken};
 
   ldmSM 
     ldmSM_dut (
@@ -83,22 +85,22 @@ module controlUnit (
       .stack (stack_call ),
       .MemWR (MemWR_call ),
       .load_pc_call (load_pc_call ),
-      .freeze_pc (freeze_pc ),
-      .freeze_cu  ( freeze_cu),
-      .pc_sel (pc_sel_call)
+      .freeze_pc (freeze_pc_call),
+      .freeze_cu  ( freeze_cu_call),
+      .pc_sel (pc_sel_call )
     );
 
   retSM
     retSM_dut (
-      .ret (ret ),
-      .clk (clk ),
-      .rst (rst ),
-      .pop_pc1 (pop_pc1 ),
-      .pop_pc2 (pop_pc2 ),
-      .stack (stack ),
-      .MemR (MemR ),
-      .freeze_pc (freeze_pc ),
-      .freeze_cu  ( freeze_cu),
+      .ret (ret),
+      .clk (clk),
+      .rst (rst),
+      .pop_pc1 (pop_pc1_ret),
+      .pop_pc2 (pop_pc2_ret),
+      .stack (stack_ret),
+      .MemR (MemR_ret),
+      .freeze_pc (freeze_pc_ret),
+      .freeze_cu  ( freeze_cu_ret),
       .pc_sel (pc_sel_ret)
     );
 
@@ -109,13 +111,13 @@ module controlUnit (
       .rst (rst ),
       .ldm (ldm ),
       .load_use (load_use ),
-      .ccr_to_stack (ccr_to_stack ),
-      .pc_to_stack1 (pc_to_stack1 ),
-      .pc_to_stack2 (pc_to_stack2 ),
-      .stack (stack ),
-      .MemWR (MemWR ),
-      .freeze_pc (freeze_pc ),
-      .freeze_cu  ( freeze_cu),
+      .ccr_to_stack (ccr_to_stack_int ),
+      .pc_to_stack1 (pc_to_stack1_int ),
+      .pc_to_stack2 (pc_to_stack2_int ),
+      .stack (stack_int ),
+      .MemWR (MemWR_int ),
+      .freeze_pc (freeze_pc_int ),
+      .freeze_cu  ( freeze_cu_int),
       .pc_sel (pc_sel_int)
     );
 
@@ -124,13 +126,13 @@ module controlUnit (
       .rti (rti ),
       .clk (clk ),
       .rst (rst ),
-      .pop_ccr (pop_ccr ),
-      .pop_pc1 (pop_pc1 ),
-      .pop_pc2 (pop_pc2 ),
-      .stack (stack ),
-      .MemR (MemR ),
-      .freeze_pc (freeze_pc ),
-      .freeze_cu  ( freeze_cu),
+      .pop_ccr (pop_ccr_rti ),
+      .pop_pc1 (pop_pc1_rti ),
+      .pop_pc2 (pop_pc2_rti ),
+      .stack (stack_rti ),
+      .MemR (MemR_rti ),
+      .freeze_pc (freeze_pc_rti ),
+      .freeze_cu  ( freeze_cu_rti),
       .pc_sel (pc_sel_rti)
     );
 
@@ -145,16 +147,21 @@ module ldmSM (
 );
 reg     [1:0] current_state, next_state;
 parameter idle_state = 0, freeze_cu_state = 1;
+reg trigger = 1'b0;
 
 always @(posedge clk, posedge rst)
 begin
   if(rst)
   begin
     current_state = idle_state;
+    trigger = 1'b1;
+
   end
   if(clk)
   begin
     current_state = next_state;
+    trigger = 1'b0;
+
   end
 end
 
@@ -198,6 +205,7 @@ module callSM (
   // code     --> pc to be pushed before going to the procedure
   //we don't have to push ccr
 
+  reg trigger = 1'b0;
 
   parameter idle_state = 0, push_pc1 = 1, push_pc2 = 2, load_pc = 3;
 
@@ -206,10 +214,14 @@ module callSM (
     if(rst)
     begin
       current_state = idle_state;
+      trigger = 1'b1;
+
     end
     if(clk)
     begin
       current_state = next_state;
+      trigger = 1'b0;
+
     end
   end
 
@@ -278,6 +290,7 @@ module retSM (
   //as it gets incremented during the calling --> as we know the call is call in decode stage
   //so that the next instruction to the call is already get fetched and we will ignore this fetch
   reg     [1:0] current_state, next_state;
+  reg trigger = 1'b0;
 
   parameter idle_state = 0, pop_pc1_state = 1, pop_pc2_state = 2;
 
@@ -286,10 +299,14 @@ module retSM (
     if(rst)
     begin
       current_state = idle_state;
+      trigger = 1'b1;
+
     end
     if(clk)
     begin
       current_state = next_state;
+      trigger = 1'b0;
+
     end
   end
 
@@ -350,6 +367,7 @@ module intSM (
   reg     [2:0] current_state, next_state;
   parameter idle_state = 0, wait_ = 1, wait_ldm_load_use = 2, freezePc = 3, freezePc_cu = 4, push_pc1 = 5, push_pc2 = 6, push_ccr = 7;
    reg ack;
+   reg trigger = 1'b0;
   assign interrupt = ack ? 0 : interrupt;
 
 
@@ -358,14 +376,16 @@ module intSM (
     if(rst)
     begin
       current_state = idle_state;
+      trigger = 1'b1;
     end
     if(clk)
     begin
       current_state = next_state;
+      trigger = 1'b0;
     end
   end
 
-  always @ (current_state, interrupt)
+  always @ (current_state, interrupt, trigger)
   begin
     case(current_state)
       idle_state:
@@ -450,6 +470,7 @@ module rtiSM (
   );
 
   reg     [1:0] current_state, next_state;
+  reg trigger = 1'b0;
 
   parameter idle_state = 0, pop_ccr_state = 1, pop_pc2_state = 2, pop_pc1_state = 3;
 
@@ -458,10 +479,14 @@ module rtiSM (
     if(rst)
     begin
       current_state = idle_state;
+      trigger = 1'b1;
+
     end
     if(clk)
     begin
       current_state = next_state;
+      trigger = 1'b0;
+
     end
   end
 

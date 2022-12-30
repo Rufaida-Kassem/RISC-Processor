@@ -43,7 +43,7 @@ module Processor (
 
 
   wire [1:0] aluSrc_sig, mem_data_sel;
-  wire MemR_sig, MemWR_sig, RW_sig_out, RW_Sig_in; //signals 3ady
+  wire MemR, MemWR, RW_sig_out, RW_Sig_in; //signals 3ady
   wire [15:0] I_op2, R_op2, op1, Reg_data;  // out from the IF  --  out from ID  --  out of ID  --  Back to ID (WB)
   wire [4:0] aluOp_sig;  //signal 3ady
   wire [2:0] RW_Out_addr;   // out from ID 
@@ -100,8 +100,8 @@ module Processor (
 
   ID 
     ID_dut (
-      .interrupt (interrupt ),
-      .load_use (load_use ),
+      .interrupt (interrupt ), //to change
+      .load_use (1'b0 ), //to change
       .mem_to_Reg_sig (mem_to_Reg_sig ),
       .pop_pc1_sig (pop_pc1_sig ),
       .pop_pc2_sig (pop_pc2_sig ),
@@ -110,7 +110,7 @@ module Processor (
       .fetch_pc_enable (fetch_pc_enable ),
       .aluOp (aluOp_sig ),
       .aluSrc (aluSrc_sig ),
-      .RegWR (RegWR ),
+      .RegWR (RW_sig_out ),
       .MemR (MemR ),
       .MemWR (MemWR ),
       .ldm (ldm ),
@@ -121,7 +121,7 @@ module Processor (
       .ret (ret ),
       .pc_sel (pc_sel ),
       .mem_data_sel (mem_data_sel ),
-      .ccr (Ccr ),
+      .ccr (3'b0 ), //to change
       .enable (decode_enable ),
       .clk (clk ),
       .rst (rst ),
@@ -199,7 +199,7 @@ always @ (posedge clk, posedge rst)
         EXMEMO_Reg ={Ccr, Out_Excute, MemoryAddress[11:0], IDEReg[108], IDEReg[107], IDEReg[48],
         1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0, aluOp_sig, IDEReg[51:49], pc};
         IDEPCReg = IFIDReg[47:16];
-        IDEReg = {MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, 
+        IDEReg = {MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, 
                   RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
                   pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
                   rti, pc_sel, mem_data_sel, pc_jmp};
