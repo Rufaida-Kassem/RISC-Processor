@@ -13,7 +13,9 @@ module Processor (
 
 
 
-  reg [116:0] IDEReg;   // shift_amount  8bits      [116:109]         
+  reg [118:0] IDEReg;   // portRW                   [118]
+                        // portR                    [117]
+                        // shift_amount  8bits      [116:109]         
                         // MemR_sig 1               [108]
                         // MemWR_sig 1              [107]
                         // aluOp_sig (5 bits)       [106:102]
@@ -55,6 +57,8 @@ module Processor (
 
   wire [8:0] shift_amount;
 
+  wire portR, portWR;
+
 
 
 
@@ -68,16 +72,11 @@ module Processor (
                                         // Pc(32 bit)
   reg [35:0] MEMOWB_Reg;
   wire [2:0]Ccr;
-  wire [15:0] MemoryAddress;
+  //wire [15:0] MemoryAddress;
   wire [15:0] Out_Excute;
   wire [15:0] Out_Memo;
-  reg fetch_enable, decode_enable;
   wire ldm;
   wire [31:0] pc_jmp;
-
-  reg     [2:0] current_state, next_state;
-  parameter idle_state = 0, fetch_state = 1, decode_state = 2, execute_state = 3, memory_state = 4, write_back_state = 5;
-
 
 
   wire fetch_pc_enable_oring;
@@ -133,7 +132,9 @@ module Processor (
       .R_op2(R_op2),
       .RW_In_addr(MEMOWB_Reg[2:0]),
       .RW_Out_addr(RW_Out_addr),
-      .RW_Sig_in(MEMOWB_Reg[3])
+      .RW_Sig_in(MEMOWB_Reg[3]),
+      .portR(portR),
+      .portWR(portWR)
     );
   
 
@@ -148,14 +149,14 @@ module Processor (
 //       .shiftAmmount(IDEReg[116:109]),   //modified
 //       .AluOp( IDEReg[106:102]),
 //       .AluScr(IDEReg[101:100]),
-//       .Inport(inputPort),
+//       .Inport(IDEReg[117]),   //modified
 //       .Branch(IDEReg[41]),
 //       .ExecuteMemoryForwarding(16'b0),
 //       .MemoryWBForwarding(16'b0),
 //       .Forward1Sel(2'b0),
 //       .Forward2Sel(2'b0),
 //       .Ccr(Ccr),
-//       .MemoryAddress(MemoryAddress),
+//       .MemoryAddress(IDEReg[78:67]),  // you have to send the memoaddress that exists in the buffer IDEReg
 //       .Out(Out_Excute)
 // );
 
@@ -196,7 +197,7 @@ always @ (posedge clk, posedge rst)
       begin
 
         MEMOWB_Reg ={EXMEMO_Reg[33:18],Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
-        EXMEMO_Reg ={Ccr, Out_Excute, MemoryAddress[11:0], IDEReg[108], IDEReg[107], IDEReg[48],
+        EXMEMO_Reg ={Ccr, Out_Excute, IDEReg[78:67], IDEReg[108], IDEReg[107], IDEReg[48],
         1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0, aluOp_sig, IDEReg[51:49], pc};
         IDEPCReg = IFIDReg[47:16];
         IDEReg = {MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, 

@@ -10,7 +10,8 @@ module controlUnit (
     output RegWR, MemR, MemWR, ldm, Mem_to_Reg, stack , branch,
     output[1:0] pc_sel,
     output pop_pc1, pop_pc2, pop_ccr, fetch_pc_enable,
-    output freeze_cu, call, rti, ret
+    output freeze_cu, call, rti, ret,
+    output portR, portWR
   );
   wire pc_to_stack1, pc_to_stack2, ccr_to_stack;
   wire MemWR_call, MemWR_int, MemWR_cu,

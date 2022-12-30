@@ -23,7 +23,8 @@ module ID #(parameter width = 16) (
   output [15:0] op1, R_op2,
   input [2:0] RW_In_addr,
   output [2:0] RW_Out_addr,
-  input RW_Sig_in
+  input RW_Sig_in,
+  output portR, portWR
  );
   
   wire [2:0] read_addr1, read_addr2;   // to read from RegFile
@@ -74,7 +75,9 @@ module ID #(parameter width = 16) (
       .freeze_cu(freeze_cu),
       .call(call),
       .ret(ret),
-      .rti(rti)
+      .rti(rti),
+      .portR(portR),
+      .portWR(portWR)
     );
 
   jumpsCU
@@ -96,7 +99,7 @@ module ID #(parameter width = 16) (
   assign read_addr1 = instruction[width - 6 : width - 8];
   assign read_addr2 = instruction[width - 9 : width - 11];
   assign read_enable = enable;
-  assign RW_Out_addr = instruction[width - 9 : width - 11];  //instruction[width - 12 : width - 14];
+  assign RW_Out_addr = (aluSrc[0] == 1'b1) ? instruction[width - 6 : width - 8] : instruction[width - 9 : width - 11];  //instruction[width - 12 : width - 14];
   assign I_op2 = instruction[width - 1 : 0];
   assign shift_amount = instruction [7:0];
   
