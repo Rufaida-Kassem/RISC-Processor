@@ -124,7 +124,6 @@ module Processor (
       .pc_sel (pc_sel ),
       .mem_data_sel (mem_data_sel ),
       .ccr (3'b0 ), //to change
-      .enable (decode_enable ),
       .clk (clk ),
       .rst (rst ),
       .instruction (IFIDReg[15:0] ),
