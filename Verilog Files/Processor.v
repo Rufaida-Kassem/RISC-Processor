@@ -94,7 +94,10 @@ module Processor (
       .pc_selection (pc_sel ),
       .branch_call_addr (pc_jmp ),
       .pc_out (pc ),  //output --> next instruction address
-      .instruction  ( instruction)  //output
+      .instruction  ( instruction),  //output
+      .pop_pc_low_sig (pop_pc1_sig),
+      .pop_pc_high_sig (pop_pc2_sig),
+      .pop_data (16'b0)
     );
 
  
@@ -123,7 +126,6 @@ module Processor (
       .pc_sel (pc_sel ),
       .mem_data_sel (mem_data_sel ),
       .ccr (3'b0 ), //to change
-      .enable (decode_enable ),
       .clk (clk ),
       .rst (rst ),
       .instruction (IFIDReg[15:0] ),
@@ -131,6 +133,7 @@ module Processor (
       .shift_amount (shift_amount),
       .Reg_data(Reg_data),
       .op1(op1),
+      .I_op2 (I_op2),
       .R_op2(R_op2),
       .RW_In_addr(MEMOWB_Reg[2:0]),
       .RW_Out_addr(RW_Out_addr),

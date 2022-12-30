@@ -14,13 +14,12 @@ module ID #(parameter width = 16) (
   output call, rti, ret,
   output [1:0] pc_sel, mem_data_sel,
   input[2:0] ccr,
-  input enable,
   input clk, rst,
   input [width - 1 : 0] instruction,
   output [31:0] pc_jmp,
   output [8:0] shift_amount,
   input [15:0] Reg_data,
-  output [15:0] op1, R_op2,
+  output [15:0] op1, R_op2, I_op2,
   input [2:0] RW_In_addr,
   output [2:0] RW_Out_addr,
   input RW_Sig_in,
@@ -30,7 +29,6 @@ module ID #(parameter width = 16) (
   
   wire [2:0] read_addr1, read_addr2;   // to read from RegFile
   wire [4:0] opCode;
-  wire read_enable;
   wire branch_taken;
 
   //reg data back -- enable -- address
@@ -98,7 +96,6 @@ module ID #(parameter width = 16) (
   assign opCode = instruction  [width - 1 : width - 5];
   assign read_addr1 = instruction[width - 6 : width - 8];
   assign read_addr2 = (aluSrc[0] == 1'b1) ? instruction[width - 6 : width - 8] : instruction[width - 9 : width - 11];
-  assign read_enable = enable;
   assign RW_Out_addr = (aluSrc[0] == 1'b1) ? instruction[width - 6 : width - 8] : instruction[width - 9 : width - 11];  //instruction[width - 12 : width - 14];
   assign I_op2 = instruction[width - 1 : 0];
   assign shift_amount = instruction [7:0];
