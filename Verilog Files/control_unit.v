@@ -390,7 +390,7 @@ module intSM (
     case(current_state)
       idle_state:
       begin
-        pc_sel = 2'b10;
+        pc_sel = 2'b0;
         freeze_pc = 0;
         freeze_cu = 0;
         stack = 0;
@@ -449,7 +449,7 @@ module intSM (
       begin
         next_state = idle_state;
         ccr_to_stack = 1;
-        pc_sel = 2'b0;
+        pc_sel = 2'b10;
       end
       default:
       begin

@@ -125,7 +125,7 @@ module Processor (
       .enable (decode_enable ),
       .clk (clk ),
       .rst (rst ),
-      .instruction (instruction ),
+      .instruction (IFIDReg[15:0] ),
       .pc_jmp  ( pc_jmp),
       .shift_amount (shift_amount),
       .Reg_data(Reg_data),

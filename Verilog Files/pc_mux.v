@@ -21,7 +21,7 @@ begin
             case (selection)
                 00: pc = next_instruction_addr;
                 01: pc = first_instruction_addr;
-                10: pc = interrupt_addr;
+                10: pc = 32'b0;
                 11: pc = branch_call_addr;
                 default: pc = pc;
             endcase
