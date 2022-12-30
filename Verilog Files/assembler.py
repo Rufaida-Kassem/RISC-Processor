@@ -9,16 +9,15 @@ for i in range(len(lines)):
         if(not lines[i].startswith("#")):  
             if(lines[i].startswith(".ORG")):
                 next_line = lines[i + 1].split()
+                print(next_line)
                 if len(next_line) == 1:
-                    try:
                         num = '{0:032b}'.format(int(next_line[0], 16))
                         array[int(line[1]) + 1] = num[:len(num)//2] # most significant bit
                         array[int(line[1])] = num[len(num)//2 if len(num)%2 == 0 else (((len(num)//2))+1):] # least significant bit
                         i = i + 2
-                    except:
-                        array_counter = int(line[1], 16)
                 else:
                     array_counter = int(line[1], 16)
+                    print(array_counter)
             # *********************ONE OPERAND********************
             if(lines[i].startswith("NOP")):
                 array[array_counter] = "0000000000000000"
@@ -331,7 +330,7 @@ for i in range(len(lines)):
                 if(reg[0] == 'R7'): 
                     array[array_counter] = array[array_counter] + "111"
                 ############### destination
-                array[array_counter]  = array[array_counter] + '{0:016b}'.format(int(reg[2], 16))
+                array[array_counter]  = array[array_counter] + '{0:08b}'.format(int(reg[1], 16))
                 array_counter += 1 
             if(lines[i].startswith("SHR")):
                 array[array_counter] = "01110"
@@ -353,7 +352,7 @@ for i in range(len(lines)):
                 if(reg[0] == 'R7'): 
                     array[array_counter] = array[array_counter] + "111"
                 ############### destination
-                array[array_counter]  = array[array_counter] + '{0:016b}'.format(int(reg[2], 16))
+                array[array_counter]  = array[array_counter] + '{0:08b}'.format(int(reg[1], 16))
                 array_counter += 1
             #*********************MEMORY******************** 
             if(lines[i].startswith("PUSH")):
@@ -587,15 +586,15 @@ for i in range(len(lines)):
                     array[array_counter] = array[array_counter] + "111"+"00000"
                 array_counter += 1  
             ################################ branch (JZ, JN, JC, JMP, CALL) same of (OUT) & (RET) same of (IN)
-            if(lines[i].startswith("RTI") | lines[i].startswith("RET") | lines[i].startswith("RESET") | lines[i].startswith("INT")):
+            if(lines[i].startswith("RTI") | lines[i].startswith("RET")):
                 if(lines[i].startswith("RET")):
                     array[array_counter] = "11001"
                 if(lines[i].startswith("RTI")):
                     array[array_counter] = "11010"
-                if(lines[i].startswith("RESET")):
-                    array[array_counter] = "11011"
-                if(lines[i].startswith("INT")):
-                    array[array_counter] = "11100"
+                # if(lines[i].startswith("RESET")):
+                #     array[array_counter] = "11011"
+                # if(lines[i].startswith("INT")):
+                #     array[array_counter] = "11100"
                 array[array_counter] = array[array_counter] + "00000000000"
                 array_counter += 1 
             

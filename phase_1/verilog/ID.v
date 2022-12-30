@@ -1,34 +1,25 @@
 module ID #(parameter width = 16) (
-  inout interrupt, 
-  input load_use,
+    enable,ldm,
+    instruction, RW_sig_out, aluSrc_sig, MemWR_sig, MemR_sig, RW_Sig_in, Reg_data, aluOp_sig, op1, R_op2, I_op2, RW_Out_addr, RW_In_addr, clk, rst
+  );
+  input interrupt, load_use;
   output mem_to_Reg_sig,
          pop_pc1_sig,
          pop_pc2_sig,
          pop_ccr_sig,
          stack_sig,
-         fetch_pc_enable,
-  output[4:0] aluOp,
-  output [1:0] aluSrc,
-  output RegWR, MemR, MemWR, ldm , branch,
-  output freeze_cu,
-  output call, rti, ret,
-  output [1:0] pc_sel, mem_data_sel,
-  input[2:0] ccr,
-  input clk, rst,
-  input [width - 1 : 0] instruction,
-  output [31:0] pc_jmp,
-  output [8:0] shift_amount,
-  input [15:0] Reg_data,
-  output [15:0] op1, R_op2, I_op2,
-  input [2:0] RW_In_addr,
-  output [2:0] RW_Out_addr,
-  input RW_Sig_in,
-  output portR, portWR
- );
-  
-  wire [2:0] read_addr1, read_addr2;   // to read from RegFile
+         fetch_pc_enable
+         ;
+  output [1:0] pc_sel, mem_data_sel;
+  input[2:0] ccr;
+  input enable;
+  input clk, rst;
+  input [width - 1 : 0] instruction;
+  wire [2 : 0] read_addr1, read_addr2;   // to read from RegFile
   wire [4:0] opCode;
-  wire branch_taken;
+  wire read_enable;
+  output [31:0] pc_jmp,
+         wire branch_taken, branch_sig;
 
   //reg data back -- enable -- address
   // input       -- out in  -- out in
@@ -49,55 +40,43 @@ module ID #(parameter width = 16) (
 
   controlUnit
     controlUnit_dut (
-      .clk(clk),
-      .rst(rst),
       .branch_taken (branch_taken ),
       .interrupt (interrupt ),
       .load_use (load_use ),
       .opCode (opCode ),
-      .aluOp (aluOp ),
-      .aluSrc (aluSrc ),
-      .RegWR (RegWR ),
-      .MemR (MemR),
-      .MemWR (MemWR),
+      .aluOp (aluOp_sig ),
+      .aluSrc (aluSrc_sig ),
+      .RegWR (RW_sig_out ),
+      .MemR (MemR_sig ),
+      .MemWR (MemWR_sig ),
       .ldm (ldm ),
       .Mem_to_Reg (mem_to_Reg_sig ),
       .stack (stack_sig ),
-      .branch (branch ),
+      .branch (branch_sig ),
       .pc_sel (pc_sel ),
       .pop_pc1 (pop_pc1_sig ),
       .pop_pc2 (pop_pc2_sig ),
       .pop_ccr (pop_ccr_sig ),
       .fetch_pc_enable  ( fetch_pc_enable),
-      .mem_data_sel (mem_data_sel),
-      .freeze_cu(freeze_cu),
-      .call(call),
-      .ret(ret),
-      .rti(rti),
-      .portR(portR),
-      .portWR(portWR)
+      .mem_data_sel (mem_data_sel)
     );
 
   jumpsCU
     jumpsCU_dut (
       .clk (clk ),
       .rst (rst ),
-      .branch (branch ),
+      .branch (branch_sig ),
       .jtype (opCode[1:0] ),
       .ccr (ccr ),
       .rdst (R_op2),
       .pc (pc_jmp ),
-      .taken  (branch_taken)
+      .taken  ( branch_taken)
     );
-
-
-
 
   assign opCode = instruction  [width - 1 : width - 5];
   assign read_addr1 = instruction[width - 6 : width - 8];
   assign read_addr2 = instruction[width - 9 : width - 11];
-  assign RW_Out_addr = (aluSrc[0] == 1'b1) ? instruction[width - 6 : width - 8] : instruction[width - 9 : width - 11];  //instruction[width - 12 : width - 14];
+  assign read_enable = enable;
+  assign RW_Out_addr = instruction[width - 9 : width - 11];  //instruction[width - 12 : width - 14];
   assign I_op2 = instruction[width - 1 : 0];
-  assign shift_amount = instruction [7:0];
-  
 endmodule
