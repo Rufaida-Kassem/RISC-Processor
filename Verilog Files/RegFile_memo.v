@@ -30,6 +30,7 @@ module RegFile_memo #(parameter N = 16) (read_enable,write_enable, read_data1, r
     if(rst)
     begin
       read_data1= 'bz;
+      read_data2 = 'bz;
     end
     else if(read_enable)
     begin
