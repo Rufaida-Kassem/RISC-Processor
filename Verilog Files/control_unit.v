@@ -10,7 +10,7 @@ module controlUnit (
     output RegWR, MemR, MemWR, ldm, Mem_to_Reg, stack , branch,
     output[1:0] pc_sel,
     output pop_pc1, pop_pc2, pop_ccr, fetch_pc_enable,
-    output freeze_cu
+    output freeze_cu, call, rti, ret
   );
   wire pc_to_stack1, pc_to_stack2, ccr_to_stack;
   wire MemWR_call, MemWR_int, MemWR_cu,
@@ -344,7 +344,7 @@ endmodule
 module intSM (
     inout interrupt,
     input clk, rst, ldm, load_use,
-    output reg ccr_to_stack , pc_to_stack1, pc_to_stack2, stack, MemWR, pc_intr_handler, freeze_pc, freeze_cu,
+    output reg ccr_to_stack , pc_to_stack1, pc_to_stack2, stack, MemWR, freeze_pc, freeze_cu,
     output reg [1:0] pc_sel
   );
   reg     [2:0] current_state, next_state;
@@ -378,7 +378,6 @@ module intSM (
         ccr_to_stack = 0;
         pc_to_stack1 = 0;
         pc_to_stack2 = 0;
-        pc_intr_handler = 0;
         if(interrupt == 1)
         begin
           ack = 1'b1;

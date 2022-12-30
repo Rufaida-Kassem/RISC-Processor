@@ -3,13 +3,29 @@ module Processor_tb;
   reg clk = 0;
   reg  rst = 0;
   reg  start = 0;
+  wire [15:0] outputPort;
+  wire [15:0] inputPort;
+  wire interrupt;
+  // Processor
+  //   Processor_dut (
+  //     .clk (clk ),
+  //     .rst  ( rst),
+  //     .start (start)
+  //   );
 
-  Processor
-    Processor_dut (
-      .clk (clk ),
-      .rst  ( rst),
-      .start (start)
-    );
+
+Processor
+  Processor_dut (
+    .clk (clk ),
+    .rst (rst ),
+    .start (start ),
+    .outputPort (outputPort ),
+    .inputPort (inputPort ),
+    .interrupt  ( interrupt)
+  );
+
+
+
   initial
   begin
     begin

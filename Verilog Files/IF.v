@@ -4,7 +4,7 @@ module pcCircuit #(parameter addressWidth = 32) (
   input [1:0] pc_selection,
   output wire [addressWidth - 1 : 0] pc  // pc
 );
-  wire next_pc;
+  wire [31:0] next_pc;
 
   increment_pc 
   increment_pc_dut (
@@ -21,11 +21,11 @@ module pcCircuit #(parameter addressWidth = 32) (
     .clk(clk),
     .rst(rst),
     .interrupt_addr (32'b0),
-    .first_instructoin_addr (32'h20 ),
+    .first_instruction_addr (32'h20 ),
     .next_instruction_addr (next_pc ),
-    .branch_addr (branch_call_addr ),
+    .branch_call_addr (branch_call_addr ),
     .selection (pc_selection ),
-    .enable (pc_enable ),
+    .pc_enable (pc_enable ),
     .pc (pc)
   );
 
