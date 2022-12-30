@@ -13,7 +13,9 @@ module Processor (
 
 
 
-  reg [116:0] IDEReg;   // shift_amount  8bits      [116:109]         
+  reg [118:0] IDEReg;   // portRW                   [118]
+                        // portR                    [117]
+                        // shift_amount  8bits      [116:109]         
                         // MemR_sig 1               [108]
                         // MemWR_sig 1              [107]
                         // aluOp_sig (5 bits)       [106:102]
@@ -55,6 +57,8 @@ module Processor (
 
   wire [8:0] shift_amount;
 
+  wire portR, portWR;
+
 
 
 
@@ -68,16 +72,11 @@ module Processor (
                                         // Pc(32 bit)
   reg [35:0] MEMOWB_Reg;
   wire [2:0]Ccr;
-  wire [15:0] MemoryAddress;
+  //wire [15:0] MemoryAddress;
   wire [15:0] Out_Excute;
   wire [15:0] Out_Memo;
-  reg fetch_enable, decode_enable;
   wire ldm;
   wire [31:0] pc_jmp;
-
-  reg     [2:0] current_state, next_state;
-  parameter idle_state = 0, fetch_state = 1, decode_state = 2, execute_state = 3, memory_state = 4, write_back_state = 5;
-
 
 
   wire fetch_pc_enable_oring;
@@ -133,7 +132,9 @@ module Processor (
       .R_op2(R_op2),
       .RW_In_addr(MEMOWB_Reg[2:0]),
       .RW_Out_addr(RW_Out_addr),
-      .RW_Sig_in(MEMOWB_Reg[3])
+      .RW_Sig_in(MEMOWB_Reg[3]),
+      .portR(portR),
+      .portWR(portWR)
     );
   
 
@@ -148,14 +149,14 @@ module Processor (
 //       .shiftAmmount(IDEReg[116:109]),   //modified
 //       .AluOp( IDEReg[106:102]),
 //       .AluScr(IDEReg[101:100]),
-//       .Inport(inputPort),
+//       .Inport(IDEReg[117]),   //modified
 //       .Branch(IDEReg[41]),
 //       .ExecuteMemoryForwarding(16'b0),
 //       .MemoryWBForwarding(16'b0),
 //       .Forward1Sel(2'b0),
 //       .Forward2Sel(2'b0),
 //       .Ccr(Ccr),
-//       .MemoryAddress(MemoryAddress),
+//       .MemoryAddress(IDEReg[78:67]),  // you have to send the memoaddress that exists in the buffer IDEReg
 //       .Out(Out_Excute)
 // );
 
@@ -196,7 +197,7 @@ always @ (posedge clk, posedge rst)
       begin
 
         MEMOWB_Reg ={EXMEMO_Reg[33:18],Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
-        EXMEMO_Reg ={Ccr, Out_Excute, MemoryAddress[11:0], IDEReg[108], IDEReg[107], IDEReg[48],
+        EXMEMO_Reg ={Ccr, Out_Excute, IDEReg[78:67], IDEReg[108], IDEReg[107], IDEReg[48],
         1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0, aluOp_sig, IDEReg[51:49], pc};
         IDEPCReg = IFIDReg[47:16];
         IDEReg = {MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, 
@@ -209,105 +210,3 @@ always @ (posedge clk, posedge rst)
 
 
 endmodule
-
-
-  // always @ (current_state, start, ldm)
-//   begin
-//     case (current_state)
-//       idle_state:
-//         if(start & ~rst)
-//         begin
-//           next_state  = fetch_state;
-//         end
-//       fetch_state:
-//       begin
-//         next_state  = decode_state;
-//         fetch_enable  = 1'b1;
-//       end
-//       decode_state:
-//       begin
-//         next_state  = execute_state;
-//         decode_enable = 1'b1;
-//         IFIDReg  = {16'b0, pc, instruction};
-//         fetch_enable = 1'b0;    
-//         if(ldm)
-//           fetch_enable = 1'b1;
-//       end
-//       execute_state:
-//       begin
-//         next_state  = memory_state;
-//         fetch_enable  = 1'b0;
-//         IDEReg = {4'b0,MemR_sig, MemWR_sig, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, RW_Out_addr, RW_sig_out};
-//         IDEPCReg = IFIDReg[47:16];
-//         decode_enable  = 1'b0;
-        
-//         //fetch_enable = 1'b0;  //changed here doaa
-//       end
-        
-//       memory_state:
-//       begin
-//         next_state  = write_back_state;
-//         //[85:83] ==> Ccr
-//         //[82:67] ==> ALuout
-//         //[66:55] ==> Memoryaddress
-//         //[54:40] ==> ControlSignals
-//         //[39:35] ==> Alu op ==> must take from decode buffer need bits
-//         //[34:32] ==> Write address
-//         //[31:0] ==> Pc
-//         EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],IDEReg[59], IDEReg[58],IDEReg[0],1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,aluOp_sig,IDEReg[3:1],pc};
-//       end
-//       write_back_state:
-//       begin
-//         next_state  = fetch_state;
-//         //[35:20] ==> ALu out
-//         //[19:4] ==> Memout
-//         //[3] ==> wb selector
-//         //[2:0] reg address
-//         MEMOWB_Reg ={EXMEMO_Reg[33:18],Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
-//       end
-//       default:
-//         next_state = idle_state;
-//     endcase
-//   end
-
-//     always @ (posedge clk or posedge rst)
-//     begin
-//       if (rst)
-//         current_state  = idle_state;
-//       else
-//         if(clk)    //and ~aluSrc_sig
-//         begin
-//           current_state  = next_state;
-//         end
-//     end
-
-
-
-
-
-
-
-
-
-
-
-     // ID
-  //   ID_dut (
-  //     .enable(decode_enable),
-  //     .instruction (IFIDReg[15:0]),    //input
-  //     .op1 (op1 ),                         //output
-  //     . R_op2 ( R_op2 ),                   //output
-  //     . I_op2 ( I_op2 ),                   //output
-  //     .RW_Out_addr (RW_Out_addr ),         //output
-  //     .RW_In_addr (MEMOWB_Reg[2:0]),   //input
-  //     .aluOp_sig (aluOp_sig ),  //output
-  //     .RW_sig_out (RW_sig_out ),  //output
-  //     .aluSrc_sig ( aluSrc_sig ), //output
-  //     .MemWR_sig ( MemWR_sig ), //output
-  //     .MemR_sig ( MemR_sig ),
-  //     .RW_Sig_in (MEMOWB_Reg[3] ), //input --> WB
-  //     .Reg_data  ( Reg_data),  //input  --> WB
-  //     .clk (clk ),
-  //     .rst ( rst ),
-  //     .ldm(ldm)
-  //   );
