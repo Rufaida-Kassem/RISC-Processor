@@ -132,6 +132,7 @@ module Processor (
       .shift_amount (shift_amount),
       .Reg_data(Reg_data),
       .op1(op1),
+      .I_op2 (I_op2),
       .R_op2(R_op2),
       .RW_In_addr(MEMOWB_Reg[2:0]),
       .RW_Out_addr(RW_Out_addr),

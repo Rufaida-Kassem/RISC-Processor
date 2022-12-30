@@ -20,7 +20,7 @@ module ID #(parameter width = 16) (
   output [31:0] pc_jmp,
   output [8:0] shift_amount,
   input [15:0] Reg_data,
-  output [15:0] op1, R_op2,
+  output [15:0] op1, R_op2, I_op2,
   input [2:0] RW_In_addr,
   output [2:0] RW_Out_addr,
   input RW_Sig_in,
