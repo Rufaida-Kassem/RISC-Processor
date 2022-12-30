@@ -13,7 +13,7 @@ module Processor (
 
 
 
-  reg [121:0] IDEReg;   // read_addr1 (src address) [121:119]
+  reg [121:0] IDEReg;   // src_address              [121:119]
                         // portWR                   [118]
                         // portR                    [117]
                         // shift_amount  8bits      [116:109]         
@@ -55,7 +55,7 @@ module Processor (
   wire [1:0] pc_sel;
   wire call, ret, rti;
   wire branch, freeze_cu;
-  wire [2:0] read_addr1;  // src address
+  wire [2:0] src_address;
 
   wire [8:0] shift_amount;
 
@@ -140,7 +140,7 @@ module Processor (
       .RW_Sig_in(MEMOWB_Reg[3]),
       .portR(portR),
       .portWR(portWR),
-      .read_addr1(read_addr1)
+      .src_address(src_address)
     );
   
 
@@ -206,7 +206,7 @@ always @ (posedge clk, posedge rst)
         EXMEMO_Reg ={Ccr, Out_Excute, IDEReg[78:67], IDEReg[108], IDEReg[107], IDEReg[48],
         1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0, aluOp_sig, IDEReg[51:49], pc};
         IDEPCReg = IFIDReg[47:16];
-        IDEReg = {read_addr1, portWR, portR, shift_amount, MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, 
+        IDEReg = {src_address, portWR, portR, shift_amount, MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, 
                   RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
                   pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
                   rti, pc_sel, mem_data_sel, pc_jmp};
