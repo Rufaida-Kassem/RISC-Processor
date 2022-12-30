@@ -97,6 +97,7 @@ module ID #(parameter width = 16) (
   assign read_addr1 = instruction[width - 6 : width - 8];
   assign read_addr2 = (aluSrc[0] == 1'b1) ? instruction[width - 6 : width - 8] : instruction[width - 9 : width - 11];
   assign RW_Out_addr = read_addr2;
+  assign src_address = read_addr1;
   assign I_op2 = instruction[width - 1 : 0];
   assign shift_amount = instruction [7:0];
   
