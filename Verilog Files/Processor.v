@@ -78,11 +78,18 @@ module Processor (
   reg     [2:0] current_state, next_state;
   parameter idle_state = 0, fetch_state = 1, decode_state = 2, execute_state = 3, memory_state = 4, write_back_state = 5;
 
+
+
+  reg fetch_pc_enable_oring;
+
+
+  assign fetch_pc_enable_oring = (rst == 1'b1) ? 1'b1 : fetch_pc_enable;
+
   IF 
     IF_dut (
       .clk (clk ),
       .rst (rst ),
-      .pc_enable (fetch_pc_enable ),
+      .pc_enable (fetch_pc_enable_oring ),
       .pc_selection (pc_sel ),
       .branch_call_addr (pc_jmp ),
       .pc_out (pc ),  //output --> next instruction address
@@ -187,6 +194,7 @@ always @ (posedge clk, posedge rst)
       end
       else if(clk)    //and ~aluSrc_sig
       begin
+
         MEMOWB_Reg ={EXMEMO_Reg[33:18],Out_Memo, EXMEMO_Reg[3], EXMEMO_Reg[2:0]};
         EXMEMO_Reg ={Ccr, Out_Excute, MemoryAddress[11:0], IDEReg[108], IDEReg[107], IDEReg[48],
         1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0, aluOp_sig, IDEReg[51:49], pc};
