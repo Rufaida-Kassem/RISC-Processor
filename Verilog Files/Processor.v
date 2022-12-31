@@ -191,7 +191,6 @@ DataMemory Date_Memory (.clk(clk),
                     .AluOut(EXMEMO_Reg[78:63]),
                     .PcLow(EXMEMO_Reg[15:0]),
                     .PcHigh(EXMEMO_Reg[31:16]),
-                    .OpCode(EXMEMO_Reg[46:42]),
                     .sel1(EXMEMO_Reg[33:32]),
                     .sel2(EXMEMO_Reg[36]),
                     .Out1(Out_Memo));
