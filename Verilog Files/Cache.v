@@ -9,7 +9,7 @@ module Memory #(parameter addBusWidth = 32, width = 16, instrORdata) (  //instr 
     reg [width - 1 : 0] memory [0 : 2**addBusWidth - 1];
     integer i;
 
-    always @(posedge clk , posedge rst) begin
+    always @(negedge clk , posedge rst) begin
         if(rst)
         begin
             if(instrORdata) begin
@@ -24,10 +24,13 @@ module Memory #(parameter addBusWidth = 32, width = 16, instrORdata) (  //instr 
         end
     end
 
-    always @(negedge clk) begin   //read
-        if (~clk & memR & ~rst) begin
-            dataR <= memory[addR];
-        end
-    end
+    //asynch reading
+    assign dataR = memory[addR];
+
+    // always @(negedge clk) begin   //read
+    //     if (~clk & memR & ~rst) begin
+    //         dataR <= memory[addR];
+    //     end
+    // end
 
 endmodule

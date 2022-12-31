@@ -2,6 +2,7 @@ file = "Memory"
 read_file = open(file + ".asm", "r",encoding='utf-8')
 array = ["0000000000000000" for i in range(2000)]
 array_counter = 0 
+s=0
 lines = read_file.readlines()
 for i in range(len(lines)):
     line = lines[i].split()
@@ -10,14 +11,11 @@ for i in range(len(lines)):
             if(lines[i].startswith(".ORG")):
                 next_line = lines[i + 1].split()
                 print(next_line)
-                if len(next_line) == 1:
-                        num = '{0:032b}'.format(int(next_line[0], 16))
-                        array[int(line[1]) + 1] = num[:len(num)//2] # most significant bit
-                        array[int(line[1])] = num[len(num)//2 if len(num)%2 == 0 else (((len(num)//2))+1):] # least significant bit
-                        i = i + 2
-                else:
-                    array_counter = int(line[1], 16)
-                    print(array_counter)
+                s=int(line[1], 16)
+                if(s == 32):
+                     array[array_counter] = '11010'+'00000000000'
+                array_counter = int(line[1], 16)
+                print(array_counter)
             # *********************ONE OPERAND********************
             if(lines[i].startswith("NOP")):
                 array[array_counter] = "0000000000000000"
@@ -105,7 +103,7 @@ for i in range(len(lines)):
                 if(line[1] == 'R7'): 
                     array[array_counter] = array[array_counter] + "111"+"00000"
                 array_counter += 1 
-            if(lines[i].startswith("IN")):
+            if(lines[i].startswith("IN ")):
                 array[array_counter] = "00111000"
                 if(line[1] == 'R0'): 
                     array[array_counter] = array[array_counter] + "000"+"00000"

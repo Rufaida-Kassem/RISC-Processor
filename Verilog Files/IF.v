@@ -73,9 +73,12 @@ module IF (
     );
 
 
-    always @ (posedge clk)
+    always @ (posedge clk)//, posedge rst)
     begin
-      instruction = instruction_temp;
+      // if(rst)
+      //   instruction = 16'b0;
+      // else
+        instruction = instruction_temp;
     end
 
 

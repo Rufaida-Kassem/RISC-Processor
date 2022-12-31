@@ -1,5 +1,0 @@
-module Ldm(input[15:0] ImmediateValue,input Enable,output reg[15:0] Out);
-always@(posedge Enable) begin
-Out = ImmediateValue;
-end
-endmodule

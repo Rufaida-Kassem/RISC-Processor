@@ -7,10 +7,12 @@ module Processor (
   
   wire [15:0] instruction;
   wire [31:0] pc;
+  reg [63:0] IFIDReg_pre;
   reg [63:0] IFIDReg;   // 0000_0000_0000_0000 - PC[47:16] - instruction[15:0]
                         //pc 32
                         //instruction 16  
 
+  reg [121:0] IDEReg_pre;
   reg [121:0] IDEReg;   // src_address     3bits    [121:119]
                         // portRW                   [118]
                         // portR                    [117]
@@ -40,7 +42,8 @@ module Processor (
                         // mem_data_sel  2bits      [33:32]
                         // pc_jmp 32 bits           [31:0]
 
-  reg [31:0] IDEPCReg; // we separate it to reduce the size in case we put all in reg (as we will need to keep the size log to the base 2)
+  reg [31:0] IDEPC_Reg_pre;
+  reg [31:0] IDEPC_Reg; // we separate it to reduce the size in case we put all in reg (as we will need to keep the size log to the base 2)
 
 
   wire [1:0] aluSrc_sig, mem_data_sel;
@@ -63,6 +66,7 @@ module Processor (
 
 
   //////////////////For Execute and Memory
+  reg [81:0] EXMEMO_Reg_pre;
   reg [81:0] EXMEMO_Reg; //86 bits ==>//[81:79] ==> Ccr
                          //[78:63] ==> ALuout
                          //[62:51] ==> Memoryaddress
@@ -80,6 +84,7 @@ module Processor (
                         //[33:32] ==> mem_data_sel IDEReg[33:32]
                         //[31:0] ==> pc IDEReg[31:0]
 
+  reg [37:0] MEMOWB_Reg_pre;
   reg [37:0] MEMOWB_Reg;//=>[36:21]Aluout
                         //=>[20:5]memoout
                         //=>[4]outPort
@@ -206,13 +211,17 @@ WriteBack Write_Back(
   .Write_Data(Reg_data),
   .output_port(outputPort));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-always @ (negedge clk, posedge rst)
+
+
+
+  
+always @ (posedge clk, posedge rst)
     begin
       if(rst)
       begin
         IFIDReg  = 0;
         IDEReg = 0;
-        IDEPCReg = 0;
+        IDEPC_Reg = 0;
         EXMEMO_Reg = 0;
         MEMOWB_Reg = 0;
       end
@@ -223,7 +232,7 @@ always @ (negedge clk, posedge rst)
                     IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
                     IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
                    IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEReg[31:0]};
-        IDEPCReg = IFIDReg[47:16];
+        IDEPC_Reg = IFIDReg[47:16];
         IDEReg [121:119] = src_address;
         IDEReg [118:0] = {portWR, portR, shift_amount,MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2,I_op2, 
                   RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
@@ -234,4 +243,64 @@ always @ (negedge clk, posedge rst)
       end
     end
 
+
+
+
+
+  // always @ (posedge clk, posedge rst)
+//     begin
+//       if(rst)
+//       begin
+//         IFIDReg  = 0;
+//         IDEReg = 0;
+//         IDEPC_Reg = 0;
+//         EXMEMO_Reg = 0;
+//         MEMOWB_Reg = 0;
+//       end
+//       else
+//       begin
+//         MEMOWB_Reg = MEMOWB_Reg_pre;
+//         EXMEMO_Reg = EXMEMO_Reg_pre;
+//         IDEPC_Reg = IDEPC_Reg_pre;
+//         IDEReg = IDEReg_pre;
+//         IFIDReg  = IFIDReg_pre;
+//         Reg_data_2 = Reg_data;
+//       end
+//     end
+
+
+
+//     always @ (negedge clk, posedge rst)
+//     begin
+//       if(rst)
+//       begin
+//         IFIDReg_pre  = 0;
+//         IDEReg_pre = 0;
+//         IDEPC_Reg_pre = 0;
+//         EXMEMO_Reg_pre = 0;
+//         MEMOWB_Reg_pre = 0;
+//       end
+//       else
+//       begin
+//         MEMOWB_Reg_pre ={EXMEMO_Reg_pre[38],EXMEMO_Reg_pre[78:63],Out_Memo, EXMEMO_Reg_pre[50],EXMEMO_Reg_pre[37], EXMEMO_Reg_pre[41:39]};
+//         EXMEMO_Reg_pre ={Ccr,Out_Excute,MemoryAddress[11:0],
+//                     IDEReg_pre[118],IDEReg_pre[117],IDEReg_pre[108],IDEReg_pre[107],
+//                     IDEReg_pre[106:102],IDEReg_pre[51:49],IDEReg_pre[48],IDEReg_pre[47],
+//                    IDEReg_pre[43],IDEReg_pre[41],IDEReg_pre[40],IDEReg_pre[33:32],IDEReg_pre[31:0]};
+//         IDEPC_Reg_pre = IFIDReg_pre[47:16];
+//         IDEReg_pre [121:119] = src_address;
+//         IDEReg_pre [118:0] = {portWR, portR, shift_amount,MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2,I_op2, 
+//                   RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
+//                   pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
+//                   rti, pc_sel, mem_data_sel, pc_jmp};
+//         IFIDReg_pre  = {16'b0, pc, instruction};  
+//         Reg_data_2 = Reg_data;
+//       end
+//     end
+
+
 endmodule
+
+
+
+

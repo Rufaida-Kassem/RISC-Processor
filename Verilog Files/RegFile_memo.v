@@ -25,23 +25,27 @@ module RegFile_memo #(parameter N = 16) (read_enable,write_enable, read_data1, r
     end
   end
 
-  always @(posedge clk, posedge rst)
-  begin
-    if(rst)
-    begin
-      read_data1= 'bz;
-      read_data2 = 'bz;
-    end
-    else if(read_enable)
-    begin
-      read_data1 = arr_regs[read_addr1];
-      read_data2 = arr_regs[read_addr2];
-    end
-    else
-    begin
-      read_data1 = 'bz;
-      read_data2 = 'bz;
-    end
-  end
+  //asynch reading
+  assign read_data1 = arr_regs[read_addr1];
+  assign read_data2 = arr_regs[read_addr2]; 
+
+  // always @(posedge clk, posedge rst)
+  // begin
+  //   if(rst)
+  //   begin
+  //     read_data1= 'bz;
+  //     read_data2 = 'bz;
+  //   end
+  //   else if(read_enable)
+  //   begin
+  //     read_data1 = arr_regs[read_addr1];
+  //     read_data2 = arr_regs[read_addr2];
+  //   end
+  //   else
+  //   begin
+  //     read_data1 = 'bz;
+  //     read_data2 = 'bz;
+  //   end
+  // end
 
 endmodule
