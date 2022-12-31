@@ -23,7 +23,8 @@ module ID #(parameter width = 16) (
   input [2:0] RW_In_addr,
   output [2:0] RW_Out_addr,
   input RW_Sig_in,
-  output portR, portWR
+  output portR, portWR,
+  output [2:0] src_address   // src_address
  );
   
   wire [2:0] read_addr1, read_addr2;   // to read from RegFile
@@ -92,11 +93,11 @@ module ID #(parameter width = 16) (
 
 
 
-
   assign opCode = instruction  [width - 1 : width - 5];
   assign read_addr1 = instruction[width - 6 : width - 8];
-  assign read_addr2 = instruction[width - 9 : width - 11];
-  assign RW_Out_addr = (aluSrc[0] == 1'b1) ? instruction[width - 6 : width - 8] : instruction[width - 9 : width - 11];  //instruction[width - 12 : width - 14];
+  assign read_addr2 = (aluSrc[0] == 1'b1) ? instruction[width - 6 : width - 8] : instruction[width - 9 : width - 11];
+  assign RW_Out_addr = read_addr2;
+  assign src_address = read_addr1;
   assign I_op2 = instruction[width - 1 : 0];
   assign shift_amount = instruction [7:0];
   

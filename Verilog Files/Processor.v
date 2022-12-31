@@ -13,7 +13,8 @@ module Processor (
 
 
 
-  reg [118:0] IDEReg;   // portRW                   [118]
+  reg [121:0] IDEReg;   // src_address              [121:119]
+                        // portWR                   [118]
                         // portR                    [117]
                         // shift_amount  8bits      [116:109]         
                         // MemR_sig 1               [108]
@@ -21,8 +22,8 @@ module Processor (
                         // aluOp_sig (5 bits)       [106:102]
                         // aluSrc_sig 2 bits        [101:100]
                         // op1 (value of first reg) 16 bits   [99:84]
-                        // R_op2 (value of second reg) to be saved for WB  16 bits  [83:68]
-                        // I_op2  (immediate)   16 bits       [67:52]
+                        // R_op2 (value of second reg) to be saved for WB  16 bits  [83:67]
+                        // I_op2  (immediate)   16 bits       [66:51]
                         // RW_Out_addr (dest address) 3 bits  [51:49]
                         // RW_sig_out  1 bit        [48]
                         // mem_to_reg_sig 1 bit     [47]
@@ -54,6 +55,7 @@ module Processor (
   wire [1:0] pc_sel;
   wire call, ret, rti;
   wire branch, freeze_cu;
+  wire [2:0] src_address;
 
   wire [8:0] shift_amount;
 
@@ -137,47 +139,45 @@ module Processor (
       .RW_Out_addr(RW_Out_addr),
       .RW_Sig_in(MEMOWB_Reg[3]),
       .portR(portR),
-      .portWR(portWR)
+      .portWR(portWR),
+      .src_address(src_address)
     );
   
 
   //////////////////For Execute and Memory
   /////////////////////////Execute////////////////////////////////////
-  Execution
-    Execute(
-      .op1( IDEReg[99:84]),
-      .op2( IDEReg[83:67]),
-      .inport(inputPort),
-      .immediate( IDEReg[66:51]),
-      .shiftAmmount({8'b0,IDEReg[116:109]}),   //modified
-      .AluOp( IDEReg[106:102]),
-      .AluScr(IDEReg[101:100]),
-      .Inport(IDEReg[117]),   //modified
-      .Branch(IDEReg[41]),
-      .ExecuteMemoryForwarding(EXMEMO_Reg[15:30]),
-      .MemoryWBForwarding(Reg_data),
-      .Forward1Sel(2'b0),
-      .Forward2Sel(2'b0),
-      .Ccr(Ccr),
-      .MemoryAddress(IDEReg[78:67]),  // you have to send the memoaddress that exists in the buffer IDEReg
-      .Out(Out_Excute)
-);
-//////////////////////////////////////////ForWarding Unit///////////////////////////////////////////////////////
-FullForwardingUnit fullforwardingunit(.CurrentRsrcAddress(),.CurrentRdstAddress(),.WriteMemoWriteBackAddress(),.WriteExcuMemoAddress,
-                           output reg[1:0] SelectionSignalRcs, output reg[1:0] SelectionSignalRds
-                           );
-//////////////////////////////////////////Memory/////////////////////////////////////////////////                           
-Memory #(.addBusWidth(12), .width(16), .instrORdata(0))
-         Date_Memory (
-           .clk (clk ),
-           .rst ( rst ),
-           .memR ( EXMEMO_Reg[5] ),
-           .memWR ( EXMEMO_Reg[4] ),
-           .dataWR ( EXMEMO_Reg[33:18] ),
-           .addR (EXMEMO_Reg[17:6] ),
-           .addWR ( EXMEMO_Reg[17:6] ),
-           .dataR  ( Out_Memo)
-         );
+//   Execution
+//     Execute(
+//       .op1( IDEReg[99:84]),
+//       .op2( IDEReg[83:67]),
+//       .inport(16'b0),
+//       .immediate( IDEReg[66:51]),
+//       .shiftAmmount(IDEReg[116:109]),   //modified
+//       .AluOp( IDEReg[106:102]),
+//       .AluScr(IDEReg[101:100]),
+//       .Inport(IDEReg[117]),   //modified
+//       .Branch(IDEReg[41]),
+//       .ExecuteMemoryForwarding(16'b0),
+//       .MemoryWBForwarding(16'b0),
+//       .Forward1Sel(2'b0),
+//       .Forward2Sel(2'b0),
+//       .Ccr(Ccr),
+//       .MemoryAddress(IDEReg[78:67]),  // you have to send the memoaddress that exists in the buffer IDEReg
+//       .Out(Out_Excute)
+// );
+
+// Memory 
+//   #(.addBusWidth(12), .width(16), .instrORdata(0))
+//          Date_Memory (
+//            .clk (clk ),
+//            .rst ( rst ),
+//            .memR ( EXMEMO_Reg[5] ),
+//            .memWR ( EXMEMO_Reg[4] ),
+//            .dataWR ( EXMEMO_Reg[33:18] ),
+//            .addR (EXMEMO_Reg[17:6] ),
+//            .addWR ( EXMEMO_Reg[17:6] ),
+//            .dataR  ( Out_Memo)
+//          );
 
 //   /////////////////////////////Write Back////////////////////////////////
 // WriteBack 
@@ -206,7 +206,7 @@ always @ (posedge clk, posedge rst)
         EXMEMO_Reg ={Ccr, Out_Excute, IDEReg[78:67], IDEReg[108], IDEReg[107], IDEReg[48],
         1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0, aluOp_sig, IDEReg[51:49], pc};
         IDEPCReg = IFIDReg[47:16];
-        IDEReg = {MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, 
+        IDEReg = {src_address, portWR, portR, shift_amount, MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2, instruction, 
                   RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
                   pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
                   rti, pc_sel, mem_data_sel, pc_jmp};
