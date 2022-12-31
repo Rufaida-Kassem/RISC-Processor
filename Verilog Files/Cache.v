@@ -25,7 +25,7 @@ module Memory #(parameter addBusWidth = 32, width = 16, instrORdata) (  //instr 
     end
 
     always @(negedge clk) begin   //read
-        if (~clk & memR) begin
+        if (~clk & memR & ~rst) begin
             dataR <= memory[addR];
         end
     end
