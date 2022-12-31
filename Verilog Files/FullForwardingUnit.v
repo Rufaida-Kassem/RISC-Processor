@@ -1,4 +1,4 @@
-module FullForwardingUnit(input[7:0] CurrentRsrcAddress,CurrentRdstAddress,WriteMemoWriteBackAddress,WriteExcuMemoAddress,
+module FullForwardingUnit(input[2:0] CurrentRsrcAddress,CurrentRdstAddress,WriteMemoWriteBackAddress,WriteExcuMemoAddress,
                            output reg[1:0] SelectionSignalRcs, output reg[1:0] SelectionSignalRds
                            );
 

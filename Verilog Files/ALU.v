@@ -1,9 +1,10 @@
 module ALU(input [15:0]Rs,
            input [15:0]Rd,
            input[4:0]AluOp, 
+           input[15:0] inport,
            inout[2:0] Ccr,
-            output[15:0] Out,
-	    output signalJump
+           output[15:0] Out,
+	       output signalJump
                  );
 //1- decoding
  wire [31:0] DecOut;
@@ -23,7 +24,7 @@ DEC dec_ins(.Rds(Rd),.Enable(DecOut[5]),.Out(Out),.previousflags(Ccr),.Ccr(Ccr))
 //6-OUT
 OUT out_ins(.Rds(Rd),.Enable(DecOut[6]),.previousflags(Ccr),.Out(Out),.Ccr(Ccr));
 //7-IN
-IN in_ins(.Rds(Rd),.Enable(DecOut[7]),.previousflags(Ccr),.Out(Out),.Ccr(Ccr));
+IN in_ins(.Rds(inport),.Enable(DecOut[7]),.previousflags(Ccr),.Out(Out),.Ccr(Ccr));
 
 ////////////////////////////////////TWO OPERANDS MODULE//////////////////////////
 Mov movOp(.Rs(Rs),.Enable(DecOut[8]),.previousflags(Ccr),.Out(Out),.Ccr(Ccr));

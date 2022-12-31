@@ -25,18 +25,18 @@ module DataMemory (input clk,
                     input[15:0] AluOut,
                     input[15:0] PcLow,
                     input[15:0] PcHigh,
+                    input[4:0]OpCode,
                     input [1:0] sel1,
                     input sel2,
                     output reg[15:0] Out1);
 reg [31:0] sp;
-wire cout;
 wire [11:0] addressSelect;
 wire [15:0] extendCcr;
 wire [15:0] dataSelected;
 assign extendCcr = {12'b0,Ccr};
 wire [31:0] Sp;
 wire [15:0] out_memo;
-SPAdder StackAdder(.SP(sp),.Out(Sp),.Cout(cout));
+SPAdder StackAdder(.SP(sp),.Out(Sp),.OpCode(OpCode));
 
 Mux12Bit addressSel(.a(sp[11:0]),.b(MemoAddreess),.sel(sel2),.out(addressSelect));
 Mux4x1 dataSel(.a(AluOut),.b(PcLow),.c(PcHigh),.d(extendCcr),.sel(sel1),.out(dataSelected));
