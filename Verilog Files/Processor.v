@@ -254,8 +254,15 @@ always @ (posedge clk, posedge rst)
         IFIDReg  = {16'b0, pc, instruction};  
         Reg_data_2 = Reg_data;
       end
-      else if(~flush)    //and ~aluSrc_sig
+      else if(flush)    //and ~aluSrc_sig
       begin
+        IFIDReg = 'b0;
+        IDEReg = 'b0;
+        IDEPC_Reg = 'b0;
+      end
+      else
+        begin
+          
         MEMOWB_Reg ={EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
         EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],
                     IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
@@ -270,12 +277,7 @@ always @ (posedge clk, posedge rst)
                   rti, pc_sel, mem_data_sel, pc_jmp};
         IFIDReg  = {16'b0, pc, instruction};  
         Reg_data_2 = Reg_data;
-      end
-      else
-        begin
-          IFIDReg = 'b0;
-          IDEReg = 'b0;
-          IDEPC_Reg = 'b0;
+
         end
     end
 
