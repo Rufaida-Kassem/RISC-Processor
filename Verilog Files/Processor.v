@@ -277,7 +277,6 @@ always @ (posedge clk, posedge rst)
                   rti, pc_sel, mem_data_sel, pc_jmp};
         IFIDReg  = {16'b0, pc, instruction};  
         Reg_data_2 = Reg_data;
-
         end
     end
 
