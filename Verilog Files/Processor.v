@@ -120,7 +120,7 @@ module Processor (
   ID 
     ID_dut (
       .interrupt (interrupt ), //to change
-      .load_use (1'b0 ), //to change
+      .load_use (load_use ), //to change
       .mem_to_Reg_sig (mem_to_Reg_sig ),
       .pop_pc1_sig (pop_pc1_sig ),
       .pop_pc2_sig (pop_pc2_sig ),
@@ -180,7 +180,7 @@ module Processor (
       .Out(Out_Excute)
 );
 FullForwardingUnit fullforwardingunit(.CurrentRsrcAddress(IDEReg[121:119]),.CurrentRdstAddress(IDEReg[51:49]),.WriteMemoWriteBackAddress(MEMOWB_Reg[2:0]),.WriteExcuMemoAddress(EXMEMO_Reg[41:39]),.SelectionSignalRcs(Forward1Sel),.SelectionSignalRds(Forward2Sel));
-// HazardDetectionUnit(.opcode(),.CurrentRsrcAddress(),.CurrentRdstAddress(),.PrevRdstAddress(),.StallFetch(),.StallCu(),.FreezePC());
+HazardDetectionUnit hazardDetectionUnit(.opcode(EXMEMO_Reg[46:42]),.CurrentRsrcAddress(IDEReg[121:119]),.CurrentRdstAddress(IDEReg[51:49]),.PrevRdstAddress(EXMEMO_Reg[41:39]),.FreezePC(load_use));
 /////////////////////////////////////////////////////////////Memory////////////////////////////////////////////////////////
 
 DataMemory Date_Memory (.clk(clk),

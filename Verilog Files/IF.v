@@ -37,7 +37,7 @@ module IF (
     input [1:0] pc_selection,
     input [31:0] branch_call_addr,
     output [31:0] pc_out,
-    output [15:0] instruction,
+    output reg [15:0] instruction,
     input pop_pc_low_sig, pop_pc_high_sig,
     input [15:0] pop_data
   );
@@ -55,7 +55,7 @@ module IF (
            .rst ( rst ),
            .memR ( 1'b1 ),    //we always read from it only (enabled 3la tool mesh mehtaga signal)
            .addR ( pc[19:0]),  // address to read the instruction
-           .dataR  (instruction),  // output
+           .dataR  (instruction_temp),  // output
            .memWR ( 1'b0 ),   // disable 3la tool
            .dataWR (16'b0),   // nothing 3la tool
            .addWR (20'b0)     // nothing 3la tool
@@ -73,13 +73,13 @@ module IF (
     );
 
 
-    // always @ (posedge clk)//, posedge rst)
-    // begin
-    //   // if(rst)
-    //   //   instruction = 16'b0;
-    //   // else
-    //     instruction = instruction_temp;
-    // end
+    always @ (posedge clk)//, posedge rst)
+    begin
+      // if(rst)
+      //   instruction = 16'b0;
+      // else
+        instruction = instruction_temp;
+    end
 
 
 endmodule
