@@ -1,4 +1,5 @@
 module ID #(parameter width = 16) (
+    output ldm_value,
     inout interrupt,
     input load_use,
     output mem_to_Reg_sig,
@@ -61,7 +62,7 @@ module ID #(parameter width = 16) (
       .read_addr2 (read_addr2 ),
       .write_addr  ( RW_In_addr)
     );
-    controlUnit
+  controlUnit
     controlUnit_dut (
       .clk(clk),
       .rst(rst),
@@ -90,7 +91,8 @@ module ID #(parameter width = 16) (
       .rti(rti),
       .portR(portR),
       .portWR(portWR),
-      .flush(flush)
+      .flush(flush),
+      .ldm_value(ldm_value)
     );
 
   jumpsCU
@@ -107,7 +109,7 @@ module ID #(parameter width = 16) (
 
 
 
-  assign opCode = instruction  [width - 1 : width - 5];
+  assign opCode = (ldm_value == 1'b1) ? 5'b0: instruction  [width - 1 : width - 5];
   assign read_addr1 = instruction[width - 6 : width - 8];   //[10:8]
   assign read_addr2 = (aluSrc[0] == 1'b1) ? instruction[width - 6 : width - 8] : instruction[width - 9 : width - 11];
   assign RW_Out_addr = read_addr2;

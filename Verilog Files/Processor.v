@@ -99,7 +99,7 @@ module Processor (
   wire [2:0] src_address;
   wire [1:0]Forward1Sel,Forward2Sel;
   wire fetch_pc_enable_oring;
-
+  wire ldm_value;
 
   assign fetch_pc_enable_oring = (rst == 1'b1) ? 1'b1 : fetch_pc_enable;
 
@@ -119,6 +119,7 @@ module Processor (
 
   ID 
     ID_dut (
+      .ldm_value(ldm_value),
       .interrupt (interrupt ), //to change
       .load_use (load_use ), //to change
       .mem_to_Reg_sig (mem_to_Reg_sig ),
@@ -236,6 +237,18 @@ always @ (posedge clk, posedge rst)
         // IDEReg[118] = portWR;
         IDEReg = IDEReg;
         IFIDReg  = IFIDReg; 
+        Reg_data_2 = Reg_data;
+      end else if(ldm_value) begin 
+        MEMOWB_Reg ={EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
+        EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],
+                    IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
+                    IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
+                   IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEReg[31:0]};
+        IDEPC_Reg = IFIDReg[47:16];
+        // IDEReg [121:119] = src_address;
+        // IDEReg[118] = portWR;
+        IDEReg[67:52] = IFIDReg[15:0];
+        IFIDReg  = {16'b0, pc, instruction};  
         Reg_data_2 = Reg_data;
       end
       else// if(clk)    //and ~aluSrc_sig

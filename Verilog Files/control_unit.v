@@ -11,9 +11,9 @@ module controlUnit (
     output[1:0] pc_sel,
     output pop_pc1, pop_pc2, pop_ccr, fetch_pc_enable,
     output freeze_cu, call, rti, ret,
-    output portR, portWR, flush
+    output portR, portWR, flush, ldm_value
   );
-  wire flush_call;
+  wire flush_call, flush_ret;
   wire pc_to_stack1, pc_to_stack2, ccr_to_stack;
   wire MemWR_call, MemWR_int, MemWR_cu,
        MemR_rti, MemR_ret, MemR_cu,
@@ -31,7 +31,7 @@ module controlUnit (
 
   assign aluSrc = rst == 1'b1 ? 'b0 : {(opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]), (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0])};
 
-  assign flush = branch_taken | flush_call;
+  assign flush = branch_taken | flush_call | flush_ret;
 
   assign ldm = rst == 1'b1 ? 'b0 : (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]);
 
@@ -71,7 +71,8 @@ module controlUnit (
       .clk (clk ),
       .rst (rst ),
       .ldm (ldm ),
-      .freeze_cu  ( freeze_cu_ldm)
+      .freeze_cu  ( freeze_cu_ldm),
+      .ldm_value (ldm_value)
     );
 
 
@@ -145,7 +146,7 @@ endmodule
 
 module ldmSM (
   input clk, rst, ldm,
-  output reg freeze_cu
+  output reg freeze_cu, ldm_value
 );
 reg     [1:0] current_state, next_state;
 parameter idle_state = 0, freeze_cu_state = 1;
@@ -174,14 +175,17 @@ begin
     idle_state:
     begin
       freeze_cu = 1'b0;
+      ldm_value = 1'b0;
       if(ldm)
       begin
         next_state = freeze_cu_state;
+        freeze_cu = 1'b1;
       end
     end
     freeze_cu_state:
     begin
-      freeze_cu = 1'b1;
+      freeze_cu = 1'b0;
+      ldm_value = 1'b1;
       next_state = idle_state;
     end
     default:
@@ -271,7 +275,7 @@ endmodule
 
 module retSM (
     input ret, clk, rst,
-    output reg pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu,
+    output reg pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu, flush_ret,
     output reg [1:0] pc_sel
   );
 
@@ -312,26 +316,23 @@ module retSM (
         stack = 1'b0;
         pop_pc2 = 1'b0;
         pop_pc1 = 1'b0;
+        flush_ret = 1'b0;
         if(ret)
         begin
+          freeze_cu = 1'b1;
+          freeze_pc = 1'b1; 
           next_state = pop_pc1_state;
+          MemR = 1'b1;
+          stack = 1'b1;  
+          pop_pc2 = 1'b1;
         end
       end
-      pop_pc2_state:
-      begin
-        freeze_cu = 1'b1;
-        freeze_pc = 1'b1;
-        MemR = 1'b1;
-        stack = 1'b1;
-        next_state = pop_pc1_state;
-        pop_pc2 = 1'b1;
-      end
-
       pop_pc1_state:
       begin
-        next_state = idle_state;
+        pop_pc2 = 1'b0;
         pop_pc1 = 1'b1;
-
+        flush_ret = 1'b1;
+        next_state = idle_state;
       end
       default:
       begin
