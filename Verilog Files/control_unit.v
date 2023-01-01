@@ -245,7 +245,6 @@ module callSM (
         if(call)
         begin
           pc_sel = 2'b11;
-          flush = 1'b1;
           MemWR = 1'b1;
           stack = 1'b1;
           pc_to_stack1 = 1'b1;  
@@ -256,6 +255,7 @@ module callSM (
       begin
         next_state = idle_state;
         pc_to_stack2 = 1'b1;
+        flush = 1'b1;
       end
       default:
       begin

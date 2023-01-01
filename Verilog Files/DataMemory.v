@@ -39,7 +39,6 @@ wire [15:0] out_memo;
 always @(posedge rst) begin
 if(rst) begin
 sp_in = 2047;
-Out1 = 16'b0;
 end 
 end
 
@@ -69,5 +68,5 @@ Memory #(.addBusWidth(12), .width(16), .instrORdata(0))
            .addWR ( addressSelect ),
            .dataR  (out_memo)
          );
-assign Out1 = out_memo;
+assign Out1 = (rst == 1'b1) ? 16'b0 : out_memo;
 endmodule

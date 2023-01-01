@@ -24,7 +24,8 @@ module ID #(parameter width = 16) (
     output [2:0] RW_Out_addr,
     input RW_Sig_in,
     output portR, portWR,
-    output [2:0] src_address   // src_address
+    output [2:0] src_address,   // src_address
+    output flush
   );
   // wire mem_to_Reg_sig_cu,
   //      pop_pc1_sig_cu,
@@ -114,6 +115,39 @@ module ID #(parameter width = 16) (
   assign src_address = read_addr1;
   assign I_op2 = instruction[width - 1 : 0];
   assign shift_amount = instruction [7:0];
+
+
+  // reg current_state, next_state;
+  // parameter idle_state = 0, flush_state = 1;
+  // always @ (posedge clk, posedge rst)
+  // begin
+  //   if(rst)
+  //     current_state = idle_state;
+  //   else
+  //     begin
+  //       current_state = next_state;
+  //     end
+
+  // end
+
+  // always @(current_state, flush)
+  // begin
+  //   next_state = idle_state;
+  //   case(current_state)
+  //     idle_state:
+  //     begin
+  //       if(flush)
+  //       begin
+  //         next_state = flush_state;
+  //       end
+  //     end
+  //     flush_state:
+  //     begin
+        
+  //     end
+  //   endcase
+    
+  // end
 
 
   // assign mem_to_Reg_sig = flush == 1'b1 ? 'b0: mem_to_Reg_sig_cu;
