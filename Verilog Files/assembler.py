@@ -21,13 +21,13 @@ for i in range(len(lines)):
                 array[array_counter] = "0000000000000000"
                 array_counter += 1 
             if(lines[i].startswith("SETC")):
-                array[array_counter] = "0001000000000000"
+                array[array_counter] = "0000100000000000"
                 array_counter += 1 
             if(lines[i].startswith("CLRC")):
-                array[array_counter] = "0001100000000000"
+                array[array_counter] = "0001000000000000"
                 array_counter += 1 
             if(lines[i].startswith("NOT")):
-                array[array_counter] = "00001000"
+                array[array_counter] = "00011000"
                 if(line[1] == 'R0'): 
                     # 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
                     array[array_counter] = array[array_counter]+"000"+"00000"
