@@ -4,7 +4,7 @@ module HazardDetectionUnit(input[4:0] opcode,
 
 always @* begin
     //LDD & POP Instruction 
-    if(opcode == 5'b10010 | opcode == 5'b01111) begin
+    if(opcode == 5'b10010 | opcode == 5'b10000) begin
         if(CurrentRsrcAddress == PrevRdstAddress | CurrentRdstAddress == PrevRdstAddress)begin
             //Hazard detected
             FreezePC = 1'b1;

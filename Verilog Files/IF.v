@@ -26,7 +26,7 @@ module pcCircuit #(parameter addressWidth = 32) (
       .branch_call_addr (branch_call_addr ),
       .selection (pc_selection ),
       .pc_enable (pc_enable ),
-      .pc (pc)
+      .pc_out (pc)
     );
 
 endmodule

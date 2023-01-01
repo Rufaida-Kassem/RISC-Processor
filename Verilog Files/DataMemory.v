@@ -27,7 +27,7 @@ module DataMemory (input clk,
                     input[15:0] PcHigh,
                     input [1:0] sel1,
                     input sel2,
-                    output reg[15:0] Out1);
+                    output [15:0] Out1);
 reg [31:0] sp_in;
 wire [11:0] addressSelect;
 wire [15:0] extendCcr;

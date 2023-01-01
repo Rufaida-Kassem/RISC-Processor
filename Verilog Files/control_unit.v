@@ -11,8 +11,9 @@ module controlUnit (
     output[1:0] pc_sel,
     output pop_pc1, pop_pc2, pop_ccr, fetch_pc_enable,
     output freeze_cu, call, rti, ret,
-    output portR, portWR
+    output portR, portWR, flush
   );
+  wire flush_call;
   wire pc_to_stack1, pc_to_stack2, ccr_to_stack;
   wire MemWR_call, MemWR_int, MemWR_cu,
        MemR_rti, MemR_ret, MemR_cu,
@@ -21,7 +22,6 @@ module controlUnit (
        ccr_to_stack_int,
        pop_pc1_ret, pop_pc1_rti, pop_pc2_ret, pop_pc2_rti,
        pop_ccr_rti,
-       load_pc_call,
        freeze_pc_int, freeze_pc_call, freeze_pc_rti, freeze_pc_ret, freeze_pc,
        freeze_cu_int, freeze_cu_call, freeze_cu_rti, freeze_cu_ret, freeze_cu_ldm;
        
@@ -31,6 +31,7 @@ module controlUnit (
 
   assign aluSrc = rst == 1'b1 ? 'b0 : {(opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]), (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0])};
 
+  assign flush = branch_taken | flush_call;
 
   assign ldm = rst == 1'b1 ? 'b0 : (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]);
 
@@ -85,10 +86,10 @@ module controlUnit (
       .pc_to_stack2 (pc_to_stack2_call ),
       .stack (stack_call ),
       .MemWR (MemWR_call ),
-      .load_pc_call (load_pc_call ),
       .freeze_pc (freeze_pc_call),
       .freeze_cu  ( freeze_cu_call),
-      .pc_sel (pc_sel_call )
+      .pc_sel (pc_sel_call ),
+      .flush(flush_call)
     );
 
   retSM
@@ -196,8 +197,9 @@ endmodule
 
 module callSM ( 
   input call, clk, rst,
-  output reg pc_to_stack1, pc_to_stack2, stack, MemWR, load_pc_call, freeze_pc, freeze_cu,
-  output reg [1:0] pc_sel
+  output reg pc_to_stack1, pc_to_stack2, stack, MemWR, freeze_pc, freeze_cu,
+  output reg [1:0] pc_sel,
+  output reg flush
                 );
   reg     [1:0] current_state, next_state;
   // push pc from decode not from pc itself
@@ -208,7 +210,7 @@ module callSM (
 
   reg trigger = 1'b0;
 
-  parameter idle_state = 0, push_pc1 = 1, push_pc2 = 2, load_pc = 3;
+  parameter idle_state = 0, push_pc1 = 1, push_pc2 = 2;
 
   always @(posedge clk, posedge rst)
   begin
@@ -239,34 +241,21 @@ module callSM (
         stack = 1'b0;
         pc_to_stack2 = 1'b0;
         pc_to_stack1 = 1'b0;
-        load_pc_call = 1'b0;
+        flush = 1'b0;
         if(call)
         begin
-          next_state = push_pc1;
+          pc_sel = 2'b11;
+          flush = 1'b1;
+          MemWR = 1'b1;
+          stack = 1'b1;
+          pc_to_stack1 = 1'b1;  
+          next_state = push_pc2;
         end
-      end
-      push_pc1:
-      begin
-        freeze_pc = 1'b1;
-        freeze_cu = 1'b1;
-        next_state = push_pc2;
-        MemWR = 1'b1;
-        stack = 1'b1;
-        pc_to_stack1 = 1'b1;
-
       end
       push_pc2:
       begin
-        next_state = load_pc;
-        MemWR = 1'b1;
-        stack = 1'b1;
-        pc_to_stack2 = 1'b1;
-      end
-      load_pc:
-      begin
         next_state = idle_state;
-        load_pc_call = 1'b1;
-        pc_sel = 2'b11;
+        pc_to_stack2 = 1'b1;
       end
       default:
       begin
@@ -275,7 +264,6 @@ module callSM (
     endcase
 
   end
-
 
 
 endmodule

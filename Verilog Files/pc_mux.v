@@ -7,9 +7,10 @@ module PC_Mux (
     //input [31:0] calling_addr,
     input [1:0] selection,
     input pc_enable,
-    output reg [31:0] pc
+    output  [31:0] pc_out
 );
-
+reg [31:0] pc;
+    assign pc_out = ((pc_enable == 1'b1) && (selection == 2'b11)) ? branch_call_addr : pc;
 always @(posedge clk, posedge rst)
 begin
     if(rst)
@@ -19,10 +20,10 @@ begin
         if(pc_enable)
         begin
             case (selection)
-                00: pc = next_instruction_addr;
-                01: pc = first_instruction_addr;
-                10: pc = 32'b0;
-                11: pc = branch_call_addr;
+                2'b00: pc = next_instruction_addr;
+                2'b01: pc = first_instruction_addr;
+                2'b10: pc = 32'b0;
+                2'b11: pc = branch_call_addr;
                 default: pc = pc;
             endcase
         end
