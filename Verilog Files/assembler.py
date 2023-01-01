@@ -11,9 +11,9 @@ for i in range(len(lines)):
             if(lines[i].startswith(".ORG")):
                 next_line = lines[i + 1].split()
                 print(next_line)
-                s=int(line[1], 16)
-                if(s == 32):
-                     array[array_counter] = '11010'+'00000000000'
+                # s=int(line[1], 16)
+                # if(s == 32):
+                #      array[array_counter] = '11010'+'00000000000'
                 array_counter = int(line[1], 16)
                 print(array_counter)
             # *********************ONE OPERAND********************
@@ -104,7 +104,7 @@ for i in range(len(lines)):
                     array[array_counter] = array[array_counter] + "111"+"00000"
                 array_counter += 1 
             if(lines[i].startswith("IN ")):
-                array[array_counter] = "00111000"
+                array[array_counter] = "01111000"
                 if(line[1] == 'R0'): 
                     array[array_counter] = array[array_counter] + "000"+"00000"
                 if(line[1] == 'R1'): 
@@ -354,7 +354,7 @@ for i in range(len(lines)):
                 array_counter += 1
             #*********************MEMORY******************** 
             if(lines[i].startswith("PUSH")):
-                array[array_counter] = "01111"
+                array[array_counter] = "00111"
                 if(line[1] == 'R0'): 
                     array[array_counter] = array[array_counter] + "000" + "00000000"
                 if(line[1] == 'R1'): 
@@ -589,14 +589,10 @@ for i in range(len(lines)):
                     array[array_counter] = "11001"
                 if(lines[i].startswith("RTI")):
                     array[array_counter] = "11010"
-                # if(lines[i].startswith("RESET")):
-                #     array[array_counter] = "11011"
-                # if(lines[i].startswith("INT")):
-                #     array[array_counter] = "11100"
                 array[array_counter] = array[array_counter] + "00000000000"
                 array_counter += 1 
             
-write_file = open(file + ".mif", "a")
+write_file = open(file + ".mif", "w")
 for arr in array:
         write_file.write(arr)
         write_file.write('\n')

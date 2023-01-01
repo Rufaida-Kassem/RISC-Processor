@@ -158,7 +158,7 @@ always@ * begin
 if( Enable==1'b1)
 begin
 //Keep sign of value
- {Ccr[2],Out}=Rs >>> shiftAmmount;
+ {Ccr[2],Out}=Rs >> shiftAmmount;
 //Assign zero flag to one if out is zeros
 Ccr[0] = (Out == 15'b0) ? 1'b1 : 1'b0 ;
 //Assign negative flag to one if out is less than zero

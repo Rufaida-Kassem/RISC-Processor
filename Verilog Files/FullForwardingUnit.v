@@ -3,21 +3,21 @@ module FullForwardingUnit(input[2:0] CurrentRsrcAddress,CurrentRdstAddress,Write
                            );
 
 always @* begin
-   if(CurrentRsrcAddress==WriteExcuMemoAddress) begin
-    SelectionSignalRcs=2'b01;
+   if(CurrentRsrcAddress==WriteExcuMemoAddress ) begin
+    SelectionSignalRcs=2'b10;
    end
    else if(CurrentRsrcAddress==WriteMemoWriteBackAddress) begin
-    SelectionSignalRcs=2'b10;
+    SelectionSignalRcs=2'b01;
    end
    else begin
          SelectionSignalRcs=2'b00; 
       end
       
-   if(CurrentRdstAddress==WriteMemoWriteBackAddress) begin
+   if(CurrentRdstAddress==WriteExcuMemoAddress) begin
    SelectionSignalRds=2'b10;
    end
-   else if(CurrentRdstAddress==WriteExcuMemoAddress) begin
-   SelectionSignalRds=2'b10;
+   else if(CurrentRdstAddress==WriteMemoWriteBackAddress) begin
+   SelectionSignalRds=2'b01;
    end
    else begin
    SelectionSignalRds=2'b00;

@@ -12,7 +12,7 @@ always @* begin
         Out = SP - 1;
     else if(MemR)
         Out = SP + 1;
-  end
+  end 
 end
 
 endmodule

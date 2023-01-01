@@ -6,7 +6,10 @@ AND R3,R4
 ADD R1,R4
 OUT R4
 .ORG 20 #this is the instructions code
-INC R1
-NOP
-NOP
-INC R1
+INC R2 
+SHR R2,2 
+INC R2
+INC R2
+
+
+

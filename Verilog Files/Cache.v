@@ -19,18 +19,18 @@ module Memory #(parameter addBusWidth = 32, width = 16, instrORdata) (  //instr 
                 $readmemb("data.mif", memory);
             end
         end
-        else if (clk & memWR) begin  //write
-            memory[addWR] <= dataWR;
+        else if (~clk & memWR) begin  //write
+            memory[addWR] = dataWR;
         end
     end
 
     //asynch reading
-    assign dataR = memory[addR];
+    // assign dataR =  memory[addR];
 
-    // always @(negedge clk) begin   //read
-    //     if (~clk & memR & ~rst) begin
-    //         dataR <= memory[addR];
-    //     end
-    // end
+    always @* begin   //read
+        if (memR & ~rst) begin
+            dataR = memory[addR];
+        end
+    end
 
 endmodule

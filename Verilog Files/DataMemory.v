@@ -28,16 +28,33 @@ module DataMemory (input clk,
                     input [1:0] sel1,
                     input sel2,
                     output reg[15:0] Out1);
-reg [31:0] sp;
+reg [31:0] sp_in;
 wire [11:0] addressSelect;
 wire [15:0] extendCcr;
 wire [15:0] dataSelected;
 assign extendCcr = {12'b0,Ccr};
 wire [31:0] Sp;
 wire [15:0] out_memo;
-SPAdder StackAdder(.SP(sp),.Out(Sp), .stack(sel2), .MemWR(MW), .MemR(MR));
 
-Mux12Bit addressSel(.a(sp[11:0]),.b(MemoAddreess),.sel(sel2),.out(addressSelect));
+always @(posedge rst) begin
+if(rst) begin
+sp_in = 2048;
+end 
+end
+
+always @* begin
+  if(sel2)
+  begin
+    if(MW)
+        sp_in = sp_in - 1;
+    else if(MR)
+        sp_in = sp_in + 1;
+  end 
+end
+
+// SPAdder StackAdder(.SP(sp_in),.Out(Sp), .stack(sel2), .MemWR(MW), .MemR(MR));
+
+Mux12Bit addressSel(.a(MemoAddreess),.b(sp_in[11:0]),.sel(sel2),.out(addressSelect));
 Mux4x1 dataSel(.a(AluOut),.b(PcLow),.c(PcHigh),.d(extendCcr),.sel(sel1),.out(dataSelected));
 
 Memory #(.addBusWidth(12), .width(16), .instrORdata(0))

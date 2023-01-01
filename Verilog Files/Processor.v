@@ -58,7 +58,7 @@ module Processor (
   wire call, ret, rti;
   wire branch, freeze_cu;
 
-  wire [8:0] shift_amount;
+  wire [7:0] shift_amount;
 
   wire portR, portWR;
 
@@ -179,7 +179,8 @@ module Processor (
       .MemoryAddress(MemoryAddress),  // you have to send the memoaddress that exists in the buffer IDEReg
       .Out(Out_Excute)
 );
-FullForwardingUnit fullforwardingunit(.CurrentRsrcAddress(IDEReg[121:119]),.CurrentRdstAddress(IDEReg[51:49]),.WriteMemoWriteBackAddress(),.WriteExcuMemoAddress(),.SelectionSignalRcs(Forward1Sel),.SelectionSignalRds(Forward2Sel));
+FullForwardingUnit fullforwardingunit(.CurrentRsrcAddress(IDEReg[121:119]),.CurrentRdstAddress(IDEReg[51:49]),.WriteMemoWriteBackAddress(MEMOWB_Reg[2:0]),.WriteExcuMemoAddress(EXMEMO_Reg[41:39]),.SelectionSignalRcs(Forward1Sel),.SelectionSignalRds(Forward2Sel));
+// HazardDetectionUnit(.opcode(),.CurrentRsrcAddress(),.CurrentRdstAddress(),.PrevRdstAddress(),.StallFetch(),.StallCu(),.FreezePC());
 /////////////////////////////////////////////////////////////Memory////////////////////////////////////////////////////////
 
 DataMemory Date_Memory (.clk(clk),
@@ -232,8 +233,9 @@ always @ (posedge clk, posedge rst)
                     IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
                    IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEReg[31:0]};
         IDEPC_Reg = IFIDReg[47:16];
-        IDEReg [121:119] = src_address;
-        IDEReg [118:0] = {portWR, portR, shift_amount,MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2,I_op2, 
+        // IDEReg [121:119] = src_address;
+        // IDEReg[118] = portWR;
+        IDEReg = {src_address,portWR,portR, shift_amount,MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2,I_op2, 
                   RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
                   pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
                   rti, pc_sel, mem_data_sel, pc_jmp};
