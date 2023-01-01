@@ -38,11 +38,12 @@ wire [15:0] out_memo;
 
 always @(posedge rst) begin
 if(rst) begin
-sp_in = 2048;
+sp_in = 2047;
+Out1 = 16'b0;
 end 
 end
 
-always @* begin
+always @(posedge clk) begin
   if(sel2)
   begin
     if(MW)
@@ -51,10 +52,10 @@ always @* begin
         sp_in = sp_in + 1;
   end 
 end
-
+assign Sp = (MW) ?sp_in :sp_in+1 ;
 // SPAdder StackAdder(.SP(sp_in),.Out(Sp), .stack(sel2), .MemWR(MW), .MemR(MR));
 
-Mux12Bit addressSel(.a(MemoAddreess),.b(sp_in[11:0]),.sel(sel2),.out(addressSelect));
+Mux12Bit addressSel(.a(MemoAddreess),.b(Sp[11:0]),.sel(sel2),.out(addressSelect));
 Mux4x1 dataSel(.a(AluOut),.b(PcLow),.c(PcHigh),.d(extendCcr),.sel(sel1),.out(dataSelected));
 
 Memory #(.addBusWidth(12), .width(16), .instrORdata(0))

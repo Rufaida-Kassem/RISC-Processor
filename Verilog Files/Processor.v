@@ -162,6 +162,7 @@ module Processor (
   //////////////////For Execute and Memory
   /////////////////////////Execute////////////////////////////////////
   Execution Execute(
+      .rst(rst),
       .op1( IDEReg[99:84]),
       .op2( IDEReg[83:68]),
       .inport(inputPort),
@@ -224,6 +225,18 @@ always @ (posedge clk, posedge rst)
         IDEPC_Reg = 0;
         EXMEMO_Reg = 0;
         MEMOWB_Reg = 0;
+      end else if(load_use) begin
+        MEMOWB_Reg ={EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
+        EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],
+                    IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
+                    IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
+                   IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEReg[31:0]};
+        IDEPC_Reg = IDEPC_Reg;
+        // IDEReg [121:119] = src_address;
+        // IDEReg[118] = portWR;
+        IDEReg = IDEReg;
+        IFIDReg  = IFIDReg; 
+        Reg_data_2 = Reg_data;
       end
       else// if(clk)    //and ~aluSrc_sig
       begin
