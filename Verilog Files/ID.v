@@ -1,4 +1,5 @@
 module ID #(parameter width = 16) (
+  output flush_fetch,
     output ldm_value,
     inout interrupt,
     input load_use,
@@ -65,6 +66,7 @@ module ID #(parameter width = 16) (
     );
   controlUnit
     controlUnit_dut (
+      .flush_fetch(flush_fetch),
       .clk(clk),
       .rst(rst),
       .branch_taken (branch_taken ),

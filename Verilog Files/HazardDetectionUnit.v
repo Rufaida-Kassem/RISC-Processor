@@ -56,7 +56,7 @@ module HazardDetectionUnit (
       idle_state:
       begin
         freeze_pc = 1'b0;
-        if((opcode == 5'b10010 | opcode == 5'b10000) & (CurrentRsrcAddress == PrevRdstAddress | CurrentRdstAddress == PrevRdstAddress))
+        if(((opcode == 5'b10010 | opcode == 5'b10000) & (CurrentRsrcAddress == PrevRdstAddress | CurrentRdstAddress == PrevRdstAddress)))
         begin
           next_state = stall;
           freeze_pc = 1'b1;
