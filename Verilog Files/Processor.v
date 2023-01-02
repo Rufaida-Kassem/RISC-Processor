@@ -2,7 +2,8 @@ module Processor (
   input clk, rst, start,
   output [15:0] outputPort,
   input [15:0] inputPort,
-  inout interrupt
+  input interrupt,
+  output ack
   );
   
   wire [15:0] instruction;
@@ -124,6 +125,7 @@ module Processor (
     ID_dut (
       .ldm_value(ldm_value),
       .interrupt (interrupt ), //to change
+      .ack(ack),
       .load_use (load_use ), //to change
       .mem_to_Reg_sig (mem_to_Reg_sig ),
       .pop_pc1_sig (pop_pc1_sig ),
@@ -272,7 +274,10 @@ always @ (posedge clk, posedge rst)
                   RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
                   pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
                   rti, pc_sel, mem_data_sel, pc_jmp};
-        IFIDReg  = {16'b0, pc, instruction};  
+        if(~fetch_pc_enable)
+          IFIDReg = {16'b0, pc, 16'b0};
+        else
+          IFIDReg  = {16'b0, pc, instruction};  
         Reg_data_2 = Reg_data;
         end
     end

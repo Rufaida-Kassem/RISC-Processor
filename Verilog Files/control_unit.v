@@ -2,7 +2,8 @@ module controlUnit (
     input clk, rst,
     output [1:0] mem_data_sel,
     input branch_taken,
-    inout interrupt,
+    input interrupt,
+    output ack,
     input load_use,
     input[4:0] opCode,
     output[4:0] aluOp,
@@ -121,7 +122,9 @@ module controlUnit (
       .MemWR (MemWR_int ),
       .freeze_pc (freeze_pc_int ),
       .freeze_cu  ( freeze_cu_int),
-      .pc_sel (pc_sel_int)
+      .pc_sel (pc_sel_int),
+      .branch_taken(branch_taken),
+      .ack(ack)
     );
 
   rtiSM
@@ -349,16 +352,16 @@ endmodule
 
 
 module intSM (
-    inout interrupt,
+    input interrupt, branch_taken,
+    output reg ack,
     input clk, rst, ldm, load_use,
     output reg ccr_to_stack , pc_to_stack1, pc_to_stack2, stack, MemWR, freeze_pc, freeze_cu,
     output reg [1:0] pc_sel
   );
-  reg     [2:0] current_state, next_state;
-  parameter idle_state = 0, wait_ = 1, wait_ldm_load_use = 2, freezePc = 3, freezePc_cu = 4, push_pc1 = 5, push_pc2 = 6, push_ccr = 7;
-   reg ack;
-   reg trigger = 1'b0;
-  assign interrupt = ack ? 0 : interrupt;
+  reg     [3:0] current_state, next_state;
+  parameter idle_state = 0, wait_1 = 1, wait_2_ldm_load_use = 2, freezePc = 3, freezePc_cu = 4, wait_3 = 5, wait_4 = 6, push_pc1 = 7, push_pc2 = 8, push_ccr = 9;
+  reg trigger = 1'b0;
+  //assign interrupt = ack == 1'b1 ? 1'b0 : interrupt;
 
 
   always @(posedge clk, posedge rst)
@@ -366,17 +369,16 @@ module intSM (
     if(rst)
     begin
       current_state = idle_state;
-      trigger = 1'b1;
     end
     if(clk)
     begin
       current_state = next_state;
-      trigger = 1'b0;
     end
   end
 
-  always @ (current_state, interrupt, trigger)
+  always @ (current_state, interrupt)
   begin
+    next_state = idle_state;
     case(current_state)
       idle_state:
       begin
@@ -385,13 +387,15 @@ module intSM (
         freeze_cu = 0;
         stack = 0;
         MemWR = 0;
+        ack = 1'b0;   //modified
         ccr_to_stack = 0;
         pc_to_stack1 = 0;
         pc_to_stack2 = 0;
         if(interrupt == 1)
         begin
-          ack = 1'b1;
-          next_state = wait_;
+          if(~branch_taken)
+            freeze_pc = 1'b1;
+          next_state = wait_1;
         end
         else
         begin
@@ -399,18 +403,22 @@ module intSM (
           next_state = idle_state;
         end
       end
-      wait_:
+      wait_1:
       begin
-        if(ldm  ||  load_use)
+        ack = 1'b1;
+        if(~branch_taken)
+            freeze_pc = 1'b1;
+        if(ldm || load_use)
         begin
-          next_state = wait_ldm_load_use;
+          next_state = wait_2_ldm_load_use;
         end
         else
         begin
+          freeze_pc = 1'b1;
           next_state = freezePc;
         end
       end
-      wait_ldm_load_use:
+      wait_2_ldm_load_use:
         next_state = freezePc;
       freezePc:
       begin
@@ -420,6 +428,14 @@ module intSM (
       freezePc_cu:
       begin
         freeze_cu = 1'b1;
+        next_state = wait_3;
+      end
+      wait_3:
+      begin
+        next_state = wait_4;
+      end
+      wait_4:
+      begin
         next_state = push_pc1;
       end
       push_pc1:
@@ -439,6 +455,7 @@ module intSM (
       begin
         next_state = idle_state;
         ccr_to_stack = 1;
+        freeze_pc = 1'b0;   //modified
         pc_sel = 2'b10;
       end
       default:

@@ -1,6 +1,7 @@
 module ID #(parameter width = 16) (
     output ldm_value,
-    inout interrupt,
+    input interrupt,
+    output ack,
     input load_use,
     output mem_to_Reg_sig,
     pop_pc1_sig,
@@ -69,6 +70,7 @@ module ID #(parameter width = 16) (
       .rst(rst),
       .branch_taken (branch_taken ),
       .interrupt (interrupt ),
+      .ack(ack),
       .load_use (load_use ),
       .opCode (opCode ),
       .aluOp (aluOp ),
