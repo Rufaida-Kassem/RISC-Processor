@@ -392,7 +392,7 @@ for i in range(len(lines)):
                     array[array_counter] = array[array_counter] + "000" + "11100000"
                 array_counter += 1
             if(lines[i].startswith("LDM")):
-                array[array_counter] = "01001"
+                array[array_counter] = "10001"
                 reg = line[1].split(',')
                 array[array_counter + 1] = '{0:016b}'.format(int(reg[1], 16))
                 if(reg[0] == 'R0'): 

@@ -4,7 +4,7 @@ module Processor_tb;
   reg  rst = 0;
   reg  start = 0;
   wire [15:0] outputPort;
-  wire [15:0] inputPort;
+  reg [15:0] inputPort;
   wire interrupt;
   // Processor
   //   Processor_dut (
@@ -33,10 +33,19 @@ Processor
       #20
        rst = 1'b0;
       start = 1'b1;
+      inputPort = 16'h0019;
 
 
     end
+      #70
+  inputPort = 16'h000F;
+      #20
+  inputPort = 16'hF320;
+  //     #20
+  // inputPort = 16'hF320;
   end
+
+
 
   always
     #10  clk = ! clk ;
