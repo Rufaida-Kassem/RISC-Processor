@@ -11,9 +11,9 @@ module controlUnit (
     output[1:0] pc_sel,
     output pop_pc1, pop_pc2, pop_ccr, fetch_pc_enable,
     output freeze_cu, call, rti, ret,
-    output portR, portWR, flush, ldm_value, flush_fetch
+    output portR, portWR, flush, ldm_value, flush_fetch, flush_call
   );
-  wire flush_call, flush_ret;
+  wire flush_ret;
   wire pc_to_stack1, pc_to_stack2, ccr_to_stack;
   wire MemWR_call, MemWR_int, MemWR_cu,
        MemR_rti, MemR_ret, MemR_cu,
@@ -32,7 +32,7 @@ module controlUnit (
   assign aluSrc = rst == 1'b1 ? 'b0 : {(opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]), (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0])};
 
   assign flush = flush_ret;
-  assign flush_fetch = branch_taken | flush_call;
+  assign flush_fetch = branch_taken;
 
   assign ldm = rst == 1'b1 ? 'b0 : (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]);
 
