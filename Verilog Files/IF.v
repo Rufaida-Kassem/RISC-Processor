@@ -36,16 +36,16 @@ module IF (
     input clk, rst, pc_enable,
     input [1:0] pc_selection,
     input [31:0] branch_call_addr,
-    output [31:0] pc_out,
+    output [31:0] pc,
     output reg [15:0] instruction,
     input pop_pc_low_sig, pop_pc_high_sig,
     input [15:0] pop_data
   );
 
-  wire [31:0] pc, pc_mux;
+  wire [31:0] pc_mux;
   wire [15:0] instruction_temp;
 
-  assign pc_out = pc + 1;
+  // assign pc_out = pc + 1;
 
   assign pc = pop_pc_low_sig == 1'b1 ? {pc[31:16], pop_data} : pop_pc_high_sig == 1'b1 ? {pop_data, pc[15:0]} : pc_mux;
 

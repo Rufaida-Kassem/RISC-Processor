@@ -9,8 +9,11 @@ module PC_Mux (
     input pc_enable,
     output  [31:0] pc_out
 );
+//f d e m wb
+//  f d e m  wb
+//    f d e  m  wb
 reg [31:0] pc;
-    assign pc_out = ((pc_enable == 1'b1) && (selection == 2'b11)) ? branch_call_addr : pc;
+    assign pc_out =  pc;
 always @(posedge clk, posedge rst)
 begin
     if(rst)
