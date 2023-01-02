@@ -100,6 +100,10 @@ module Processor (
   wire ldm_value;
   wire flush;
   wire flush_fetch, flush_call;
+  wire stalling;
+  assign stalling = ((EXMEMO_Reg[46:42] == 5'b10010 | EXMEMO_Reg[46:42] == 5'b10000) & (src_address == EXMEMO_Reg[41:39] || RW_Out_addr == EXMEMO_Reg[41:39]))?1'b1:1'b0;
+
+
   assign wb_sig_after_detect_ldm = MEMOWB_Reg[37];
   assign fetch_pc_enable_oring = (rst == 1'b1) ? 1'b1 : fetch_pc_enable;
   wire stalling;
@@ -268,6 +272,19 @@ module Processor (
       MEMOWB_Reg ={EXMEMO_Reg[34],EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
       IDEPC_Reg = IDEPC_Reg;
     end
+    else if(stalling)
+    begin
+      IDEPC_Reg = IDEPC_Reg;
+      IFIDReg  = IFIDReg;
+      IDEReg = IDEReg;
+      Reg_data_2 = Reg_data;
+      MEMOWB_Reg ={EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
+      EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],
+                   IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
+                   IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
+                   IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEReg[31:0]};
+    end
+
     else if(ldm_value)
     begin
       MEMOWB_Reg ={EXMEMO_Reg[34],EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
@@ -290,7 +307,7 @@ module Processor (
                    IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
                    IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEPC_Reg[31:0]};
 
-                   IDEReg = {13'b0,MemR, MemWR, 7'b0, 48'b0,
+      IDEReg = {13'b0,MemR, MemWR, 7'b0, 48'b0,
                 5'b0, pop_pc1_sig, pop_pc2_sig,
                 pop_ccr_sig, stack_sig, 4'b0, call, ret,
                 rti, pc_sel, mem_data_sel, pc_jmp};
@@ -324,11 +341,11 @@ module Processor (
     else
     begin
 
-      MEMOWB_Reg ={EXMEMO_Reg[34],EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
+      MEMOWB_Reg ={EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
       EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],
                    IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
                    IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
-                   IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEPC_Reg[31:0]};
+                   IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEReg[31:0]};
       IDEPC_Reg = IFIDReg[47:16];
       // IDEReg [121:119] = src_address;
       // IDEReg[118] = portWR;

@@ -35,7 +35,6 @@ Processor
       start = 1'b1;
       inputPort = 16'h0019;
 
-
     end
       #70
   inputPort = 16'h000F;
