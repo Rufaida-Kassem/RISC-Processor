@@ -34,5 +34,5 @@ Mux3x1  muxForwardSel(.a(op2),.b(ExecuteMemoryForwarding),.c(MemoryWBForwarding)
 Mux3x1  muxOp2(.a(InOp2Sel),.b(immediate),.c(shiftAmmount),.sel(AluScr),.out(Op2));//Selected op2 of Alu
 
 ALU alu(Op1,Op2,AluOp,inport,Ccr, Out,signalJump);
-assign MemoryAddress=Op2;
+assign MemoryAddress=(Branch == 1'b0)?op1:op2;
 endmodule
