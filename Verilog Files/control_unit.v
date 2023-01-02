@@ -11,7 +11,7 @@ module controlUnit (
     output[1:0] pc_sel,
     output pop_pc1, pop_pc2, pop_ccr, fetch_pc_enable,
     output freeze_cu, call, rti, ret,
-    output portR, portWR, flush, ldm_value
+    output portR, portWR, flush, ldm_value, flush_fetch
   );
   wire flush_call, flush_ret;
   wire pc_to_stack1, pc_to_stack2, ccr_to_stack;
@@ -22,8 +22,8 @@ module controlUnit (
        ccr_to_stack_int,
        pop_pc1_ret, pop_pc1_rti, pop_pc2_ret, pop_pc2_rti,
        pop_ccr_rti,
-       freeze_pc_int, freeze_pc_call, freeze_pc_rti, freeze_pc_ret, freeze_pc,
-       freeze_cu_int, freeze_cu_call, freeze_cu_rti, freeze_cu_ret, freeze_cu_ldm;
+       freeze_pc_int, freeze_pc_rti, freeze_pc_ret, freeze_pc,
+       freeze_cu_int, freeze_cu_rti, freeze_cu_ret, freeze_cu_ldm;
        
   wire [1:0] pc_sel_int, pc_sel_call, pc_sel_ret, pc_sel_rti;
 
@@ -31,7 +31,8 @@ module controlUnit (
 
   assign aluSrc = rst == 1'b1 ? 'b0 : {(opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]), (~opCode[4] && opCode[3] && opCode[2] && ~opCode[1] && opCode[0]) || (~opCode[4] && opCode[3] && opCode[2] && opCode[1] && ~opCode[0])};
 
-  assign flush = branch_taken | flush_call | flush_ret;
+  assign flush = flush_ret;
+  assign flush_fetch = branch_taken | flush_call;
 
   assign ldm = rst == 1'b1 ? 'b0 : (opCode[4] && ~opCode[3] && ~opCode[2] && ~opCode[1] && opCode[0]);
 
@@ -59,8 +60,8 @@ module controlUnit (
   assign pop_pc1 = rst == 1'b1 ? 'b0 : pop_pc1_rti | pop_pc1_ret;
   assign pop_pc2 = rst == 1'b1 ? 'b0 : pop_pc2_rti | pop_pc2_ret;
   assign pop_ccr = rst == 1'b1 ? 'b0 : pop_ccr_rti;
-  assign freeze_cu = rst == 1'b1 ? 'b0 : load_use | freeze_cu_call | freeze_cu_int | freeze_cu_ret | freeze_cu_rti | freeze_cu_ldm;
-  assign freeze_pc = rst == 1'b1 ? 'b0 : freeze_pc_call | freeze_pc_int | freeze_pc_ret | freeze_pc_rti;
+  assign freeze_cu = rst == 1'b1 ? 'b0 : load_use | freeze_cu_int | freeze_cu_ret | freeze_cu_rti | freeze_cu_ldm;
+  assign freeze_pc = rst == 1'b1 ? 'b0 : freeze_pc_int | freeze_pc_ret | freeze_pc_rti;
 
   assign fetch_pc_enable = freeze_pc == 1'b1 ? 1'b0 : 1'b1;
   assign mem_data_sel = (rst == 1'b1) ? 'b0 : (pc_to_stack1 == 1'b1) ? 2'b01 : (pc_to_stack2 == 1'b1) ? 2'b10 : (ccr_to_stack == 1'b1) ? 2'b11 : 2'b0;
@@ -87,8 +88,6 @@ module controlUnit (
       .pc_to_stack2 (pc_to_stack2_call ),
       .stack (stack_call ),
       .MemWR (MemWR_call ),
-      .freeze_pc (freeze_pc_call),
-      .freeze_cu  ( freeze_cu_call),
       .pc_sel (pc_sel_call ),
       .flush(flush_call)
     );
@@ -104,7 +103,8 @@ module controlUnit (
       .MemR (MemR_ret),
       .freeze_pc (freeze_pc_ret),
       .freeze_cu  ( freeze_cu_ret),
-      .pc_sel (pc_sel_ret)
+      .pc_sel (pc_sel_ret),
+      .flush (flush_ret)
     );
 
   intSM
@@ -201,7 +201,7 @@ endmodule
 
 module callSM ( 
   input call, clk, rst,
-  output reg pc_to_stack1, pc_to_stack2, stack, MemWR, freeze_pc, freeze_cu,
+  output reg pc_to_stack1, pc_to_stack2, stack, MemWR,
   output reg [1:0] pc_sel,
   output reg flush
                 );
@@ -239,8 +239,6 @@ module callSM (
       idle_state:
       begin
         pc_sel = 2'b0;
-        freeze_pc = 1'b0;
-        freeze_cu = 1'b0;
         MemWR = 1'b0;
         stack = 1'b0;
         pc_to_stack2 = 1'b0;
@@ -253,11 +251,13 @@ module callSM (
           stack = 1'b1;
           pc_to_stack1 = 1'b1;  
           next_state = push_pc2;
-        end
+          end
       end
       push_pc2:
       begin
+        pc_sel = 2'b0;
         next_state = idle_state;
+        pc_to_stack1 = 1'b0;  
         pc_to_stack2 = 1'b1;
         flush = 1'b1;
       end
@@ -275,23 +275,18 @@ endmodule
 
 module retSM (
     input ret, clk, rst,
-    output reg pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu, flush_ret,
+    output reg pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu, flush,
     output reg [1:0] pc_sel
   );
-
-  //we have to set pc to pc - 1 to fetch the correct instruction
-  //as it gets incremented during the calling --> as we know the call is call in decode stage
-  //so that the next instruction to the call is already get fetched and we will ignore this fetch
   reg     [1:0] current_state, next_state;
   reg trigger = 1'b0;
-
-  parameter idle_state = 0, pop_pc1_state = 1, pop_pc2_state = 2;
+  parameter idle_state = 2, pop_pc1_state = 3, wait0 = 0, wait1= 1;
 
   always @(posedge clk, posedge rst)
   begin
     if(rst)
     begin
-      current_state = idle_state;
+      current_state = wait0;
       trigger = 1'b1;
 
     end
@@ -307,7 +302,7 @@ module retSM (
   begin
     next_state = idle_state;
     case(current_state)
-      idle_state:
+      wait0:
       begin
         pc_sel = 2'b0;
         freeze_cu = 1'b0;
@@ -316,27 +311,37 @@ module retSM (
         stack = 1'b0;
         pop_pc2 = 1'b0;
         pop_pc1 = 1'b0;
-        flush_ret = 1'b0;
-        if(ret)
-        begin
+        flush = 1'b0;
+        if(ret)begin
+          next_state = wait1;
+        end
+        else begin
+          next_state = wait0;
+        end
+      end
+      wait1:
+      begin
+        next_state = idle_state;
+      end
+      idle_state:
+      begin
           freeze_cu = 1'b1;
           freeze_pc = 1'b1; 
           next_state = pop_pc1_state;
           MemR = 1'b1;
           stack = 1'b1;  
           pop_pc2 = 1'b1;
-        end
       end
       pop_pc1_state:
       begin
         pop_pc2 = 1'b0;
         pop_pc1 = 1'b1;
-        flush_ret = 1'b1;
-        next_state = idle_state;
+        // flush = 1'b1;
+        next_state = wait0;
       end
       default:
       begin
-        next_state = idle_state;
+        next_state = wait0;
       end
     endcase
 
