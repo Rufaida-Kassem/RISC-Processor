@@ -88,6 +88,8 @@ module IF (
       // else
       if(pc_enable)
         instruction = instruction_temp;
+      else
+        instruction = 16'b0;
 
     end
 
