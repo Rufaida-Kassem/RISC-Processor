@@ -104,7 +104,8 @@ module controlUnit (
       .MemR (MemR_ret),
       .freeze_pc (freeze_pc_ret),
       .freeze_cu  ( freeze_cu_ret),
-      .pc_sel (pc_sel_ret)
+      .pc_sel (pc_sel_ret),
+      .flush (flush_ret)
     );
 
   intSM
@@ -253,7 +254,7 @@ module callSM (
           stack = 1'b1;
           pc_to_stack1 = 1'b1;  
           next_state = push_pc2;
-        end
+          end
       end
       push_pc2:
       begin
@@ -277,7 +278,7 @@ endmodule
 
 module retSM (
     input ret, clk, rst,
-    output reg pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu, flush_ret,
+    output reg pop_pc1, pop_pc2, stack, MemR, freeze_pc, freeze_cu, flush,
     output reg [1:0] pc_sel
   );
   reg     [1:0] current_state, next_state;
@@ -313,7 +314,7 @@ module retSM (
         stack = 1'b0;
         pop_pc2 = 1'b0;
         pop_pc1 = 1'b0;
-        flush_ret = 1'b0;
+        flush = 1'b0;
         if(ret)begin
           next_state = wait1;
         end
@@ -338,7 +339,7 @@ module retSM (
       begin
         pop_pc2 = 1'b0;
         pop_pc1 = 1'b1;
-        // flush_ret = 1'b1;
+        // flush = 1'b1;
         next_state = wait0;
       end
       default:
