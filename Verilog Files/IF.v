@@ -2,7 +2,8 @@ module pcCircuit #(parameter addressWidth = 32) (
     input pc_enable, rst, clk,
     input [31:0] branch_call_addr,
     input [1:0] pc_selection,
-    output wire [addressWidth - 1 : 0] pc  // pc
+    output wire [addressWidth - 1 : 0] pc , // pc
+    input interrupt
   );
   wire [31:0] next_pc;
 
@@ -26,7 +27,8 @@ module pcCircuit #(parameter addressWidth = 32) (
       .branch_call_addr (branch_call_addr ),
       .selection (pc_selection ),
       .pc_enable (pc_enable ),
-      .pc_out (pc)
+      .pc_out (pc),
+      .interrupt(interrupt)
     );
 
 endmodule
@@ -39,7 +41,8 @@ module IF (
     output [31:0] pc,
     output reg [15:0] instruction,
     input pop_pc_low_sig, pop_pc_high_sig,
-    input [15:0] pop_data
+    input [15:0] pop_data,
+    input interrupt
   );
 
   wire [31:0] pc_mux;
@@ -69,17 +72,21 @@ module IF (
       .rst (rst ),
       .clk (clk ),
       .branch_call_addr (branch_call_addr ),
-      .pc  (pc_mux)
+      .pc  (pc_mux),
+      .interrupt(interrupt)
     );
 
 
-    always @ (posedge clk)//, posedge rst)
-    begin
-      // if(rst)
-      //   instruction = 16'b0;
-      // else
-        instruction = instruction_temp;
-    end
+  always @ (posedge clk)//, posedge rst)
+  begin
+    // if(rst)
+    //   instruction = 16'b0;
+    // else
+    if(pc_enable)
+      instruction = instruction_temp;
+    else
+      instruction = 16'b0;
+  end
 
 
 endmodule

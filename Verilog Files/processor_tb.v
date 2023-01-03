@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module Processor_tb;
 
   reg clk = 0;
@@ -5,14 +6,16 @@ module Processor_tb;
   reg  start = 0;
   wire [15:0] outputPort;
   wire [15:0] inputPort;
-  wire interrupt;
+  reg interrupt;
+  reg raise_interrupt;
+  wire ack;
   // Processor
   //   Processor_dut (
   //     .clk (clk ),
   //     .rst  ( rst),
   //     .start (start)
   //   );
-assign interrupt = 1'b0;
+//assign interrupt = raise_interrupt ? 1'b1 : interrupt;
 
 Processor
   Processor_dut (
@@ -21,7 +24,8 @@ Processor
     .start (start ),
     .outputPort (outputPort ),
     .inputPort (inputPort ),
-    .interrupt  ( interrupt)
+    .interrupt  ( interrupt),
+    .ack(ack)
   );
 
 
@@ -30,12 +34,23 @@ Processor
   begin
     begin
       rst = 1'b1;
+      interrupt = 1'b0;
       #20
        rst = 1'b0;
       start = 1'b1;
 
+      #30
+      interrupt = 1'b1;
+
+
 
     end
+  end
+
+  always @ (ack)
+  begin
+    if(ack)
+      interrupt = 1'b0;
   end
 
   always

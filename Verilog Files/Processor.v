@@ -2,7 +2,8 @@ module Processor (
     input clk, rst, start,
     output [15:0] outputPort,
     input [15:0] inputPort,
-    inout interrupt
+    input interrupt,
+    output ack
   );
 
   wire [15:0] instruction;
@@ -105,7 +106,7 @@ module Processor (
   assign fetch_pc_enable_oring = (rst == 1'b1) ? 1'b1 : fetch_pc_enable;
   wire stalling;
   assign stalling = ((EXMEMO_Reg[46:42] == 5'b10010 | EXMEMO_Reg[46:42] == 5'b10000) & (src_address == EXMEMO_Reg[41:39] || RW_Out_addr == EXMEMO_Reg[41:39]))?1'b1:1'b0;
-
+wire load_0_pc;
   IF
     IF_dut (
       .clk (clk ),
@@ -117,13 +118,15 @@ module Processor (
       .instruction  ( instruction),  //output
       .pop_pc_low_sig (pop_pc1_sig),
       .pop_pc_high_sig (pop_pc2_sig),
-      .pop_data (16'b0)
+      .pop_data (16'b0),
+      .interrupt(load_0_pc)
     );
 
   ID
     ID_dut (
       .ldm_value(ldm_value),
       .interrupt (interrupt ), //to change
+      .ack(ack),
       .load_use (stalling ), //to change
       .mem_to_Reg_sig (mem_to_Reg_sig ),
       .pop_pc1_sig (pop_pc1_sig ),
@@ -161,7 +164,8 @@ module Processor (
       .portWR(portWR),
       .src_address(src_address),
       .flush(flush),
-      .flush_fetch(flush_fetch)
+      .flush_fetch(flush_fetch),
+      .load_0_pc(load_0_pc)
     );
 
 
@@ -246,19 +250,20 @@ module Processor (
       EXMEMO_Reg = 0;
       MEMOWB_Reg = 0;
     end
-    else if(stalling) begin
+    else if(stalling)
+    begin
       IDEPC_Reg = IDEPC_Reg;
-     IFIDReg  = IFIDReg;
-     IDEReg = IDEReg;
-     Reg_data_2 = Reg_data;
-     MEMOWB_Reg ={EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
-     EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],
-                 IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
-                 IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
-                IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEReg[31:0]};
-    
-     
-   end
+      IFIDReg  = IFIDReg;
+      IDEReg = IDEReg;
+      Reg_data_2 = Reg_data;
+      MEMOWB_Reg ={EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
+      EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],
+                   IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
+                   IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
+                   IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEReg[31:0]};
+
+
+    end
 
     // else if(load_use)
     // begin
@@ -295,19 +300,19 @@ module Processor (
       // IDEReg [121:119] = src_address;
       // IDEReg[118] = portWR;
       IDEReg = {29'b0,MemR, MemWR, 7'b0, 48'b0,
-      5'b0, pop_pc1_sig, pop_pc2_sig,
-      pop_ccr_sig, stack_sig, 4'b0, call, ret,
-      rti, pc_sel, mem_data_sel, pc_jmp};
+                5'b0, pop_pc1_sig, pop_pc2_sig,
+                pop_ccr_sig, stack_sig, 4'b0, call, ret,
+                rti, pc_sel, mem_data_sel, pc_jmp};
 
       IFIDReg = 'b0;
       Reg_data_2 = Reg_data;
     end
     else if(flush === 1'b1 && flush !== 1'bx)    //and ~aluSrc_sig
-      begin
-        IFIDReg = 'b0;
-        IDEReg = 'b0;
-        IDEPC_Reg = 'b0;
-      end
+    begin
+      IFIDReg = 'b0;
+      IDEReg = 'b0;
+      IDEPC_Reg = 'b0;
+    end
     else
     begin
 
@@ -316,14 +321,19 @@ module Processor (
                    IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
                    IDEReg[106:102],IDEReg[51:49],IDEReg[48],IDEReg[47],
                    IDEReg[43],IDEReg[41],IDEReg[40],IDEReg[33:32],IDEPC_Reg[31:0]};
-      IDEPC_Reg = IFIDReg[47:16];
       // IDEReg [121:119] = src_address;
       // IDEReg[118] = portWR;
       IDEReg = {inputPort,src_address,portWR,portR, shift_amount,MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2,I_op2,
                 RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
                 pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
                 rti, pc_sel, mem_data_sel, pc_jmp};
-      IFIDReg  = {16'b0, pc, instruction};
+      if(~fetch_pc_enable)
+        IFIDReg = {16'b0, pc, 16'b0};
+      else
+        begin
+          IDEPC_Reg = IFIDReg[47:16];
+          IFIDReg  = {16'b0, pc, instruction};
+        end
       Reg_data_2 = Reg_data;
     end
   end

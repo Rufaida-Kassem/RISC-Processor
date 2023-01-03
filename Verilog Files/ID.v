@@ -1,7 +1,8 @@
 module ID #(parameter width = 16) (
   output flush_fetch,
     output ldm_value,
-    inout interrupt,
+    input interrupt,
+    output ack,
     input load_use,
     output mem_to_Reg_sig,
     pop_pc1_sig,
@@ -27,7 +28,8 @@ module ID #(parameter width = 16) (
     input RW_Sig_in,
     output portR, portWR,
     output [2:0] src_address,   // src_address
-    output flush
+    output flush,
+    output load_0_pc
   );
   // wire mem_to_Reg_sig_cu,
   //      pop_pc1_sig_cu,
@@ -71,6 +73,7 @@ module ID #(parameter width = 16) (
       .rst(rst),
       .branch_taken (branch_taken ),
       .interrupt (interrupt ),
+      .ack(ack),
       .load_use (load_use ),
       .opCode (opCode ),
       .aluOp (aluOp ),
@@ -95,7 +98,8 @@ module ID #(parameter width = 16) (
       .portR(portR),
       .portWR(portWR),
       .flush(flush),
-      .ldm_value(ldm_value)
+      .ldm_value(ldm_value),
+      .load_0_pc(load_0_pc)
     );
 
   jumpsCU

@@ -7,17 +7,21 @@ module PC_Mux (
     //input [31:0] calling_addr,
     input [1:0] selection,
     input pc_enable,
-    output  [31:0] pc_out
+    output  [31:0] pc_out,
+    input interrupt
 );
 //f d e m wb
 //  f d e m  wb
 //    f d e  m  wb
 reg [31:0] pc;
     assign pc_out =  pc;
-always @(posedge clk, posedge rst)
+always @(posedge clk, posedge rst, posedge interrupt)
 begin
     if(rst)
         pc = 32'h20; 
+    else if (interrupt) begin
+        pc = 32'b0;
+    end
     else if(clk)
     begin
         if(pc_enable)
