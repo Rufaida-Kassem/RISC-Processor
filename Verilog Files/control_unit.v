@@ -362,8 +362,8 @@ module intSM (
     output reg ccr_to_stack , pc_to_stack1, pc_to_stack2, stack, MemWR, freeze_pc, freeze_cu,
     output reg [1:0] pc_sel
   );
-  reg     [3:0] current_state, next_state;
-  parameter idle_state = 0, wait_1 = 1, wait_2_ldm_load_use = 2, freezePc = 3, freezePc_cu = 4, wait_3 = 5, wait_4 = 6, push_pc1 = 7, push_pc2 = 8, push_ccr = 9;
+  reg     [3:0] current_state, next_state, prev_state;
+  parameter idle_state = 0, wait_1 = 1, wait_2_ldm_load_use = 2, freezePc = 3, freezePc_cu = 4, wait_3 = 5, wait_4 = 6, push_pc1 = 7, push_pc2 = 8, push_ccr = 9, refreeze_pc_state_1 = 10, refreeze_pc_state_2 = 11;
   reg trigger = 1'b0;
   //assign interrupt = ack == 1'b1 ? 1'b0 : interrupt;
 
@@ -373,6 +373,7 @@ module intSM (
     if(rst)
     begin
       current_state = idle_state;
+      prev_state = idle_state;
     end
     if(clk)
     begin
@@ -397,8 +398,6 @@ module intSM (
         pc_to_stack2 = 0;
         if(interrupt == 1)
         begin
-          if(~branch_taken)
-            freeze_pc = 1'b1;
           next_state = wait_1;
         end
         else
@@ -410,15 +409,14 @@ module intSM (
       wait_1:
       begin
         ack = 1'b1;
-        if(~branch_taken)
-            freeze_pc = 1'b1;
         if(ldm || load_use)
         begin
           next_state = wait_2_ldm_load_use;
         end
         else
         begin
-          freeze_pc = 1'b1;
+          if(~branch_taken)
+            freeze_pc = 1'b1;
           next_state = freezePc;
         end
       end
@@ -431,6 +429,7 @@ module intSM (
       end
       freezePc_cu:
       begin
+        ack = 0;
         freeze_cu = 1'b1;
         next_state = wait_3;
       end
@@ -457,10 +456,18 @@ module intSM (
       end
       push_ccr:
       begin
-        next_state = idle_state;
+        next_state = refreeze_pc_state_1;
         ccr_to_stack = 1;
-        freeze_pc = 1'b0;   //modified
+        //freeze_pc = 1'b0;   //modified
         pc_sel = 2'b10;
+      end
+      refreeze_pc_state_1:
+      begin
+        next_state = idle_state;
+      end
+      refreeze_pc_state_2:
+      begin
+        
       end
       default:
       begin
@@ -528,17 +535,21 @@ module rtiSM (
         MemR = 1'b1;
         stack = 1'b1;
         pop_ccr = 1'b1;
+        pc_sel = 2'b11;
       end
       pop_pc2_state:
       begin
         next_state = pop_pc1_state;
-        pop_pc2 = 1'b1;
+        pop_pc1 = 1'b1;
 
       end
       pop_pc1_state:
       begin
         next_state = idle_state;
-        pop_pc1 = 1'b1;
+        pop_pc1 = 1'b0;
+        pop_pc2 = 1'b1;
+        
+
 
       end
       default:

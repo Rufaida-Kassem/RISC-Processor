@@ -7,6 +7,7 @@ INC R5
 AND R3,R4
 ADD R1,R4
 OUT R4
+RTI
 .ORG 20 #this is the instructions code
 INC R1
 INC R2

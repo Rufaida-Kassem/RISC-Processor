@@ -2,7 +2,8 @@ module pcCircuit #(parameter addressWidth = 32) (
     input pc_enable, rst, clk,
     input [31:0] branch_call_addr,
     input [1:0] pc_selection,
-    output wire [addressWidth - 1 : 0] pc  // pc
+    output wire [addressWidth - 1 : 0] pc,  // pc
+    input interrupt
   );
   wire [31:0] next_pc;
 
@@ -26,8 +27,10 @@ module pcCircuit #(parameter addressWidth = 32) (
       .branch_call_addr (branch_call_addr ),
       .selection (pc_selection ),
       .pc_enable (pc_enable ),
-      .pc_out (pc)
+      .pc_out (pc),
+      .interrupt(interrupt)
     );
+
 
 endmodule
 
@@ -39,7 +42,8 @@ module IF (
     output [31:0] pc,
     output reg [15:0] instruction,
     input pop_pc_low_sig, pop_pc_high_sig,
-    input [15:0] pop_data
+    input [15:0] pop_data,
+    input interrupt
   );
 
   wire [31:0] pc_mux;
@@ -47,8 +51,10 @@ module IF (
 
   // assign pc_out = pc + 1;
 
-  assign pc = pop_pc_low_sig == 1'b1 ? {pc[31:16], pop_data} : pop_pc_high_sig == 1'b1 ? {pop_data, pc[15:0]} : pc_mux;
+  //assign pc = pop_pc_low_sig == 1'b1 ? {pc[31:16], pop_data} : pop_pc_high_sig == 1'b1 ? {pop_data, pc[15:0]} : pc_mux;
 
+  assign pc[15:0] = pop_pc_low_sig == 1'b1 ? pop_data : pop_pc_high_sig == 1'b0 ? pc_mux[15:0] : pc[15:0];
+  assign pc[31:16] = pop_pc_high_sig == 1'b1 ? pop_data : pop_pc_low_sig == 1'b0 ? pc_mux[31:16] : pc[31:16];
   Memory #( .addBusWidth(20), .width(16), .instrORdata(1) )
          instructions_memory  (
            .clk (clk ),
@@ -69,8 +75,10 @@ module IF (
       .rst (rst ),
       .clk (clk ),
       .branch_call_addr (branch_call_addr ),
-      .pc  (pc_mux)
+      .pc  (pc_mux),
+      .interrupt(interrupt)
     );
+
 
 
     always @ (posedge clk)//, posedge rst)
@@ -78,7 +86,9 @@ module IF (
       // if(rst)
       //   instruction = 16'b0;
       // else
+      if(pc_enable)
         instruction = instruction_temp;
+
     end
 
 

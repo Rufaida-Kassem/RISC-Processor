@@ -63,6 +63,8 @@ module Processor (
 
   wire portR, portWR;
 
+  
+
 
 
 
@@ -118,7 +120,8 @@ module Processor (
       .instruction  ( instruction),  //output
       .pop_pc_low_sig (pop_pc1_sig),
       .pop_pc_high_sig (pop_pc2_sig),
-      .pop_data (16'b0)
+      .pop_data (Out_Memo),
+      .interrupt(interrupt)
     );
 
   ID
@@ -220,7 +223,7 @@ module Processor (
               .output_port(outputPort));
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+  integer count_disable_fetch = 0;
 
 
   always @ (posedge clk, posedge rst)
@@ -298,7 +301,6 @@ module Processor (
     end
     else
     begin
-
       MEMOWB_Reg ={EXMEMO_Reg[38],EXMEMO_Reg[78:63],Out_Memo, EXMEMO_Reg[50],EXMEMO_Reg[37], EXMEMO_Reg[41:39]};
       EXMEMO_Reg ={Ccr,Out_Excute,MemoryAddress[11:0],
                    IDEReg[118],IDEReg[117],IDEReg[108],IDEReg[107],
@@ -311,7 +313,16 @@ module Processor (
                 RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
                 pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
                 rti, pc_sel, mem_data_sel, pc_jmp};
-      IFIDReg  = {16'b0, pc, instruction};
+      if(~fetch_pc_enable)
+      begin
+        // IDEReg = {3'b0 , 1'b0, 1'b0, 8'b0,MemR, MemWR, 5'b0, 2'b0, 48'b0,
+        //         3'b0, 2'b0, pop_pc1_sig, pop_pc2_sig,
+        //         pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
+        //         rti, pc_sel, mem_data_sel, pc_jmp};
+        IFIDReg  = {16'b0, pc, 16'b0};
+      end
+      else
+        IFIDReg  = {16'b0, pc, instruction};
       Reg_data_2 = Reg_data;
     end
   end
