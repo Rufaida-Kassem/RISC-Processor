@@ -63,8 +63,6 @@ module Processor (
 
   wire portR, portWR;
 
-  
-
 
 
 
@@ -314,13 +312,7 @@ module Processor (
                 pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
                 rti, pc_sel, mem_data_sel, pc_jmp};
       if(~fetch_pc_enable)
-      begin
-        // IDEReg = {3'b0 , 1'b0, 1'b0, 8'b0,MemR, MemWR, 5'b0, 2'b0, 48'b0,
-        //         3'b0, 2'b0, pop_pc1_sig, pop_pc2_sig,
-        //         pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
-        //         rti, pc_sel, mem_data_sel, pc_jmp};
         IFIDReg  = {16'b0, pc, 16'b0};
-      end
       else
         IFIDReg  = {16'b0, pc, instruction};
       Reg_data_2 = Reg_data;
