@@ -526,6 +526,7 @@ module rtiSM (
         if(rti)
         begin
           next_state = pop_ccr_state;
+          pc_sel = 2'b11;
         end
       end
       pop_ccr_state:
@@ -536,11 +537,12 @@ module rtiSM (
         MemR = 1'b1;
         stack = 1'b1;
         pop_ccr = 1'b1;
-        pc_sel = 2'b11;
+        //pc_sel = 2'b11;
       end
       pop_pc2_state:
       begin
         next_state = pop_pc1_state;
+        pop_ccr = 1'b0;
         pop_pc1 = 1'b1;
 
       end
@@ -548,10 +550,7 @@ module rtiSM (
       begin
         next_state = idle_state;
         pop_pc1 = 1'b0;
-        pop_pc2 = 1'b1;
-        
-
-
+        pop_pc2 = 1'b1;    
       end
       default:
       begin

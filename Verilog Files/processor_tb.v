@@ -39,8 +39,8 @@ Processor
        rst = 1'b0;
       start = 1'b1;
 
-      #30
-      interrupt = 1'b1;
+      //#30
+      //interrupt = 1'b1;
 
 
 

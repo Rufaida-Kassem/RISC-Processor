@@ -10,7 +10,7 @@ z2
 cModel Technology
 dD:/1st term 3rd year/VLSI/MiniPro1
 vAddition
-Z0 !s110 1672707897
+Z0 !s110 1672708338
 !i10b 1
 !s100 c3KKIhLCf<<8OO^:ROC733
 Z1 !s11b Dg1SIo80bB@j0V0VzS_@n1
@@ -20,13 +20,13 @@ Z3 dD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implemen
 Z4 w1672587313
 Z5 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/twoOperands.v
 Z6 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/twoOperands.v
-!i122 748
+!i122 803
 L0 23 23
 Z7 OV;L;2020.1;71
 r1
 !s85 0
 31
-Z8 !s108 1672707897.000000
+Z8 !s108 1672708338.000000
 Z9 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/twoOperands.v|
 Z10 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/twoOperands.v|
 !i113 1
@@ -34,7 +34,7 @@ Z11 o-work work
 Z12 tCvgOpt 0
 n@addition
 vALU
-Z13 !s110 1672707891
+Z13 !s110 1672708332
 !i10b 1
 !s100 NeCk]U`AU:;hZ>429zNFK2
 R1
@@ -44,13 +44,13 @@ R3
 w1672497076
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/ALU.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/ALU.v
-!i122 723
+!i122 778
 L0 1 68
 R7
 r1
 !s85 0
 31
-Z14 !s108 1672707891.000000
+Z14 !s108 1672708332.000000
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/ALU.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/ALU.v|
 !i113 1
@@ -68,7 +68,7 @@ R3
 R4
 R5
 R6
-!i122 748
+!i122 803
 L0 74 23
 R7
 r1
@@ -82,7 +82,7 @@ R11
 R12
 n@anding
 vcallSM
-Z15 !s110 1672707892
+Z15 !s110 1672708333
 !i10b 1
 !s100 Bf9T?LccOa7hzoUj[nZ4]3
 R1
@@ -92,13 +92,13 @@ R3
 Z16 w1672707736
 Z17 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/control_unit.v
 Z18 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/control_unit.v
-!i122 727
+!i122 782
 L0 205 72
 R7
 r1
 !s85 0
 31
-Z19 !s108 1672707892.000000
+Z19 !s108 1672708333.000000
 Z20 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/control_unit.v|
 Z21 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/control_unit.v|
 !i113 1
@@ -106,7 +106,7 @@ R11
 R12
 ncall@s@m
 vCLRC
-Z22 !s110 1672707895
+Z22 !s110 1672708336
 !i10b 1
 !s100 bN[F[O59I1[AHPe8EVJ<03
 R1
@@ -116,13 +116,13 @@ R3
 Z23 w1672343224
 Z24 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/OneOperandInstuctions.v
 Z25 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/OneOperandInstuctions.v
-!i122 739
+!i122 794
 L0 38 12
 R7
 r1
 !s85 0
 31
-Z26 !s108 1672707895.000000
+Z26 !s108 1672708335.000000
 Z27 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/OneOperandInstuctions.v|
 Z28 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/OneOperandInstuctions.v|
 !i113 1
@@ -140,7 +140,7 @@ R3
 R16
 R17
 R18
-!i122 727
+!i122 782
 L0 1 145
 R7
 r1
@@ -164,7 +164,7 @@ R3
 Z29 w1672618104
 Z30 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/DataMemory.v
 Z31 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/DataMemory.v
-!i122 728
+!i122 783
 L0 19 54
 R7
 r1
@@ -188,7 +188,7 @@ R3
 R23
 R24
 R25
-!i122 739
+!i122 794
 L0 75 23
 R7
 r1
@@ -202,7 +202,7 @@ R11
 R12
 n@d@e@c
 vDecoder
-Z34 !s110 1672707893
+R15
 !i10b 1
 !s100 C31lHC`OYXbKJi;Xg7JXP2
 R1
@@ -212,8 +212,8 @@ R3
 R23
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Decoder.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Decoder.v
-!i122 729
-Z35 L0 1 41
+!i122 784
+Z34 L0 1 41
 R7
 r1
 !s85 0
@@ -226,7 +226,7 @@ R11
 R12
 n@decoder
 vExecution
-R34
+Z35 !s110 1672708334
 !i10b 1
 !s100 8Q>D:5A]c;4=E@VAW0LA]3
 R1
@@ -236,13 +236,13 @@ R3
 w1672667421
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Execution.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Execution.v
-!i122 730
+!i122 785
 L0 1 38
 R7
 r1
 !s85 0
 31
-Z36 !s108 1672707893.000000
+R19
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Execution.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Execution.v|
 !i113 1
@@ -250,7 +250,7 @@ R11
 R12
 n@execution
 vFullForwardingUnit
-R34
+R35
 !i10b 1
 !s100 f<VQTH3F69EF9HjdQGB::2
 R1
@@ -260,13 +260,13 @@ R3
 R4
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/FullForwardingUnit.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/FullForwardingUnit.v
-!i122 731
+!i122 786
 L0 1 27
 R7
 r1
 !s85 0
 31
-R36
+Z36 !s108 1672708334.000000
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/FullForwardingUnit.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/FullForwardingUnit.v|
 !i113 1
@@ -274,7 +274,7 @@ R11
 R12
 n@full@forwarding@unit
 vHazardDetectionUnit
-R34
+R35
 !i10b 1
 !s100 A7P5X6z_F4G;kR2M]G<`i2
 R1
@@ -284,7 +284,7 @@ R3
 R16
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/HazardDetectionUnit.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/HazardDetectionUnit.v
-!i122 732
+!i122 787
 L0 1 21
 R7
 r1
@@ -298,7 +298,7 @@ R11
 R12
 n@hazard@detection@unit
 vID
-R34
+R35
 !i10b 1
 !s100 j]n7zbD:oN^>@j5oI5G`G2
 R1
@@ -308,7 +308,7 @@ R3
 w1672704303
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/ID.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/ID.v
-!i122 733
+!i122 788
 L0 1 180
 R7
 r1
@@ -322,25 +322,25 @@ R11
 R12
 n@i@d
 vIF
-Z37 !s110 1672707894
+R35
 !i10b 1
 !s100 `@e]V0zMW@7_<PJikl8:51
 R1
 IEdM3DLgJUE`:Jf`c];3?G3
 R2
 R3
-Z38 w1672707421
-Z39 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/IF.v
-Z40 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/IF.v
-!i122 734
+Z37 w1672707421
+Z38 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/IF.v
+Z39 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/IF.v
+!i122 789
 L0 38 60
 R7
 r1
 !s85 0
 31
-Z41 !s108 1672707894.000000
-Z42 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/IF.v|
-Z43 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/IF.v|
+R36
+Z40 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/IF.v|
+Z41 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/IF.v|
 !i113 1
 R11
 R12
@@ -356,7 +356,7 @@ R3
 R23
 R24
 R25
-!i122 739
+!i122 794
 L0 112 12
 R7
 r1
@@ -380,7 +380,7 @@ R3
 R23
 R24
 R25
-!i122 739
+!i122 794
 L0 51 23
 R7
 r1
@@ -404,13 +404,13 @@ R3
 w1672476922
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/pc_adder.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/pc_adder.v
-!i122 740
+!i122 795
 L0 1 12
 R7
 r1
 !s85 0
 31
-R26
+Z42 !s108 1672708336.000000
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/pc_adder.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/pc_adder.v|
 !i113 1
@@ -427,7 +427,7 @@ R3
 R16
 R17
 R18
-!i122 727
+!i122 782
 L0 359 124
 R7
 r1
@@ -447,12 +447,12 @@ vjumpConditionally
 R1
 I2^F?YW>eSJDzgnWRU?3@g2
 R2
-Z44 dD:/1st term 3rd year/ComputerArch/Projects/Phase1Pro
+Z43 dD:/1st term 3rd year/ComputerArch/Projects/Phase1Pro
 w1672086576
 8D:\1st term 3rd year\ComputerArch\Projects\Phase1Pro\BranchOperation.v
 FD:\1st term 3rd year\ComputerArch\Projects\Phase1Pro\BranchOperation.v
 !i122 412
-Z45 L0 1 11
+Z44 L0 1 11
 R7
 r1
 !s85 0
@@ -465,7 +465,7 @@ R11
 R12
 njump@conditionally
 vjumpConditionallyCarry
-R15
+R13
 !i10b 1
 !s100 `88]LHzJB`4J5UK0^JYK]0
 R1
@@ -473,23 +473,23 @@ I_G=E0<m_fC@=IVGCOX7fW3
 R2
 R3
 R23
-Z46 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/BranchOperation.v
-Z47 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/BranchOperation.v
-!i122 725
+Z45 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/BranchOperation.v
+Z46 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/BranchOperation.v
+!i122 780
 L0 27 13
 R7
 r1
 !s85 0
 31
-R19
-Z48 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/BranchOperation.v|
-Z49 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/BranchOperation.v|
+R14
+Z47 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/BranchOperation.v|
+Z48 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/BranchOperation.v|
 !i113 1
 R11
 R12
 njump@conditionally@carry
 vjumpConditionallyNegative
-R15
+R13
 !i10b 1
 !s100 Bo]4OBb>kHz8zaO5F3z_?1
 R1
@@ -497,23 +497,23 @@ IM8R=::=3bfDQXe56ejz;Z3
 R2
 R3
 R23
+R45
 R46
-R47
-!i122 725
+!i122 780
 L0 14 13
 R7
 r1
 !s85 0
 31
-R19
+R14
+R47
 R48
-R49
 !i113 1
 R11
 R12
 njump@conditionally@negative
 vjumpConditionallyZero
-R15
+R13
 !i10b 1
 !s100 ]AXMCo=gll^ki67lJi;8O0
 R1
@@ -521,23 +521,23 @@ I0^4fhB^_0>4:__7QH1hk:2
 R2
 R3
 R23
+R45
 R46
-R47
-!i122 725
+!i122 780
 L0 1 13
 R7
 r1
 !s85 0
 31
-R19
+R14
+R47
 R48
-R49
 !i113 1
 R11
 R12
 njump@conditionally@zero
 vjumpsCU
-R37
+Z49 !s110 1672708335
 !i10b 1
 !s100 ol]Qc?mRM:HiW;R4Z=E:`1
 R1
@@ -547,13 +547,13 @@ R3
 R4
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/jmps_cu.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/jmps_cu.v
-!i122 735
+!i122 790
 L0 1 16
 R7
 r1
 !s85 0
 31
-R41
+R26
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/jmps_cu.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/jmps_cu.v|
 !i113 1
@@ -561,7 +561,7 @@ R11
 R12
 njumps@c@u
 vLDD
-R37
+R49
 !i10b 1
 !s100 kc=`GP6dcQaWOP?]bRjI22
 R1
@@ -571,13 +571,13 @@ R3
 R23
 Z50 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/MemoryInstructions.v
 Z51 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/MemoryInstructions.v
-!i122 736
+!i122 791
 L0 23 12
 R7
 r1
 !s85 0
 31
-R41
+R26
 Z52 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/MemoryInstructions.v|
 Z53 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/MemoryInstructions.v|
 !i113 1
@@ -585,7 +585,7 @@ R11
 R12
 n@l@d@d
 vLdm
-R37
+R49
 !i10b 1
 !s100 6Y@D1aB6=1KzDcAcnK_@60
 R1
@@ -595,13 +595,13 @@ R3
 R23
 R50
 R51
-!i122 736
-R45
+!i122 791
+R44
 R7
 r1
 !s85 0
 31
-R41
+R26
 R52
 R53
 !i113 1
@@ -619,7 +619,7 @@ R3
 R16
 R17
 R18
-!i122 727
+!i122 782
 L0 150 54
 R7
 r1
@@ -643,13 +643,13 @@ R3
 w1672675582
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Cache.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Cache.v
-!i122 726
+!i122 781
 L0 2 35
 R7
 r1
 !s85 0
 31
-R19
+R14
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Cache.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Cache.v|
 !i113 1
@@ -667,7 +667,7 @@ R3
 R4
 R5
 R6
-!i122 748
+!i122 803
 L0 2 19
 R7
 r1
@@ -691,7 +691,7 @@ R3
 R29
 R30
 R31
-!i122 728
+!i122 783
 Z54 L0 1 6
 R7
 r1
@@ -705,7 +705,7 @@ R11
 R12
 n@mux12@bit
 vMux16Bit
-R37
+R49
 !i10b 1
 !s100 QO8:8nT2^QK7z_M0e]8b`2
 R1
@@ -715,13 +715,13 @@ R3
 R23
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Mux2x1.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Mux2x1.v
-!i122 737
+!i122 792
 R54
 R7
 r1
 !s85 0
 31
-R41
+R26
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Mux2x1.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Mux2x1.v|
 !i113 1
@@ -729,7 +729,7 @@ R11
 R12
 n@mux16@bit
 vMux3x1
-R22
+R49
 !i10b 1
 !s100 OPHK>>M>4M;aBZ>8mK6n01
 R1
@@ -739,7 +739,7 @@ R3
 R4
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Mux3x1.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Mux3x1.v
-!i122 738
+!i122 793
 L0 1 8
 R7
 r1
@@ -763,7 +763,7 @@ R3
 R29
 R30
 R31
-!i122 728
+!i122 783
 L0 9 9
 R7
 r1
@@ -787,7 +787,7 @@ R3
 R23
 R24
 R25
-!i122 739
+!i122 794
 Z55 L0 1 23
 R7
 r1
@@ -811,7 +811,7 @@ R3
 R4
 R5
 R6
-!i122 748
+!i122 803
 L0 98 23
 R7
 r1
@@ -835,7 +835,7 @@ R3
 R23
 R24
 R25
-!i122 739
+!i122 794
 L0 100 12
 R7
 r1
@@ -859,13 +859,13 @@ R3
 w1672690009
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/pc_mux.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/pc_mux.v
-!i122 741
-R35
+!i122 796
+R34
 R7
 r1
 !s85 0
 31
-R26
+R42
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/pc_mux.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/pc_mux.v|
 !i113 1
@@ -873,25 +873,25 @@ R11
 R12
 n@p@c_@mux
 vpcCircuit
-R37
+R35
 !i10b 1
 !s100 Pani@VCCY@;zkmaH09CG23
 R1
 IgICYiHFF:iQD@A4?X3oDY3
 R2
 R3
+R37
 R38
 R39
-R40
-!i122 734
+!i122 789
 L0 1 35
 R7
 r1
 !s85 0
 31
+R36
+R40
 R41
-R42
-R43
 !i113 1
 R11
 R12
@@ -903,7 +903,7 @@ vPOP
 R1
 I9[zU9[LK?oT_LRoXdXR_D1
 R2
-R44
+R43
 w1670895312
 8D:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/MemoryInstructions.v
 FD:/1st term 3rd year/ComputerArch/Projects/Phase1Pro/MemoryInstructions.v
@@ -921,7 +921,7 @@ R11
 R12
 n@p@o@p
 vProcessor
-Z56 !s110 1672707896
+R22
 !i10b 1
 !s100 NLFL20U<nGYQ?FT3dPLXl0
 R1
@@ -931,13 +931,13 @@ R3
 w1672707794
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Processor.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Processor.v
-!i122 742
+!i122 797
 L0 1 393
 R7
 r1
 !s85 0
 31
-R26
+R42
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Processor.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Processor.v|
 !i113 1
@@ -945,23 +945,23 @@ R11
 R12
 n@processor
 vProcessor_tb
-R56
+Z56 !s110 1672708337
 !i10b 1
-!s100 l=`jDS118Tk=Fd[k01G1E1
+!s100 zR?VlFagKnn;XPQoTPa772
 R1
-Im9X7BFMcFLXDe`Wn3jg9J3
+I1blzd:]ijZCkagz6I`V3_2
 R2
 R3
-w1672690397
+w1672708324
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/processor_tb.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/processor_tb.v
-!i122 743
+!i122 798
 L0 2 58
 R7
 r1
 !s85 0
 31
-Z57 !s108 1672707896.000000
+Z57 !s108 1672708337.000000
 !s107 D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/processor_tb.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/processor_tb.v|
 !i113 1
@@ -969,7 +969,7 @@ R11
 R12
 n@processor_tb
 vPUSH
-R37
+R49
 !i10b 1
 !s100 =_[bd1mB:@8;DOHC>EaWN1
 R1
@@ -979,13 +979,13 @@ R3
 R23
 R50
 R51
-!i122 736
+!i122 791
 L0 45 11
 R7
 r1
 !s85 0
 31
-R41
+R26
 R52
 R53
 !i113 1
@@ -1003,7 +1003,7 @@ R3
 R23
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/RegFile.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/RegFile.v
-!i122 744
+!i122 799
 Z58 L0 1 34
 R7
 r1
@@ -1027,7 +1027,7 @@ R3
 w1672608621
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/RegFile_memo.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/RegFile_memo.v
-!i122 745
+!i122 800
 L0 1 51
 R7
 r1
@@ -1051,7 +1051,7 @@ R3
 R23
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Register.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/Register.v
-!i122 746
+!i122 801
 R58
 R7
 r1
@@ -1075,7 +1075,7 @@ R3
 R16
 R17
 R18
-!i122 727
+!i122 782
 L0 279 78
 R7
 r1
@@ -1099,7 +1099,7 @@ R3
 R16
 R17
 R18
-!i122 727
+!i122 782
 L0 485 81
 R7
 r1
@@ -1123,7 +1123,7 @@ R3
 R23
 R24
 R25
-!i122 739
+!i122 794
 L0 25 12
 R7
 r1
@@ -1147,7 +1147,7 @@ R3
 R4
 R5
 R6
-!i122 748
+!i122 803
 L0 122 24
 R7
 r1
@@ -1171,7 +1171,7 @@ R3
 R4
 R5
 R6
-!i122 748
+!i122 803
 L0 149 24
 R7
 r1
@@ -1195,7 +1195,7 @@ R3
 R4
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/assign_sp.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/assign_sp.v
-!i122 724
+!i122 779
 L0 1 10
 R7
 r1
@@ -1218,7 +1218,7 @@ R3
 R4
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/SPAdder.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/SPAdder.v
-!i122 747
+!i122 802
 L0 1 18
 R7
 r1
@@ -1242,7 +1242,7 @@ R3
 R4
 R5
 R6
-!i122 748
+!i122 803
 L0 48 23
 R7
 r1
@@ -1256,7 +1256,7 @@ R11
 R12
 n@subtraction
 vSw
-R37
+R49
 !i10b 1
 !s100 i9]HIndozF0;UO4gN1<`C1
 R1
@@ -1266,13 +1266,13 @@ R3
 R23
 R50
 R51
-!i122 736
+!i122 791
 L0 12 11
 R7
 r1
 !s85 0
 31
-R41
+R26
 R52
 R53
 !i113 1
@@ -1290,7 +1290,7 @@ R3
 R16
 8D:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/WriteBack.v
 FD:/Academic_college/Third_Year/First_Term/Computer_Arch/Project/Our_Implementation/RISC-Processor/Verilog Files/WriteBack.v
-!i122 749
+!i122 804
 R55
 R7
 r1
