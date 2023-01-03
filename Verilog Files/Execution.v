@@ -12,7 +12,7 @@ module Execution(input rst,
                  input [15:0] MemoryWBForwarding,
                  input[1:0] Forward1Sel,
                  input[1:0] Forward2Sel,
-                 inout [2:0] Ccr,
+                 output [2:0] Ccr,
                  output [15:0]MemoryAddress,
                  output [15:0] Out
                  );

@@ -2,7 +2,7 @@ module ALU(input [15:0]Rs,
            input [15:0]Rd,
            input[4:0]AluOp, 
            input[15:0] inport,
-           inout[2:0] Ccr,
+           output[2:0] Ccr,
            output[15:0] Out,
 	       output signalJump
                  );

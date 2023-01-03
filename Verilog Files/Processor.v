@@ -339,61 +339,6 @@ wire load_0_pc;
   end
 
 
-
-
-
-  // always @ (posedge clk, posedge rst)
-  //     begin
-  //       if(rst)
-  //       begin
-  //         IFIDReg  = 0;
-  //         IDEReg = 0;
-  //         IDEPC_Reg = 0;
-  //         EXMEMO_Reg = 0;
-  //         MEMOWB_Reg = 0;
-  //       end
-  //       else
-  //       begin
-  //         MEMOWB_Reg = MEMOWB_Reg_pre;
-  //         EXMEMO_Reg = EXMEMO_Reg_pre;
-  //         IDEPC_Reg = IDEPC_Reg_pre;
-  //         IDEReg = IDEReg_pre;
-  //         IFIDReg  = IFIDReg_pre;
-  //         Reg_data_2 = Reg_data;
-  //       end
-  //     end
-
-
-
-  //     always @ (negedge clk, posedge rst)
-  //     begin
-  //       if(rst)
-  //       begin
-  //         IFIDReg_pre  = 0;
-  //         IDEReg_pre = 0;
-  //         IDEPC_Reg_pre = 0;
-  //         EXMEMO_Reg_pre = 0;
-  //         MEMOWB_Reg_pre = 0;
-  //       end
-  //       else
-  //       begin
-  //         MEMOWB_Reg_pre ={EXMEMO_Reg_pre[38],EXMEMO_Reg_pre[78:63],Out_Memo, EXMEMO_Reg_pre[50],EXMEMO_Reg_pre[37], EXMEMO_Reg_pre[41:39]};
-  //         EXMEMO_Reg_pre ={Ccr,Out_Excute,MemoryAddress[11:0],
-  //                     IDEReg_pre[118],IDEReg_pre[117],IDEReg_pre[108],IDEReg_pre[107],
-  //                     IDEReg_pre[106:102],IDEReg_pre[51:49],IDEReg_pre[48],IDEReg_pre[47],
-  //                    IDEReg_pre[43],IDEReg_pre[41],IDEReg_pre[40],IDEReg_pre[33:32],IDEReg_pre[31:0]};
-  //         IDEPC_Reg_pre = IFIDReg_pre[47:16];
-  //         IDEReg_pre [121:119] = src_address;
-  //         IDEReg_pre [118:0] = {portWR, portR, shift_amount,MemR, MemWR, aluOp_sig, aluSrc_sig, op1, R_op2,I_op2,
-  //                   RW_Out_addr, RW_sig_out, mem_to_Reg_sig, pop_pc1_sig, pop_pc2_sig,
-  //                   pop_ccr_sig, stack_sig, fetch_pc_enable, branch, ldm, freeze_cu, call, ret,
-  //                   rti, pc_sel, mem_data_sel, pc_jmp};
-  //         IFIDReg_pre  = {16'b0, pc, instruction};
-  //         Reg_data_2 = Reg_data;
-  //       end
-  //     end
-
-
 endmodule
 
 
